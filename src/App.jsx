@@ -10,6 +10,7 @@ import PlasticItem from "./components/items/PlasticItem.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Sale from "./pages/auth/sale/Sale.jsx";
 import Register from "./pages/auth/register/Register.jsx";
+import Login from "./pages/auth/login/login.jsx";
 import SaleAddItem from "./components/forms/SaleAddItem.jsx";
 import AddItemForm from "./components/forms/AddItemForm.jsx";
 import Buy from "./pages/buy/Buy.jsx";
@@ -30,9 +31,9 @@ export default function App() {
           <Route path="/services" element={<Services />} />
           <Route path="/buy-and-sale" element={<BuyAndSale />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/plastic-item" element={<PlasticItem />} />
-          <Route path="/sale" element={<Sale />} />
+          <Route path="/plastic-item" element={<PlasticItem />} />          <Route path="/sale" element={<Sale />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/sale-add-item" element={<SaleAddItem />} />
           <Route path="/add-item-form" element={<AddItemForm />} />
           <Route path="/buy" element={<Buy />} />

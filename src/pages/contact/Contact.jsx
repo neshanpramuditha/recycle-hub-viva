@@ -1,33 +1,24 @@
 import React, { useState } from "react";
 import {
-  FaMoon,
-  FaSun,
   FaEnvelope,
   FaUser,
   FaPhone,
   FaMapMarkerAlt,
   FaPaperPlane,
   FaComment,
+  FaHeadset,
 } from "react-icons/fa";
+import useTheme from "../../hooks/useTheme";
 import "./Contact.css";
 
 const Contact = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { isDarkMode } = useTheme();
   const [formData, setFormData] = useState({
     email: "",
     name: "",
     phone: "",
     message: "",
   });
-
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    if (!isDarkMode) {
-      document.body.style.backgroundColor = "#01002E";
-    } else {
-      document.body.style.backgroundColor = "white";
-    }
-  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -42,140 +33,184 @@ const Contact = () => {
     // Handle form submission
     const { email, name, phone, message } = formData;
     alert(
-      `Contact Form Submitted:\n` +
-        `Email: ${email}\n` +
+      `Contact Form Submitted Successfully!\n\n` +
         `Name: ${name}\n` +
+        `Email: ${email}\n` +
         `Phone: ${phone}\n` +
-        `Message: ${message}`
+        `Message: ${message}\n\n` +
+        `Thank you for reaching out to RecycleHub!`
     );
-  };
+    
+    // Reset form
+    setFormData({
+      email: "",
+      name: "",
+      phone: "",
+      message: "",
+    });
+  };  return (
+    <div className="contact-page">
+      <div className="contact-container">
+        {/* Header Section */}
+        <header className="contact-header">
+          <h1 className="contact-title">
+            <FaHeadset style={{ marginRight: '1rem', color: '#28a745' }} />
+            Contact Us
+          </h1>
+          <p className="contact-subtitle">
+            Get in touch with our team. We'd love to hear from you and help with
+            any questions about our sustainable marketplace.
+          </p>
+        </header>
 
-  return (
-    <div id="background" className={isDarkMode ? "dark-mode" : ""}>
-      <div className="container">
-        <div className="row">
-          <div className="col-12 mt-5">
-            <br />
-            <br />
-            <button
-              onClick={toggleDarkMode}
-              className="btn btn-link p-0 me-3"
-              id="light_contact"
-            >
-              {isDarkMode ? <FaSun /> : <FaMoon />}
+        {/* Contact Form */}
+        <div className="contact-form-card">
+          <form onSubmit={handleSubmit} className="contact-form">
+            <div className="row">
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="name" className="form-label">
+                    <FaUser />
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    className="form-control"
+                    placeholder="Enter your full name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+              </div>
+              
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="email" className="form-label">
+                    <FaEnvelope />
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    className="form-control"
+                    placeholder="Enter your email address"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="phone" className="form-label">
+                    <FaPhone />
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    className="form-control"
+                    placeholder="Enter your phone number"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+              
+              <div className="col-md-6">
+                <div className="form-group">
+                  <label htmlFor="location" className="form-label">
+                    <FaMapMarkerAlt />
+                    Location (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    id="location"
+                    name="location"
+                    className="form-control"
+                    placeholder="Your city or region"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="message" className="form-label">
+                <FaComment />
+                Message
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                className="form-control"
+                placeholder="Tell us how we can help you..."
+                value={formData.message}
+                onChange={handleInputChange}
+                required
+              ></textarea>
+            </div>
+
+            <button type="submit" className="submit-btn">
+              <FaPaperPlane />
+              Send Message
             </button>
-            <span id="Main-topic-contact">CONTACT US</span>
-          </div>
+          </form>
         </div>
 
-        <div className="row justify-content-center">
-          <div className="col-lg-8">
-            <form onSubmit={handleSubmit} className="mt-4">
-              <div className="row">
-                <div className="col-md-6">
-                  <div className="mb-3">
-                    <label
-                      htmlFor="email"
-                      className="form-label"
-                      id="Email-contact"
-                    >
-                      <FaEnvelope className="me-2" />
-                      Email:
-                    </label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="email"
-                      name="email"
-                      placeholder="Enter your Email Address"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="mb-3">
-                    <label
-                      htmlFor="name"
-                      className="form-label"
-                      id="name-contact"
-                    >
-                      <FaUser className="me-2" />
-                      Name:
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="name"
-                      name="name"
-                      placeholder="Enter your Name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                </div>
+        {/* Contact Information */}
+        <div className="contact-info">
+          <div className="contact-info-grid">
+            <div className="contact-info-card">
+              <div className="contact-info-icon">
+                <FaEnvelope />
               </div>
+              <h3 className="contact-info-title">Email Us</h3>
+              <p className="contact-info-text">
+                <a href="mailto:info@recyclehub.com" className="contact-info-link">
+                  info@recyclehub.com
+                </a>
+              </p>
+              <p className="contact-info-text">
+                <a href="mailto:support@recyclehub.com" className="contact-info-link">
+                  support@recyclehub.com
+                </a>
+              </p>
+            </div>
 
-              <div className="row">
-                <div className="col-md-6">
-                  <div className="mb-3">
-                    <label htmlFor="phone" className="form-label">
-                      <FaPhone className="me-2" />
-                      Phone:
-                    </label>
-                    <input
-                      type="tel"
-                      className="form-control"
-                      id="phone"
-                      name="phone"
-                      placeholder="Enter your Phone Number"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="mb-3">
-                    <label htmlFor="location" className="form-label">
-                      <FaMapMarkerAlt className="me-2" />
-                      Location:
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="location"
-                      placeholder="Your Location (Optional)"
-                    />
-                  </div>
-                </div>
+            <div className="contact-info-card">
+              <div className="contact-info-icon">
+                <FaPhone />
               </div>
+              <h3 className="contact-info-title">Call Us</h3>
+              <p className="contact-info-text">
+                <a href="tel:+1234567890" className="contact-info-link">
+                  +1 (234) 567-8900
+                </a>
+              </p>
+              <p className="contact-info-text">
+                Mon - Fri: 9:00 AM - 6:00 PM
+              </p>
+            </div>
 
-              <div className="mb-3">
-                <label htmlFor="message" className="form-label">
-                  <FaComment className="me-2" />
-                  Message:
-                </label>
-                <textarea
-                  className="form-control"
-                  id="message"
-                  name="message"
-                  rows="5"
-                  placeholder="Enter your message here..."
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  required
-                ></textarea>
+            <div className="contact-info-card">
+              <div className="contact-info-icon">
+                <FaMapMarkerAlt />
               </div>
-
-              <div className="text-center">
-                <button type="submit" className="btn btn-success btn-lg">
-                  <FaPaperPlane className="me-2" />
-                  Send Message
-                </button>
-              </div>
-            </form>
+              <h3 className="contact-info-title">Visit Us</h3>
+              <p className="contact-info-text">
+                123 Green Street<br />
+                Eco City, EC 12345<br />
+                United States
+              </p>
+            </div>
           </div>
         </div>
       </div>
