@@ -1,53 +1,172 @@
-#backgroundimage-sale{
-         background-image:url("image/13.jpg");
-         background-position:center;
-         background-repeat:no-repeat;
-         background-size: cover;
 
+/* Sale page hero section */
+#backgroundimage-sale {
+    background-image: url("image/13.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    position: relative;
 }
 
-#space-sale{
-     margin-top:150px;
+/* Dark overlay for better text readability */
+#backgroundimage-sale::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1;
 }
 
-#green-market-sale{
-          font-size: 85px;
-          font-family:Times;
-          margin-left:540px;
-          text-align: center;
-          color:white;
-
+/* Ensure content is above overlay */
+#backgroundimage-sale > * {
+    position: relative;
+    z-index: 2;
 }
 
-#Save-your-planet-sale{
-           margin-left: 620px;
-           font-size: 35px;
-           color:white;
+/* Content container */
+.sale-content {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
 }
 
-#and-sale{
-       margin-left:730px;
-       font-size:35px;
-       color:white;
+#space-sale {
+    margin-top: 0; /* Remove fixed margin for responsive design */
 }
 
-#save-your-committee-sale{
-      margin-left: 590px;
-      font-size: 35px;
-      color:white;
+#green-market-sale {
+    font-size: clamp(40px, 8vw, 85px);
+    font-family: 'Times New Roman', serif;
+    color: white;
+    font-weight: bold;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    margin-bottom: 20px;
+    line-height: 1.1;
 }
 
-
-#paragraph-sale{
-      color:white;
-      font-size:20px;
-      margin-left:270px;
-
+#Save-your-planet-sale,
+#and-sale,
+#save-your-committee-sale {
+    font-size: clamp(20px, 4vw, 35px);
+    color: white;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+    margin: 10px 0;
+    font-weight: 300;
 }
 
-#Register-Now-sale{
-          font-size: 20px;
-          padding-bottom:11px;
-          margin-left:680px;
-          margin-bottom: 115px;
+#paragraph-sale {
+    color: white;
+    font-size: clamp(16px, 2.5vw, 20px);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+    margin: 30px auto;
+    max-width: 700px;
+    line-height: 1.6;
+    padding: 0 20px;
+}
+
+#Register-Now-sale {
+    font-size: clamp(16px, 2.5vw, 20px);
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 30px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+}
+
+#Register-Now-sale:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(40, 167, 69, 0.4);
+}
+
+#Register-Now-sale:active {
+    transform: translateY(0);
+}
+
+/* Mobile responsive design */
+@media (max-width: 768px) {
+    #backgroundimage-sale {
+        background-attachment: scroll;
+        padding: 15px;
+        text-align: center;
+    }
+    
+    .sale-content {
+        max-width: 100%;
+    }
+    
+    #green-market-sale {
+        margin-bottom: 15px;
+    }
+    
+    #Save-your-planet-sale,
+    #and-sale,
+    #save-your-committee-sale {
+        margin: 8px 0;
+    }
+    
+    #paragraph-sale {
+        margin: 25px auto;
+        padding: 0 15px;
+    }
+    
+    #Register-Now-sale {
+        margin-top: 25px;
+        padding: 12px 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    #backgroundimage-sale {
+        padding: 10px;
+    }
+    
+    #green-market-sale {
+        margin-bottom: 10px;
+    }
+    
+    #Save-your-planet-sale,
+    #and-sale,
+    #save-your-committee-sale {
+        margin: 5px 0;
+    }
+    
+    #paragraph-sale {
+        margin: 20px auto;
+        padding: 0 10px;
+    }
+    
+    #Register-Now-sale {
+        margin-top: 20px;
+        padding: 10px 20px;
+    }
+}
+
+/* Large screen optimizations */
+@media (min-width: 1200px) {
+    .sale-content {
+        max-width: 1000px;
+    }
+    
+    #paragraph-sale {
+        max-width: 800px;
+    }
 }

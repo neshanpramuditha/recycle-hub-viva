@@ -1,22 +1,22 @@
 import React from 'react'
-import Navigation_bar from "./Navigation_bar.js";
-import Home from "./Home.js"
-import About from "./About.js"
-import Services from "./Services.js"
-import Buy_And_Sale from "./Buy_And_Sale.js"
-import Contact from "./Contact.js"
-import Plastic_Item from "./Plastic_Item.js"
+import Navigation_bar from "./Navigation_bar.jsx";
+import Home from "./Home.jsx"
+import About from "./About.jsx"
+import Services from "./Services.jsx"
+import Buy_And_Sale from "./Buy_And_Sale.jsx"
+import Contact from "./Contact.jsx"
+import Plastic_Item from "./Plastic_Item.jsx"
 import { BrowserRouter,Routes,Route } from 'react-router-dom';
-import Sale from "./Sale.js";
-import Register from "./Register.js"
-import Sale_Add_Item from "./Sale_Add_Item.js";
-import Add_Item_form from "./Add_Item_form.js";
-import Buy from "./Buy.js";
-import Glasses from "./Glasses.js";
-import Tyre from "./Tyre.js";
-import Electronic_Device from "./Electronic_Device.js";
-import Iron_Bar from "./Iron_Bar.js";
-import Book from "./Book.js"
+import Sale from "./Sale.jsx";
+import Register from "./Register.jsx"
+import Sale_Add_Item from "./Sale_Add_Item.jsx";
+import Add_Item_form from "./Add_Item_form.jsx";
+import Buy from "./Buy.jsx";
+import Glasses from "./Glasses.jsx";
+import Tyre from "./Tyre.jsx";
+import Electronic_Device from "./Electronic_Device.jsx";
+import Iron_Bar from "./Iron_Bar.jsx";
+import Book from "./Book.jsx"
 
 
 

@@ -1,63 +1,207 @@
-#Main_topic_BAS{/*add css for Main topic*/
-    font-size:40px;
-    font-family:impact;
-    border-bottom: 3px solid black;
-    color:black;
+
+/* Buy and Sale page container */
+.buy-sale-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+#Main_topic_BAS {
+    /* Main topic styling */
+    font-size: clamp(28px, 5vw, 40px);
+    font-family: Impact, Arial Black, sans-serif;
+    border-bottom: 3px solid #333;
+    color: #333;
+    text-align: center;
+    margin-bottom: 50px;
+    padding-bottom: 15px;
+    font-weight: bold;
+}
+
+/* Cards container */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 40px;
+    margin: 50px 0;
+    justify-items: center;
+}
+
+#card_01_BAS,
+#card_02_BAS {
+    /* Card styling */
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+#card_01_BAS:hover,
+#card_02_BAS:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Card images */
+.card-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+}
+
+#card_body_01_BAS,
+#card_body_02_BAS {
+    /* Card body styling */
+    background-color: #f8f9fa;
+    padding: 30px;
+    text-align: center;
+}
+
+#btn_01_BAS,
+#btn_02_BAS {
+    /* Button styling */
+    background-color: #007bff;
+    color: white;
+    border: none;
+    width: 100%;
+    max-width: 200px;
+    height: 60px;
+    margin: 20px auto 0 auto;
+    font-size: clamp(18px, 3vw, 25px);
+    font-family: 'Times New Roman', serif;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    display: block;
+}
+
+#btn_01_BAS:hover,
+#btn_02_BAS:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+}
+
+#btn_01_BAS:active,
+#btn_02_BAS:active {
+    transform: translateY(0);
+}
+
+/* Card titles and descriptions */
+.card-title {
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+    font-family: Impact, Arial Black, sans-serif;
+}
+
+.card-description {
+    font-size: clamp(14px, 2vw, 18px);
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    font-family: Arial, sans-serif;
+}
+
+#light_BAS {
+    /* Light icon styling */
+    color: #ffc107;
+    font-size: clamp(28px, 4vw, 34px);
+    text-align: center;
+    border-bottom: 3px solid #ffc107;
+    margin: 50px auto;
+    padding: 15px;
+    display: block;
+    max-width: 200px;
+}
+
+/* Mobile responsive design */
+@media (max-width: 768px) {
+    .buy-sale-container {
+        padding: 30px 15px;
+    }
     
+    .cards-container {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin: 40px 0;
+    }
+    
+    #card_01_BAS,
+    #card_02_BAS {
+        max-width: 100%;
+    }
+    
+    .card-image {
+        height: 200px;
+    }
+    
+    #card_body_01_BAS,
+    #card_body_02_BAS {
+        padding: 25px 20px;
+    }
+    
+    #btn_01_BAS,
+    #btn_02_BAS {
+        height: 50px;
+        margin: 15px auto 0 auto;
+    }
+    
+    #light_BAS {
+        margin: 40px auto;
+    }
 }
 
-
-
-#card_01_BAS{/*add css for card 01*/
-    width:500px;
-    height:400px;
-    margin-top: 60px;
-    margin-left:60px;
+@media (max-width: 480px) {
+    .buy-sale-container {
+        padding: 20px 10px;
+    }
+    
+    .cards-container {
+        gap: 20px;
+        margin: 30px 0;
+    }
+    
+    .card-image {
+        height: 180px;
+    }
+    
+    #card_body_01_BAS,
+    #card_body_02_BAS {
+        padding: 20px 15px;
+    }
+    
+    #btn_01_BAS,
+    #btn_02_BAS {
+        height: 45px;
+        max-width: 180px;
+    }
+    
+    #light_BAS {
+        margin: 30px auto;
+    }
 }
 
-#btn_01_BAS{ /*add css for button 01*/
-    width:180px;
-    height:70px;
-    margin-top: 20px;
-    margin-left: 150px;
-    font-size: 25px;
-    font-family:Times;
-}
-
-#card_body_01_BAS{ /*add css for cord 01 body*/
-    background-color:rgb(224, 218, 209);
-}
-
-
-#card_02_BAS{/*add css for card 02*/
-    width:500px;
-    height:400px;
-    margin-top: 60px;
-    margin-left: 60px;
-}
-
-#card_body_02_BAS{/*add css for card 02 body*/
-    background-color:rgb(224, 218, 209);
-     
-}
-
-
-
-#btn_02_BAS{ /*add css for button  02*/
-    width:180px;
-    height:70px;
-    margin-top: 20px;
-    margin-left: 150px;
-    font-size: 25px;
-    font-family:Times;
-   
-}
-
-#light_BAS{
-    font-size:34px;
-    margin-left: 270px;
-  border-bottom:3px solid black;
-  color:black;
+/* Large screen optimizations */
+@media (min-width: 1200px) {
+    .buy-sale-container {
+        padding: 60px 40px;
+    }
+    
+    .cards-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 60px;
+        margin: 80px 0;
+    }
+    
+    .card-image {
+        height: 280px;
+    }
 }
 
 

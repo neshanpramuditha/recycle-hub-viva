@@ -60,7 +60,7 @@ function Buy_And_Sale() {
             <div className="row">
               <div className="col-es-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
                 <div className="card" id="card_01_BAS">
-                  <img id="image_01_BAS" src={require('./image/10.gif')} alt="Buy" />
+                  <img id="image_01_BAS" src="/image/10.gif" alt="Buy" />
                   <div className="card-body" id="card_body_01_BAS">
                     <a href="/Buy" type="button" id="btn_01_BAS" className="btn btn-dark ">BUY NOW</a>
                   </div>
@@ -69,7 +69,7 @@ function Buy_And_Sale() {
 
               <div className="col-es-12 col-sm-12 col-md-12 col-lg-6 col-xl-6 col-xxl-6">
                 <div className="card" id="card_02_BAS">
-                  <img id="image_02_BAS" src={require('./image/12.gif')} alt="Sale" />
+                  <img id="image_02_BAS" src="/image/12.gif" alt="Sale" />
                   <div id="card_body_02_BAS" className="card-body">
                     <button type="button" id="btn_02_BAS" className="btn btn-dark" onClick={click}>SALE</button>
                   </div>

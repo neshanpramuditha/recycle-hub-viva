@@ -1,39 +1,196 @@
-#background-image-register{
-            background-image:url(image/14.jpg);
-            background-position:center;
-            background-repeat:no-repeat;
-            background-size:cover;
+
+/* Register page container */
+.register-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
 
-#create-account-register{
-           font-size:27px;
-           color:black;
-           margin-left:130px;
-           font-weight:bold;
-           
-           
-           
+#background-image-register {
+    background-image: url(image/14.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
 }
 
-#second-div-register{
-           background-color:rgb(239, 211, 183);
+/* Overlay for better readability */
+#background-image-register::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
 }
 
-#Banking-Information-register{
-             font-size:25px;
-             font-weight:bold;
+/* Registration form container */
+.register-form-container {
+    position: relative;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    max-width: 500px;
+    width: 100%;
+    backdrop-filter: blur(10px);
 }
 
-
-#Bank-Name-register{
-        margin-top:10px;
+#create-account-register {
+    font-size: clamp(20px, 4vw, 27px);
+    color: #333;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
 }
 
-#submit-register{font-size:20px;
-        margin-left: 190px;
-        margin-bottom:40px;
-        margin-top:15px;
-       }
+#second-div-register {
+    background-color: #f8f9fa;
+    padding: 25px;
+    border-radius: 12px;
+    margin: 20px 0;
+    border-left: 4px solid #007bff;
+}
+
+#Banking-Information-register {
+    font-size: clamp(18px, 3vw, 25px);
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Form inputs styling */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+#Bank-Name-register {
+    margin-top: 10px;
+}
+
+#submit-register {
+    font-size: clamp(16px, 2.5vw, 20px);
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+    margin: 25px auto 0 auto;
+    font-weight: 600;
+    min-width: 150px;
+}
+
+#submit-register:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+}
+
+#submit-register:active {
+    transform: translateY(0);
+}
+
+/* Mobile responsive design */
+@media (max-width: 768px) {
+    .register-container {
+        padding: 15px;
+    }
+    
+    #background-image-register {
+        background-attachment: scroll;
+    }
+    
+    .register-form-container {
+        padding: 30px 20px;
+        margin: 10px;
+    }
+    
+    #second-div-register {
+        padding: 20px;
+        margin: 15px 0;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    #submit-register {
+        margin: 20px auto 0 auto;
+        padding: 12px 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .register-container {
+        padding: 10px;
+    }
+    
+    .register-form-container {
+        padding: 25px 15px;
+        border-radius: 10px;
+    }
+    
+    #create-account-register {
+        margin-bottom: 20px;
+    }
+    
+    #second-div-register {
+        padding: 15px;
+        margin: 10px 0;
+    }
+    
+    .form-group input,
+    .form-group select {
+        padding: 10px 12px;
+    }
+    
+    #submit-register {
+        padding: 10px 20px;
+        margin: 15px auto 0 auto;
+    }
+}
 
 
 

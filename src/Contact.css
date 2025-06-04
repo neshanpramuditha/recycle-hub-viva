@@ -1,54 +1,165 @@
-#Main-topic-contact{
-             font-size:45px;
-             font-family:impact;
-             border-bottom: 3px solid black;
 
+/* Container for contact form */
+.contact-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px;
 }
 
-#question-contact{
-            font-size:25px;
-            margin-left: 380px;
-            font-family: Times;
+#Main-topic-contact {
+    font-size: clamp(32px, 5vw, 45px);
+    font-family: Impact, Arial Black, sans-serif;
+    border-bottom: 3px solid #333;
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    color: #333;
 }
 
-#Email-contact{
-         font-size:22px;
-         font-family: Times;
-         margin-left:100px;
-
+#question-contact {
+    font-size: clamp(18px, 3vw, 25px);
+    font-family: 'Times New Roman', serif;
+    text-align: center;
+    margin-bottom: 40px;
+    color: #555;
+    line-height: 1.5;
 }
 
-#input-01-contact{
-          width:500px;
-          margin-left:100px;
+/* Form styling */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
 }
 
-#input-02-contact{
-    width:500px;
-    margin-left:100px;
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
-#name-contact{
-         font-size:22px;
-         font-family: Times;
-         margin-left:100px;
+#Email-contact,
+#name-contact,
+#massage-contact {
+    font-size: clamp(18px, 2.5vw, 22px);
+    font-family: 'Times New Roman', serif;
+    color: #333;
+    font-weight: 600;
 }
 
-#massage-contact{
-    font-size:22px;
-    font-family: Times;
-    margin-left:100px;
+#input-01-contact,
+#input-02-contact {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    font-family: Arial, sans-serif;
 }
 
-#textarea-contact{
-    margin-left:100px;
-    width:1100px;
+#input-01-contact:focus,
+#input-02-contact:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
-#submit-contact{
-       padding: 5px 30px;
-       font-size:30px;
-       font-family:Times;
+#textarea-contact {
+    width: 100%;
+    min-height: 120px;
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    resize: vertical;
+    font-family: Arial, sans-serif;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#textarea-contact:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+#submit-contact {
+    padding: 15px 40px;
+    font-size: clamp(18px, 3vw, 30px);
+    font-family: 'Times New Roman', serif;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    align-self: center;
+    margin-top: 20px;
+    font-weight: 600;
+}
+
+#submit-contact:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
+}
+
+#submit-contact:active {
+    transform: translateY(0);
+}
+
+/* Mobile responsive design */
+@media (max-width: 768px) {
+    .contact-container {
+        padding: 30px 15px;
+    }
+    
+    #question-contact {
+        margin-bottom: 30px;
+    }
+    
+    .contact-form {
+        gap: 20px;
+    }
+    
+    #submit-contact {
+        padding: 12px 30px;
+        margin-top: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .contact-container {
+        padding: 20px 10px;
+    }
+    
+    #Main-topic-contact {
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+    }
+    
+    #question-contact {
+        margin-bottom: 25px;
+    }
+    
+    .contact-form {
+        gap: 15px;
+    }
+    
+    #input-01-contact,
+    #input-02-contact,
+    #textarea-contact {
+        padding: 10px 12px;
+    }
+    
+    #textarea-contact {
+        min-height: 100px;
+    }
+    
+    #submit-contact {
+        padding: 10px 25px;
+    }
+}
        margin-left: 570px;
 }
 
