@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import { 
-  FaMoon, 
-  FaSun, 
-  FaEnvelope, 
-  FaUser, 
-  FaPhone, 
+import React, { useState } from "react";
+import {
+  FaMoon,
+  FaSun,
+  FaEnvelope,
+  FaUser,
+  FaPhone,
   FaMapMarkerAlt,
   FaPaperPlane,
-  FaComment
-} from 'react-icons/fa';
-import './Contact.css';
+  FaComment,
+} from "react-icons/fa";
+import "./Contact.css";
 
 const Contact = () => {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [formData, setFormData] = useState({
-    email: '',
-    name: '',
-    phone: '',
-    message: ''
+    email: "",
+    name: "",
+    phone: "",
+    message: "",
   });
 
   const toggleDarkMode = () => {
@@ -31,9 +31,9 @@ const Contact = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -43,20 +43,21 @@ const Contact = () => {
     const { email, name, phone, message } = formData;
     alert(
       `Contact Form Submitted:\n` +
-      `Email: ${email}\n` +
-      `Name: ${name}\n` +
-      `Phone: ${phone}\n` +
-      `Message: ${message}`
+        `Email: ${email}\n` +
+        `Name: ${name}\n` +
+        `Phone: ${phone}\n` +
+        `Message: ${message}`
     );
   };
 
   return (
-    <div id="background" className={isDarkMode ? 'dark-mode' : ''}>
+    <div id="background" className={isDarkMode ? "dark-mode" : ""}>
       <div className="container">
         <div className="row">
           <div className="col-12 mt-5">
-            <br/><br/>
-            <button 
+            <br />
+            <br />
+            <button
               onClick={toggleDarkMode}
               className="btn btn-link p-0 me-3"
               id="light_contact"
@@ -73,12 +74,17 @@ const Contact = () => {
               <div className="row">
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label htmlFor="email" className="form-label" id="Email-contact">
-                      <FaEnvelope className="me-2" />Email:
+                    <label
+                      htmlFor="email"
+                      className="form-label"
+                      id="Email-contact"
+                    >
+                      <FaEnvelope className="me-2" />
+                      Email:
                     </label>
-                    <input 
-                      type="email" 
-                      className="form-control" 
+                    <input
+                      type="email"
+                      className="form-control"
                       id="email"
                       name="email"
                       placeholder="Enter your Email Address"
@@ -90,12 +96,17 @@ const Contact = () => {
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label htmlFor="name" className="form-label" id="name-contact">
-                      <FaUser className="me-2" />Name:
+                    <label
+                      htmlFor="name"
+                      className="form-label"
+                      id="name-contact"
+                    >
+                      <FaUser className="me-2" />
+                      Name:
                     </label>
-                    <input 
-                      type="text" 
-                      className="form-control" 
+                    <input
+                      type="text"
+                      className="form-control"
                       id="name"
                       name="name"
                       placeholder="Enter your Name"
@@ -111,11 +122,12 @@ const Contact = () => {
                 <div className="col-md-6">
                   <div className="mb-3">
                     <label htmlFor="phone" className="form-label">
-                      <FaPhone className="me-2" />Phone:
+                      <FaPhone className="me-2" />
+                      Phone:
                     </label>
-                    <input 
-                      type="tel" 
-                      className="form-control" 
+                    <input
+                      type="tel"
+                      className="form-control"
                       id="phone"
                       name="phone"
                       placeholder="Enter your Phone Number"
@@ -127,11 +139,12 @@ const Contact = () => {
                 <div className="col-md-6">
                   <div className="mb-3">
                     <label htmlFor="location" className="form-label">
-                      <FaMapMarkerAlt className="me-2" />Location:
+                      <FaMapMarkerAlt className="me-2" />
+                      Location:
                     </label>
-                    <input 
-                      type="text" 
-                      className="form-control" 
+                    <input
+                      type="text"
+                      className="form-control"
                       id="location"
                       placeholder="Your Location (Optional)"
                     />
@@ -141,10 +154,11 @@ const Contact = () => {
 
               <div className="mb-3">
                 <label htmlFor="message" className="form-label">
-                  <FaComment className="me-2" />Message:
+                  <FaComment className="me-2" />
+                  Message:
                 </label>
-                <textarea 
-                  className="form-control" 
+                <textarea
+                  className="form-control"
                   id="message"
                   name="message"
                   rows="5"

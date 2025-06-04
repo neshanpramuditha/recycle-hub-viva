@@ -52,7 +52,9 @@ const Services = () => {
 
   return (
     <div id="background" className={isDarkMode ? "dark-mode" : ""}>
-      <div className="services-container">        <div className="services-header">
+      <div className="services-container">
+        {" "}
+        <div className="services-header">
           <div className="header-content">
             <h1 className="main-title">
               <b>Classic Collectors Hub</b>

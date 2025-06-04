@@ -15,8 +15,8 @@ export default function About() {
   const { isDarkMode } = useTheme();
 
   return (
-    <div className="about-page">
-      <div id="background_about">
+    <div className={`about-page ${isDarkMode ? 'dark-mode' : ''}`}>
+      <div className="about-container">
         <div className="row">
           <div className="col-12">
             <span id="Your_second_hand_marketplace_about">

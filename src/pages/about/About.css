@@ -1,3 +1,12 @@
+/* About Page Styles with Theme Support */
+.about-container {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  padding: 2rem 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 #image_about {
   /* add css for image*/
   width: 420px;
@@ -5,28 +14,34 @@
   margin-top: 70px;
   margin-right: 70px;
   margin-bottom: 70px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px var(--shadow-color);
+  transition: box-shadow 0.3s ease;
 }
 
 #Your_second_hand_marketplace_about {
   /*add css for main topic*/
   font-family: impact;
   font-size: 40px;
-  color: black;
-  border-bottom: 3px solid black;
+  color: var(--text-primary);
+  border-bottom: 3px solid var(--primary-color);
+  transition: color 0.3s ease, border-color 0.3s ease;
 }
 
 #Promote_Effective_about {
   /*add css for sub topic 01*/
-  color: black;
+  color: var(--text-secondary);
   font-size: 24px;
   margin-left: 50px;
+  transition: color 0.3s ease;
 }
 
 #Foster_Circular_Economy_about {
   /*add css for sub topic 02*/
-  color: black;
+  color: var(--text-secondary);
   font-size: 24px;
   margin-left: 50px;
+  transition: color 0.3s ease;
 }
 
 #Drive_Behavioral_Change {

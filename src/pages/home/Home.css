@@ -15,55 +15,56 @@
 
 /* Hero Section */
 #background_image {
-    background: linear-gradient(var(--home-bg-overlay-light)), url('/image/1.jpg');
-    background-size: cover;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    background-position: center center;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
+  background: linear-gradient(var(--home-bg-overlay-light)), url("/image/1.jpg");
+  background-size: cover;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: center center;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 /* Parallax effect for mobile */
 @media (max-width: 768px) {
-    #background_image {
-        background-attachment: scroll;
-    }
+  #background_image {
+    background-attachment: scroll;
+  }
 }
 
 /* Hero Content Container */
 .hero-content {
-    padding: 2rem 0;
-    text-align: center;
-    width: 100%;
+  padding: 2rem 0;
+  text-align: center;
+  width: 100%;
 }
 
 /* Main Title */
 #Recycle_Hub_home {
-    font-size: clamp(3rem, 8vw, 6rem);
-    font-family: 'Times New Roman', serif;
-    color: white;
-    font-weight: bold;
-    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
-    margin-bottom: 1rem;
-    animation: fadeInUp 1s ease-out;
-    line-height: 1.1;
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-family: "Times New Roman", serif;
+  color: white;
+  font-weight: bold;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+  margin-bottom: 1rem;
+  animation: fadeInUp 1s ease-out;
+  line-height: 1.1;
 }
 
 /* Subtitle */
 #Buy_and_Sell_home {
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
-    color: #e8f5e8;
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-    margin-bottom: 2rem;
-    animation: fadeInUp 1s ease-out 0.3s both;
-    font-weight: 300;
-    letter-spacing: 1px;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  color: #e8f5e8;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  margin-bottom: 2rem;
+  animation: fadeInUp 1s ease-out 0.3s both;
+  font-weight: 300;
+  letter-spacing: 1px;
 }
 
 /* CTA Button */
@@ -95,139 +96,144 @@
 }
 
 #button_home:active {
-    transform: translateY(-2px) scale(1.02);
+  transform: translateY(-2px) scale(1.02);
 }
 
 /* Responsive Design */
 @media (max-width: 1200px) {
-    .hero-content {
-        padding: 1.5rem 1rem;
-    }
+  .hero-content {
+    padding: 1.5rem 1rem;
+  }
 }
 
 @media (max-width: 992px) {
-    #background_image {
-        min-height: 90vh;
-    }
-    
-    .hero-content {
-        padding: 1rem;
-    }
+  #background_image {
+    min-height: 90vh;
+  }
+
+  .hero-content {
+    padding: 1rem;
+  }
 }
 
 @media (max-width: 768px) {
-    #background_image {
-        min-height: 80vh;
-        background-position: center top;
-    }
-    
-    .hero-content {
-        padding: 1rem 0.5rem;
-    }
-    
-    #button_home {
-        padding: 0.85rem 1.75rem;
-        margin-bottom: 2rem;
-    }
+  #background_image {
+    min-height: 80vh;
+    background-position: center top;
+  }
+
+  .hero-content {
+    padding: 1rem 0.5rem;
+  }
+
+  #button_home {
+    padding: 0.85rem 1.75rem;
+    margin-bottom: 2rem;
+  }
 }
 
 @media (max-width: 576px) {
-    #background_image {
-        min-height: 75vh;
-        padding: 1rem 0;
-    }
-    
-    .hero-content {
-        padding: 0.5rem;
-    }
-    
-    #Recycle_Hub_home {
-        margin-bottom: 0.75rem;
-    }
-    
-    #Buy_and_Sell_home {
-        margin-bottom: 1.5rem;
-        line-height: 1.3;
-    }
-    
-    #button_home {
-        padding: 0.75rem 1.5rem;
-        margin-bottom: 1rem;
-        width: auto;
-        max-width: 90%;
-    }
+  #background_image {
+    min-height: 75vh;
+    padding: 1rem 0;
+  }
+
+  .hero-content {
+    padding: 0.5rem;
+  }
+
+  #Recycle_Hub_home {
+    margin-bottom: 0.75rem;
+  }
+
+  #Buy_and_Sell_home {
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+  }
+
+  #button_home {
+    padding: 0.75rem 1.5rem;
+    margin-bottom: 1rem;
+    width: auto;
+    max-width: 90%;
+  }
 }
 
 @media (max-width: 400px) {
-    #background_image {
-        min-height: 70vh;
-    }
-    
-    #button_home {
-        padding: 0.7rem 1.25rem;
-        font-size: 0.95rem;
-    }
+  #background_image {
+    min-height: 70vh;
+  }
+
+  #button_home {
+    padding: 0.7rem 1.25rem;
+    font-size: 0.95rem;
+  }
 }
 
 /* Animation keyframes */
 @keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Additional effects */
 #background_image::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(45deg, rgba(22, 160, 133, 0.1), rgba(26, 188, 156, 0.1));
+  background: linear-gradient(
+    45deg,
+    rgba(22, 160, 133, 0.1),
+    rgba(26, 188, 156, 0.1)
+  );
   pointer-events: none;
 }
 
 /* Icon styling in button */
 #button_home .fa-eye {
-    font-size: 1.1em;
-    transition: transform 0.3s ease;
+  font-size: 1.1em;
+  transition: transform 0.3s ease;
 }
 
 #button_home:hover .fa-eye {
-    transform: scale(1.2);
+  transform: scale(1.2);
 }
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
-    #Recycle_Hub_home,
-    #Buy_and_Sell_home {
-        text-shadow: 2px 2px 0px black, -2px -2px 0px black, 2px -2px 0px black, -2px 2px 0px black;
-    }
-    
-    #button_home {
-        border-width: 4px;
-    }
+  #Recycle_Hub_home,
+  #Buy_and_Sell_home {
+    text-shadow: 2px 2px 0px black, -2px -2px 0px black, 2px -2px 0px black,
+      -2px 2px 0px black;
+  }
+
+  #button_home {
+    border-width: 4px;
+  }
 }
 
 /* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
-    #background_image {
-        background-attachment: scroll;
-    }
-    
-    #Recycle_Hub_home,
-    #Buy_and_Sell_home,
-    #button_home {
-        animation: none;
-    }
-    
-    #button_home:hover {
-        transform: none;
-    }
+  #background_image {
+    background-attachment: scroll;
+  }
+
+  #Recycle_Hub_home,
+  #Buy_and_Sell_home,
+  #button_home {
+    animation: none;
+  }
+
+  #button_home:hover {
+    transform: none;
+  }
 }
