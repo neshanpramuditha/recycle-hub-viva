@@ -70,7 +70,7 @@
 
 /* Contact Form Card */
 .contact-form-card {
-  background: var(--bg-primary);
+  background: var(--bg-secondary);
   backdrop-filter: blur(20px);
   border-radius: 25px;
   padding: 3rem;
@@ -130,7 +130,7 @@
 
 .form-label {
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   margin-bottom: 0.75rem;
   display: flex;
   align-items: center;
@@ -150,7 +150,7 @@
   padding: 1rem 1.25rem;
   font-size: 1rem;
   transition: all 0.3s ease;
-  background: var(--bg-primary);
+  background: var(--bg-secondary);
   color: var(--text-primary);
   width: 100%;
   box-sizing: border-box;
@@ -161,6 +161,7 @@
   border-color: var(--secondary-color);
   box-shadow: 0 0 0 4px var(--focus-ring);
   transform: translateY(-2px);
+  background: var(--bg-primary);
 }
 
 .form-control::placeholder {
@@ -227,7 +228,7 @@ textarea.form-control {
 }
 
 .contact-info-card {
-  background: var(--bg-primary);
+  background: var(--bg-secondary);
   backdrop-filter: blur(10px);
   border-radius: 20px;
   padding: 2rem;
