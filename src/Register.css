@@ -1,0 +1,42 @@
+#background-image-register{
+            background-image:url(image/14.jpg);
+            background-position:center;
+            background-repeat:no-repeat;
+            background-size:cover;
+}
+
+#create-account-register{
+           font-size:27px;
+           color:black;
+           margin-left:130px;
+           font-weight:bold;
+           
+           
+           
+}
+
+#second-div-register{
+           background-color:rgb(239, 211, 183);
+}
+
+#Banking-Information-register{
+             font-size:25px;
+             font-weight:bold;
+}
+
+
+#Bank-Name-register{
+        margin-top:10px;
+}
+
+#submit-register{font-size:20px;
+        margin-left: 190px;
+        margin-bottom:40px;
+        margin-top:15px;
+       }
+
+
+
+
+      
+

@@ -1,0 +1,64 @@
+#Main_topic_BAS{/*add css for Main topic*/
+    font-size:40px;
+    font-family:impact;
+    border-bottom: 3px solid black;
+    color:black;
+    
+}
+
+
+
+#card_01_BAS{/*add css for card 01*/
+    width:500px;
+    height:400px;
+    margin-top: 60px;
+    margin-left:60px;
+}
+
+#btn_01_BAS{ /*add css for button 01*/
+    width:180px;
+    height:70px;
+    margin-top: 20px;
+    margin-left: 150px;
+    font-size: 25px;
+    font-family:Times;
+}
+
+#card_body_01_BAS{ /*add css for cord 01 body*/
+    background-color:rgb(224, 218, 209);
+}
+
+
+#card_02_BAS{/*add css for card 02*/
+    width:500px;
+    height:400px;
+    margin-top: 60px;
+    margin-left: 60px;
+}
+
+#card_body_02_BAS{/*add css for card 02 body*/
+    background-color:rgb(224, 218, 209);
+     
+}
+
+
+
+#btn_02_BAS{ /*add css for button  02*/
+    width:180px;
+    height:70px;
+    margin-top: 20px;
+    margin-left: 150px;
+    font-size: 25px;
+    font-family:Times;
+   
+}
+
+#light_BAS{
+    font-size:34px;
+    margin-left: 270px;
+  border-bottom:3px solid black;
+  color:black;
+}
+
+
+

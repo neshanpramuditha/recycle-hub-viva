@@ -1,0 +1,29 @@
+#background_image{
+    background-image:url('image/1.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#Recycle_Hub_home{
+    font-size:95px;
+    font-family:times;
+    color:white;
+    margin-left: 30px;
+    
+}
+
+#Buy_and_Sell_home{font-size: 40px;
+                   margin-left:30px;
+                   color:white;
+                   font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+                  
+                   }
+
+#button_home{
+   font-size:20px;
+   padding:10px 16px;
+   margin-left: 30px;
+   margin-bottom: 325px;
+}
