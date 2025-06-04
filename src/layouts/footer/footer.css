@@ -32,13 +32,14 @@
 }
 
 .site-footer::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="90" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="30" cy="70" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="70" cy="30" r="0.5" fill="rgba(255,255,255,0.05)"/></svg>') repeat;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="90" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="30" cy="70" r="0.5" fill="rgba(255,255,255,0.05)"/><circle cx="70" cy="30" r="0.5" fill="rgba(255,255,255,0.05)"/></svg>')
+    repeat;
   opacity: 0.3;
   pointer-events: none;
 }
@@ -50,9 +51,24 @@
   padding: 4rem 0 2rem;
 }
 
+.footer-content .row {
+  gap: 0;
+  justify-content: space-between;
+}
+
+.footer-content .col-lg-2 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.footer-content .col-lg-3 {
+  padding-right: 2rem;
+}
+
 /* Brand Section */
 .footer-brand {
   margin-bottom: 2rem;
+  text-align: left;
 }
 
 .brand-logo {
@@ -69,8 +85,12 @@
 }
 
 @keyframes rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .brand-name {
@@ -130,19 +150,27 @@
 /* Footer Sections */
 .footer-section {
   height: 100%;
+  padding-right: 1rem;
+  padding-top: 0;
+  text-align: left;
+}
+
+.footer-section:last-child {
+  padding-right: 0;
 }
 
 .footer-title {
   color: white;
   font-size: 1.25rem;
   font-weight: 600;
-  margin-bottom: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
   position: relative;
   padding-bottom: 0.5rem;
 }
 
 .footer-title::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
@@ -201,52 +229,6 @@
   transform: scale(1.2);
 }
 
-/* Contact Info */
-.contact-info {
-  margin-bottom: 2rem;
-}
-
-.contact-item {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 10px;
-  border-left: 4px solid #28a745;
-  transition: all 0.3s ease;
-}
-
-.contact-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateX(5px);
-}
-
-.contact-icon {
-  color: #28a745;
-  font-size: 1.25rem;
-  margin-right: 1rem;
-  margin-top: 0.25rem;
-  flex-shrink: 0;
-}
-
-.contact-details strong {
-  color: white;
-  display: block;
-  margin-bottom: 0.25rem;
-  font-weight: 600;
-}
-
-.contact-details p {
-  color: var(--footer-text-secondary-light);
-  margin: 0;
-  line-height: 1.5;
-}
-
-.site-footer.dark-mode .contact-details p {
-  color: var(--footer-text-secondary-dark);
-}
-
 /* Sustainability Badge */
 .sustainability-badge {
   display: flex;
@@ -259,6 +241,8 @@
   color: white;
   font-weight: 600;
   backdrop-filter: blur(10px);
+  text-align: left;
+  margin-top: 1rem;
 }
 
 .sustainability-icon {
@@ -268,60 +252,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
-
-/* Mission Section */
-.mission-section {
-  margin-top: 3rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--footer-border-light);
-}
-
-.site-footer.dark-mode .mission-section {
-  border-top-color: var(--footer-border-dark);
-}
-
-.mission-content {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 15px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.mission-icon {
-  color: #28a745;
-  font-size: 3rem;
-  flex-shrink: 0;
-  animation: float 3s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-}
-
-.mission-text h5 {
-  color: white;
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.mission-text p {
-  color: var(--footer-text-secondary-light);
-  margin: 0;
-  line-height: 1.8;
-  font-size: 1.1rem;
-}
-
-.site-footer.dark-mode .mission-text p {
-  color: var(--footer-text-secondary-dark);
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
 }
 
 /* Footer Bottom */
@@ -329,7 +266,7 @@
   background: rgba(0, 0, 0, 0.3);
   border-top: 1px solid var(--footer-border-light);
   padding: 1.5rem 0;
-  margin-top: 2rem;
+  margin-top: 0;
 }
 
 .site-footer.dark-mode .footer-bottom {
@@ -356,8 +293,13 @@
 }
 
 @keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.2); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
 }
 
 .footer-bottom-links {
@@ -405,62 +347,45 @@
   .footer-content {
     padding: 3rem 0 1.5rem;
   }
-  
-  .brand-logo {
-    justify-content: center;
-    text-align: center;
+
+  .footer-content .row {
+    gap: 1rem;
   }
-  
+
+  .footer-content .col-lg-2,
+  .footer-content .col-lg-3,
+  .footer-content .col-lg-5 {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  .brand-logo {
+    justify-content: flex-start;
+    text-align: left;
+  }
+
   .brand-icon {
     font-size: 2rem;
   }
-  
+
   .brand-name {
     font-size: 1.75rem;
   }
-  
   .social-links {
-    justify-content: center;
+    justify-content: flex-start;
   }
-  
   .footer-section {
-    text-align: center;
+    text-align: left;
     margin-bottom: 2rem;
+  }  .footer-title::after {
+    left: 0;
+    transform: none;
   }
-  
-  .footer-title::after {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  
-  .contact-item {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .contact-icon {
-    margin-right: 0;
-    margin-bottom: 0.5rem;
-  }
-  
-  .mission-content {
-    flex-direction: column;
-    text-align: center;
-    gap: 1.5rem;
-  }
-  
-  .mission-icon {
-    font-size: 2.5rem;
-  }
-  
   .footer-bottom-links {
-    justify-content: center;
+    justify-content: flex-start;
     margin-top: 1rem;
   }
-  
   .copyright {
-    text-align: center;
+    text-align: left;
   }
 }
 
@@ -468,37 +393,24 @@
   .footer-content {
     padding: 2rem 0 1rem;
   }
-  
+
   .brand-name {
     font-size: 1.5rem;
   }
-  
+
   .brand-icon {
     font-size: 1.75rem;
   }
-  
   .social-link {
     width: 40px;
     height: 40px;
   }
-  
-  .mission-content {
-    padding: 1.5rem;
-  }
-  
-  .mission-text h5 {
-    font-size: 1.25rem;
-  }
-  
-  .mission-text p {
-    font-size: 1rem;
-  }
-  
+
   .footer-bottom-links {
     flex-direction: column;
     gap: 0.5rem;
   }
-  
+
   .separator {
     display: none;
   }
@@ -508,14 +420,11 @@
 @media (prefers-reduced-motion: reduce) {
   .brand-icon,
   .sustainability-icon,
-  .mission-icon,
   .heart-icon {
     animation: none;
   }
-  
   .social-link:hover,
   .footer-link:hover,
-  .contact-item:hover,
   .bottom-link:hover {
     transform: none;
   }
@@ -536,13 +445,11 @@
     background: #000;
     border-top: 3px solid #fff;
   }
-  
   .footer-title::after {
     background: #fff;
   }
-  
-  .social-link,
-  .contact-item {
+
+  .social-link {
     border-width: 2px;
   }
 }

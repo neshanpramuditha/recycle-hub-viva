@@ -6,6 +6,9 @@ import {
   FaUsers,
   FaHandshake,
   FaHeart,
+  FaLightbulb,
+  FaShoppingCart,
+  FaTrophy
 } from "react-icons/fa";
 import useTheme from "../../hooks/useTheme";
 import aboutImage from "/image/3.png";
@@ -14,77 +17,132 @@ import "./About.css";
 export default function About() {
   const { isDarkMode } = useTheme();
 
+  const features = [
+    {
+      icon: <FaRecycle />,
+      title: "Waste Reduction",
+      description: "Effective tools for reducing, reusing, and recycling waste through our comprehensive platform."
+    },
+    {
+      icon: <FaShoppingCart />,
+      title: "Second-Hand Marketplace",
+      description: "Buy, sell, and donate items to promote a circular economy and reduce environmental impact."
+    },
+    {
+      icon: <FaUsers />,
+      title: "Community Engagement",
+      description: "Connect with like-minded individuals and participate in recycling challenges together."
+    },
+    {
+      icon: <FaTrophy />,
+      title: "Gamification",
+      description: "Track your progress, earn rewards, and compete in sustainability challenges."
+    },
+    {
+      icon: <FaGlobe />,
+      title: "Environmental Impact",
+      description: "Make a real difference by contributing to global sustainability efforts."
+    },
+    {
+      icon: <FaLightbulb />,
+      title: "Education & Resources",
+      description: "Access guides, tips, and resources for effective waste management and recycling."
+    }
+  ];
+
   return (
-    <div className={`about-page ${isDarkMode ? 'dark-mode' : ''}`}>
+    <div className="">
       <div className="about-container">
-        <div className="row">
-          <div className="col-12">
-            <span id="Your_second_hand_marketplace_about">
-              Your second-hand marketplace.
-            </span>
+        {/* Hero Section */}
+        <div className="hero-section">
+          <div className="hero-content">
+            <div className="hero-text">
+              <h1 className="main-title">About RecycleHub</h1>
+              <p className="hero-subtitle">
+                Your comprehensive platform for sustainable living and circular economy
+              </p>
+              <p className="hero-description">
+                We're dedicated to promoting effective waste reduction, reuse, and recycling 
+                through innovative tools, community engagement, and educational resources.
+              </p>
+            </div>
+            <div className="hero-image">
+              <img src={aboutImage} alt="About RecycleHub" />
+            </div>
           </div>
         </div>
 
-        <div className="row">
-          <div className="col-es-12 col-sm-12 col-md-12 col-lg-12 col-xl-4 col-xxl-4">
-            <img id="image_about" src={aboutImage} alt="About RecycleHub" />
+        {/* Mission Section */}
+        <div className="mission-section">
+          <h2 className="section-title">Our Mission</h2>
+          <div className="mission-grid">
+            <div className="mission-card">
+              <div className="mission-icon">
+                <FaRecycle />
+              </div>
+              <h3>Promote Effective Waste Management</h3>
+              <p>
+                Educate and empower users to reduce, reuse, and recycle waste effectively 
+                through comprehensive tools and resources.
+              </p>
+            </div>
+            <div className="mission-card">
+              <div className="mission-icon">
+                <FaHandshake />
+              </div>
+              <h3>Foster Circular Economy</h3>
+              <p>
+                Create a thriving marketplace and community that encourages sustainable 
+                buying, selling, and sharing practices.
+              </p>
+            </div>
+            <div className="mission-card">
+              <div className="mission-icon">
+                <FaHeart />
+              </div>
+              <h3>Drive Behavioral Change</h3>
+              <p>
+                Motivate sustainable habits through gamification, convenience, and 
+                community-driven initiatives.
+              </p>
+            </div>
           </div>
+        </div>
 
-          <div className="col-es-12 col-sm-12 col-md-12 col-lg-12 col-xl-8 col-xxl-8">
-            <br />
-            <br />
-            <span id="Promote_Effective_about">
-              <b>Promote Effective Waste Reduction, Reuse, and Recycling</b>
-            </span>
-            <ul className="mt-3" id="list01_about">
-              <li className="lead mb-3">
-                To educate and empower users to reduce, reuse, and recycle waste
-                effectively by providing tools like the Waste Sorting
-                Guide,Upcycling & Repair Hub, and Local Recycling Center
-                Locator.
-              </li>
+        {/* Features Section */}
+        <div className="features-section">
+          <h2 className="section-title">What We Offer</h2>
+          <div className="features-grid">
+            {features.map((feature, index) => (
+              <div key={index} className="feature-card">
+                <div className="feature-icon">{feature.icon}</div>
+                <h3 className="feature-title">{feature.title}</h3>
+                <p className="feature-description">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
 
-              <li className="lead  mb-4">
-                Outcome: Users will have the knowledge and resources to properly
-                sort waste , repair and upcycle items, and <br />
-                locate recycling facilities, leading to a significant reduction
-                in waste sent to landfills and an increase in recycling
-                <br /> rates.
-              </li>
-            </ul>
-
-            <span id="Foster_Circular_Economy_about">
-              <b>
-                Foster a Circular Economy Through Community and Marketplace
-                &nbsp;&nbsp;Engagement
-              </b>
-            </span>
-            <ul className="mt-3" id="list02_about">
-              <li className="lead mb-4">
-                Objective: To create a Second-Hand Marketplace and Community
-                Challenges that encourage users to buy, sell,
-                <br /> and donate second-hand items, participate in recycling
-                challenges, and engage with like-minded individuals and
-                businesses.
-              </li>
-            </ul>
-
-            <span id="Drive_Behavioral_Change">
-              <b>
-                {" "}
-                Drive Behavioral Change Through Gamification and Convenience
-              </b>
-            </span>
-            <ul className="mt-3" id="list03_about">
-              <li className="lead">
-                Objective: To motivate users to adopt sustainable habits through
-                Waste Tracker & Gamification features, such as tracking waste
-                reduction progress, earning rewards, and competing in
-                challenges, while also making recycling <br />
-                more convenient through the Local Recycling Center Locator and
-                Business Partnerships.
-              </li>
-            </ul>
+        {/* Impact Section */}
+        <div className="impact-section">
+          <h2 className="section-title">Our Impact</h2>
+          <div className="impact-stats">
+            <div className="stat-card">
+              <div className="stat-number">10K+</div>
+              <div className="stat-label">Items Recycled</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-number">5K+</div>
+              <div className="stat-label">Active Users</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-number">50+</div>
+              <div className="stat-label">Partner Centers</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-number">25%</div>
+              <div className="stat-label">Waste Reduced</div>
+            </div>
           </div>
         </div>
       </div>
