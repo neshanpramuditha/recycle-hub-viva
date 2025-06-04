@@ -1,8 +1,8 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { FaEye, FaRecycle } from "react-icons/fa";
-import "./Home.css";
-import Features from "../../components/ui/features/Features";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { FaEye, FaRecycle } from 'react-icons/fa';
+import Services from '../services/Services';
+import './Home.css';
 
 const Home = () => {
   return (
@@ -19,9 +19,9 @@ const Home = () => {
                 <p id="Buy_and_Sell_home" className="lead mb-5">
                   Buy & Sell Second-Hand Items Easily
                 </p>
-                <Link
-                  to="/services"
-                  className="btn btn-success btn-lg"
+                <Link 
+                  to="/services" 
+                  className="btn btn-success btn-lg" 
                   id="button_home"
                 >
                   <FaEye className="me-2" />
@@ -32,7 +32,7 @@ const Home = () => {
           </div>
         </div>
       </div>
-      <Features />
+      <Services />
     </div>
   );
 };

@@ -3,6 +3,7 @@ import Navbar from "./layouts/navbar/Navbar.jsx";
 import Footer from "./layouts/footer/footer.jsx";
 import Home from "./pages/home/Home.jsx";
 import About from "./pages/about/About.jsx";
+import Services from "./pages/services/Services.jsx";
 import BuyAndSale from "./pages/buy-and-sale/BuyAndSale.jsx";
 import Contact from "./pages/contact/Contact.jsx";
 import PlasticItem from "./components/items/PlasticItem.jsx";
@@ -18,7 +19,6 @@ import Tyre from "./components/items/Tyre.jsx";
 import ElectronicDevice from "./components/items/ElectronicDevice.jsx";
 import IronBar from "./components/items/IronBar.jsx";
 import Book from "./components/items/Book.jsx";
-import Services from "./pages/services/Services.jsx";
 
 export default function App() {
   return (
@@ -31,8 +31,7 @@ export default function App() {
           <Route path="/services" element={<Services />} />
           <Route path="/buy-and-sale" element={<BuyAndSale />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/plastic-item" element={<PlasticItem />} />
-          <Route path="/sale" element={<Sale />} />
+          <Route path="/plastic-item" element={<PlasticItem />} />          <Route path="/sale" element={<Sale />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/sale-add-item" element={<SaleAddItem />} />

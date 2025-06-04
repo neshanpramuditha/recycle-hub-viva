@@ -106,6 +106,36 @@
   transform: translateY(0);
 }
 
+/* Navbar Theme Toggle Styling */
+.navbar .theme-toggle {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.navbar .theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.navbar .theme-toggle:focus {
+  border-color: white;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+/* Dark mode navbar adjustments */
+[data-theme="dark"] .navbar .theme-toggle {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="dark"] .navbar .theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
   #link1 {
