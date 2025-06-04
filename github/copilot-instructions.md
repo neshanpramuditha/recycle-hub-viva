@@ -1,4 +1,0 @@
-- use pure css and react to create a simple webpage
-- use bootstrap for responsive design
-- use pure css for styling
-- use react for interactivity
