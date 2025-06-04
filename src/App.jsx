@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import Navbar from "./layouts/navbar/Navbar.jsx";
+import Footer from "./layouts/footer/footer.jsx";
 import Home from "./pages/home/Home.jsx"
 import About from "./pages/about/About.jsx"
 import Services from "./pages/services/Services.jsx"
@@ -43,6 +44,7 @@ export default function App() {
              <Route path="/iron-bar" element={<IronBar/>}/>
              <Route path="/book" element={<Book/>}/>
          </Routes>
+         <Footer/>
        </BrowserRouter>
     </div>
   );
