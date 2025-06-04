@@ -1,0 +1,62 @@
+#image_about {
+  /* add css for image*/
+  width: 420px;
+  margin-left: 70px;
+  margin-top: 70px;
+  margin-right: 70px;
+  margin-bottom: 70px;
+}
+
+#Your_second_hand_marketplace_about {
+  /*add css for main topic*/
+  font-family: impact;
+  font-size: 40px;
+  color: black;
+  border-bottom: 3px solid black;
+}
+
+#Promote_Effective_about {
+  /*add css for sub topic 01*/
+  color: black;
+  font-size: 24px;
+  margin-left: 50px;
+}
+
+#Foster_Circular_Economy_about {
+  /*add css for sub topic 02*/
+  color: black;
+  font-size: 24px;
+  margin-left: 50px;
+}
+
+#Drive_Behavioral_Change {
+  /*add css for sub topic 03*/
+  color: black;
+  font-size: 24px;
+  margin-left: 40px;
+}
+
+#list01_about {
+  /*add color for list item01*/
+  color: black;
+  font-size: 20px;
+}
+
+#list02_about {
+  /*add color for list item02*/
+  color: black;
+  font-size: 20px;
+}
+
+#list03_about {
+  /*add color for list item03*/
+  color: black;
+  font-size: 20px;
+}
+
+#light {
+  color: black; /*add css for bulb icon*/
+  font-size: 35px;
+  margin-left: 450px;
+  border-bottom: 3px solid black;
+}
