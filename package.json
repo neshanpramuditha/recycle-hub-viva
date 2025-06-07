@@ -11,14 +11,17 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.3.0",
-    "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
-  },  "scripts": {
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.1.4"
+  },
+  "scripts": {
     "dev": "vite",
-    "start": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "react-scripts test"
+    "test": "vite test"
   },
   "eslintConfig": {
     "extends": [
@@ -37,9 +40,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@vitejs/plugin-react": "^4.5.1",
-    "vite": "^6.3.5"
   }
 }

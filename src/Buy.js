@@ -90,7 +90,7 @@ export default function Buy() {
 
             <div class="row">
                 <div class="col-12">
-                    <img src="/image/15.png" alt="shoping" id="image-Buy"/>
+                    <img src={require("./image/15.png")} alt="shoping" id="image-Buy"/>
                 </div>
             </div>
 
@@ -109,7 +109,7 @@ export default function Buy() {
 
                <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                     <div class="card" id="phone-card-buy">
-                       <a href="https://ikman.lk/en/ads/sri-lanka/electronics"><img src={"/image/16.png"} alt="phone" class="card-img-top"/></a>
+                       <a href="https://ikman.lk/en/ads/sri-lanka/electronics"><img src={require("./image/16.png")} alt="phone" class="card-img-top"/></a>
                     </div>
                     <div class="card-body">
                         <a href="https://ikman.lk/en/ads/sri-lanka/electronics" class="nav-link"><span id="phone-buy">Phone</span></a>
@@ -118,7 +118,7 @@ export default function Buy() {
 
                <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                   <div class="card" id="laptop-card-buy">
-                     <a href=""><img src={"/image/17.png"} alt="laptop" class="card-img-top"/></a>
+                     <a href=""><img src={require("./image/17.png")} alt="laptop" class="card-img-top"/></a>
                   </div>
                   <div class="card-body">
                       <a href="" class="nav-link"><span id="laptop-buy">Laptops</span></a>
@@ -127,7 +127,7 @@ export default function Buy() {
 
                <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                    <div class="card" id="computer-card-buy">
-                        <a href=""><img src={"/image/18.png"} alt="" class="card-img-top"/></a>
+                        <a href=""><img src={require("./image/18.png")} alt="" class="card-img-top"/></a>
                    </div>
                    <div class="card-body">
                       <a href="" class="nav-link"><span id="computer-buy">Computers</span></a>
@@ -136,7 +136,7 @@ export default function Buy() {
 
                <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                   <div class="card" id="Audio-card-buy">
-                      <a href=""><img src={"/image/19.png"} alt="Audio" class="card-img-top"/></a>
+                      <a href=""><img src={require("./image/19.png")} alt="Audio" class="card-img-top"/></a>
                   </div>
                   <div class="card-body">
                        <a href="" class="nav-link"><span id="Audio-buy">Audio </span></a>
@@ -145,7 +145,7 @@ export default function Buy() {
 
                <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                    <div class="card" id="tv-card-buy">
-                      <a href=""><img src={"/image/20.png"} alt="tv" class="card-img-top"/> </a> 
+                      <a href=""><img src={require("./image/20.png")} alt="tv" class="card-img-top"/> </a> 
                    </div> 
                    <div class="card-body">
                           <a href="" class="nav-link"><span id="tv-buy">TVs</span></a>
@@ -154,7 +154,7 @@ export default function Buy() {
 
                <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                    <div class="card" id="Home-Appliances-card-buy">
-                       <a href=""><img src={"/image/21.png"} alt="Home Appliances"  class="card-img-top"/></a>
+                       <a href=""><img src={require("./image/21.png")} alt="Home Appliances"  class="card-img-top"/></a>
                    </div>
                    <div class="card-body">
                        <a href="" class="nav-link"><span id="Home-Appliances-buy">Home Appliances</span></a>
@@ -170,7 +170,7 @@ export default function Buy() {
                 <div class="row">
                   <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                       <div class="card" id="Sofas-card-buy">
-                         <a href=""><img src={"/image/22.png"} alt="Sofas" class="card-img-top"/></a>
+                         <a href=""><img src={require("./image/22.png")} alt="Sofas" class="card-img-top"/></a>
                       </div>
                       <div class="card-body">
                           <a href="" class="nav-link"><span id="sofa-buy">Sofas</span></a>
@@ -179,7 +179,7 @@ export default function Buy() {
 
                       <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                            <div class="card" id="Desks-desk-buy">
-                               <a href=""><img src={"/image/23.png"} alt="Desks" class="card-img-top"/></a>
+                               <a href=""><img src={require("./image/23.png")} alt="Desks" class="card-img-top"/></a>
                            </div>
                            <div class="card-body">
                               <a href="" class="nav-link"><span id="Desks-buy">Desks</span></a>
@@ -188,7 +188,7 @@ export default function Buy() {
 
                       <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                           <div class="card" id="Mattresses-card-buy">
-                              <a href=""><img src={"/image/24.png"} alt="Mattresses" class="card-img-top"/></a>
+                              <a href=""><img src={require("./image/24.png")} alt="Mattresses" class="card-img-top"/></a>
                           </div>
                           <div>
                               <a href="" class="nav-link"><span id="Mattresses-buy">Mattresses</span></a>
@@ -197,7 +197,7 @@ export default function Buy() {
 
                       <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                           <div class="card" id="Cupboards-card-buy">
-                              <a href=""><img src={"/image/25.png"} alt="Cupboards" class="card-img-top"/></a>
+                              <a href=""><img src={require("./image/25.png")} alt="Cupboards" class="card-img-top"/></a>
                           </div>
                           <div class="card-body">
                               <a href="" class="nav-link"> <span id="Cupboards-buy">Cupboards</span></a>
@@ -206,7 +206,7 @@ export default function Buy() {
 
                       <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                          <div class="card" id="Beds-card-buy">
-                            <a href=""><img src={"/image/26.png"} alt="Beds"  class="card-img-top"/></a> 
+                            <a href=""><img src={require("./image/26.png")} alt="Beds"  class="card-img-top"/></a> 
                          </div>
                          <div>
                             <a href="" class="nav-link"><span id="Beds-buy">Beds</span></a>
@@ -223,7 +223,7 @@ export default function Buy() {
 
                       <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                           <div class="card" id="men-card-buy">
-                              <a href=""><img src={"/image/27.jpg"} alt="Men’s Cloth" class="card-img-top"/></a>
+                              <a href=""><img src={require("./image/27.jpg")} alt="Men’s Cloth" class="card-img-top"/></a>
                           </div>
                           <div class="card-body">
                                <a href="" class="nav-link"><span id="men-buy">Men’s Cloth</span></a>
@@ -232,7 +232,7 @@ export default function Buy() {
 
                       <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                           <div class="card" id="Women-card-buy">
-                              <a href=""> <img src={"/image/28.png"} alt="Women’s Cloth" class="card-img-top"/></a>
+                              <a href=""> <img src={require("./image/28.png")} alt="Women’s Cloth" class="card-img-top"/></a>
                           </div>
                           <div class="card-body">
                               <a href="" class="nav-link"><span id="Women-buy">Women’s Cloth</span></a>
@@ -241,7 +241,7 @@ export default function Buy() {
 
                       <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                           <div class="card" id="Kids-card-buy">
-                              <a href=""><img src={"/image/29.png"} alt="Kids’ Cloth" class="card-img-top"/></a>
+                              <a href=""><img src={require("./image/29.png")} alt="Kids’ Cloth" class="card-img-top"/></a>
                           </div>
                           <div class="card-body">
                               <a href="" class="nav-link"><span id="Kids-buy">Kids’ Cloth</span></a>
@@ -250,7 +250,7 @@ export default function Buy() {
 
                       <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                          <div class="card" id="Shoes-card-buy">
-                              <a href=""><img src={"/image/30.png"} alt="Shoes" class="card-img-top"/></a>
+                              <a href=""><img src={require("./image/30.png")} alt="Shoes" class="card-img-top"/></a>
                          </div>
                          <div class="card-body">
                              <a href="" class="nav-link"><span id="Shoes-buy">Shoes</span></a>
@@ -259,7 +259,7 @@ export default function Buy() {
 
                       <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                          <div class="card" id="Bags-card-buy">
-                             <a href=""><img src={"/image/31.png"} alt="Bags" class="card-img-top"/></a>
+                             <a href=""><img src={require("./image/31.png")} alt="Bags" class="card-img-top"/></a>
                          </div>
                          <div class="card-body">
                              <a href="" class="nav-link"><span id="Bags-buy">Bags</span></a>
@@ -276,7 +276,7 @@ export default function Buy() {
 
                       <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                           <div class="card" id="ExerciseItem-card-buy">
-                              <a href=""><img src={"/image/32.png"} alt="Exercise Item" class="card-img-top"/></a>
+                              <a href=""><img src={require("./image/32.png")} alt="Exercise Item" class="card-img-top"/></a>
                           </div>
                           <div class="card-body">
                                  <a href="" class="nav-link"> <span id="ExerciseItem-buy">Exercise Item</span></a>
@@ -285,7 +285,7 @@ export default function Buy() {
 
                       <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                           <div class="card" id="Bicycle-card-buy">
-                              <a href=""><img src={"/image/33.png"} alt="Bicycles" class="card-img-top"/></a>
+                              <a href=""><img src={require("./image/33.png")} alt="Bicycles" class="card-img-top"/></a>
                           </div>
                           <div class="card-body">
                               <a href="" class="nav-link"><span id="Bicycle-buy">Bicycles</span></a>
@@ -294,7 +294,7 @@ export default function Buy() {
 
                       <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                         <div class="card" id="SportsItem-card-buy">
-                           <a href=""><img src={"/image/34.png"} alt="Sports Item"  class="card-img-top"/></a>
+                           <a href=""><img src={require("./image/34.png")} alt="Sports Item"  class="card-img-top"/></a>
                         </div>
                         <div class="card-body">
                            <a href="" class="nav-link"><span id="SportsItem-buy">Sports Item</span></a>
@@ -310,7 +310,7 @@ export default function Buy() {
 
                       <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                           <div class="card" id="bike-card-buy">
-                              <a href=""><img src={"/image/35.png"} alt="bike" class="card-img-top"/></a>
+                              <a href=""><img src={require("./image/35.png")} alt="bike" class="card-img-top"/></a>
                           </div>
                           <div class="card-body">
                               <a href="" class="nav-link"> <span id="bike-buy">bikes</span></a>
@@ -319,7 +319,7 @@ export default function Buy() {
 
                       <div class="col-es-12 col-sm-12 col-md-4 col-lg-1 col-xl-1 col-xxl-1">
                           <div class="card" id="car-card-buy">
-                               <a href=""><img src={"/image/36.png"} alt="car" class="card-img-top"/></a>
+                               <a href=""><img src={require("./image/36.png")} alt="car" class="card-img-top"/></a>
                           </div>
                           <div class="card-body">
                                <a href="" class="nav-link"><span id="car-buy">Cars</span></a>

@@ -1,104 +1,62 @@
-
-/* Container for better layout */
-.about-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
 #image_about {
-  /* Responsive image */
-  width: 100%;
-  max-width: 420px;
-  height: auto;
-  margin: 20px auto;
-  display: block;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* add css for image*/
+  width: 420px;
+  margin-left: 70px;
+  margin-top: 70px;
+  margin-right: 70px;
+  margin-bottom: 70px;
 }
 
 #Your_second_hand_marketplace_about {
-  /* Main topic - responsive heading */
-  font-family: Impact, Arial Black, sans-serif;
-  font-size: clamp(28px, 5vw, 40px);
-  color: #333;
-  border-bottom: 3px solid #333;
-  padding-bottom: 10px;
-  margin: 30px 0 20px 0;
-  text-align: center;
+  /*add css for main topic*/
+  font-family: impact;
+  font-size: 40px;
+  color: black;
+  border-bottom: 3px solid black;
 }
 
-#Promote_Effective_about,
-#Foster_Circular_Economy_about,
+#Promote_Effective_about {
+  /*add css for sub topic 01*/
+  color: black;
+  font-size: 24px;
+  margin-left: 50px;
+}
+
+#Foster_Circular_Economy_about {
+  /*add css for sub topic 02*/
+  color: black;
+  font-size: 24px;
+  margin-left: 50px;
+}
+
 #Drive_Behavioral_Change {
-  /* Sub topics - consistent styling */
-  color: #555;
-  font-size: clamp(18px, 3vw, 24px);
-  margin: 20px 0 15px 20px;
-  font-weight: 600;
-  line-height: 1.4;
+  /*add css for sub topic 03*/
+  color: black;
+  font-size: 24px;
+  margin-left: 40px;
 }
 
-#list01_about,
-#list02_about,
+#list01_about {
+  /*add color for list item01*/
+  color: black;
+  font-size: 20px;
+}
+
+#list02_about {
+  /*add color for list item02*/
+  color: black;
+  font-size: 20px;
+}
+
 #list03_about {
-  /* List items - improved readability */
-  color: #666;
-  font-size: clamp(16px, 2.5vw, 20px);
-  margin: 10px 0;
-  padding: 8px 15px;
-  background-color: #f8f9fa;
-  border-radius: 5px;
-  border-left: 4px solid #007bff;
-  line-height: 1.5;
+  /*add color for list item03*/
+  color: black;
+  font-size: 20px;
 }
 
 #light {
-  /* Icon styling - responsive */
-  color: #ffc107;
-  font-size: clamp(24px, 4vw, 35px);
-  text-align: center;
-  display: block;
-  margin: 30px auto;
-  padding: 15px;
-  border-bottom: 3px solid #ffc107;
-  max-width: 200px;
-}
-
-/* Mobile-first responsive design */
-@media (max-width: 768px) {
-  .about-container {
-    padding: 15px;
-  }
-  
-  #image_about {
-    margin: 15px auto;
-  }
-  
-  #Promote_Effective_about,
-  #Foster_Circular_Economy_about,
-  #Drive_Behavioral_Change {
-    margin-left: 10px;
-  }
-  
-  #list01_about,
-  #list02_about,
-  #list03_about {
-    margin: 8px 0;
-    padding: 6px 12px;
-  }
-}
-
-@media (max-width: 480px) {
-  .about-container {
-    padding: 10px;
-  }
-  
-  #Your_second_hand_marketplace_about {
-    margin: 20px 0 15px 0;
-  }
-  
-  #light {
-    margin: 20px auto;
-  }
+  color: black; /*add css for bulb icon*/
+  font-size: 35px;
+  margin-left: 450px;
+  border-bottom: 3px solid black;
 }

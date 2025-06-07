@@ -52,7 +52,9 @@ export default function Services() {
               <span id="Classic_Collectors_Hub"><b>Classic Collectors Hub.</b></span>
             </center>
           </div>
-        </div>        <div class="row">
+        </div>
+
+        <div class="row">
           <div class="col-es-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
             <div class="card mt-5" id="card_01_services">
               <img id="card_01_image_services"  src="/image/2.jpg" alt="Plastic Item"/>
@@ -62,7 +64,9 @@ export default function Services() {
                 <br/>
               </div>
             </div>
-          </div>          <div class="col-es-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+          </div>
+
+          <div class="col-es-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
             <div class="card mt-5" id="card_02_services">
               <img id="card_02_image_services" src="/image/5.png" alt="Vidhuru Item"/>
               <div class="card-body" id="card_body_services">
@@ -70,7 +74,9 @@ export default function Services() {
                 <a href="/Glasses" type="button"  id="button_services" class="btn btn-outline-success mb-5">GO HERE</a>
               </div>
             </div>
-          </div>          <div class="col-es-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+          </div>
+
+          <div class="col-es-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
             <div class="card mt-5" id="card_03_services">
               <img id="card_03_image_services"  src="/image/6.jpg" alt="Tyres"/>
               <div class="card-body" id="card_body_services">
@@ -78,7 +84,9 @@ export default function Services() {
                 <a href="/Tyre" type="button" id="button_services" class="btn btn-outline-success">GO HERE</a>
               </div>
             </div>
-          </div>          <div class="col-es-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+          </div>
+
+          <div class="col-es-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
             <div class="card mt-5" id="card_04_services">
               <img id="card_04_image_services"  src="/image/8.jpg" alt="Electronic Device"/>
               <div class="card-body" id="card_body_services">
@@ -86,7 +94,9 @@ export default function Services() {
                 <a href="/Electronic_Device"  type="button" id="button_services" class="btn btn-outline-success">GO HERE</a>
               </div>
             </div>
-          </div>          <div class="col-es-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+          </div>
+
+          <div class="col-es-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
             <div class="card mt-5" id="card_05_services">
               <img id="card_05_image_services"  src="/image/7.jpg" alt="Iron Bars"/>
               <div class="card-body" id="card_body_services">
@@ -97,7 +107,8 @@ export default function Services() {
           </div>
 
 
-            <div class="col-es-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">                 <div id="card_06_services" class="card mt-5">
+            <div class="col-es-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
+                 <div id="card_06_services" class="card mt-5">
                      <img id="card_06_image_services" src="/image/9.jpg" alt="books"/>
 
                      <div class="card-body" id="card_body_services">
