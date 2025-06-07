@@ -12,9 +12,10 @@ export default function Home() {
                       <br/><br/><br/><br/><br/><br/>
                     <span id="Recycle_Hub_home">Recycle &nbsp; Hub</span>
                     <br/>
-                    <span id="Buy_and_Sell_home">Buy & Sell Second-Hand Items Easily</span>
-                    <br/><br/>
+                    <span id="Buy_and_Sell_home">Buy & Sell Second-Hand Items Easily</span>                    <br/><br/>
                     <a href="/Services" type="button" id="button_home" class="btn btn-success">VIEW SERVICES</a>
+                    &nbsp;&nbsp;
+                    <a href="/Buy" type="button" class="btn btn-outline-success">BROWSE PRODUCTS</a>
                     
                 </div>
             </div>
