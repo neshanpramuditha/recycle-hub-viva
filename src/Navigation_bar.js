@@ -1,17 +1,45 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext";
 import "./Navigation_bar.css";
 
 export default function Navigation_bar() {
   const { user, signOut } = useAuth();
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    if (showDropdown) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showDropdown]);
 
   const handleLogout = async () => {
     try {
       await signOut();
+      setShowDropdown(false);
     } catch (error) {
       console.error('Logout error:', error);
     }
+  };
+
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
+
+  const closeDropdown = () => {
+    setShowDropdown(false);
   };
   return (
     <div>
@@ -62,48 +90,103 @@ export default function Navigation_bar() {
                 <Link to="/Contact" className="nav-link active" id="link5">
                   Contact
                 </Link>
-              </li>            </div>            {user ? (
-              <div className="d-flex align-items-center">
-                <li className="nav-item me-3">
-                  <Link to="/Dashboard" className="nav-link text-white">
-                    <i className="fas fa-tachometer-alt me-1"></i>
-                    Dashboard
-                  </Link>
-                </li>
-                <span className="navbar-text me-3 text-white">
-                  Welcome, {user.user_metadata?.full_name || user.email}
-                </span>
-                <button
-                  onClick={handleLogout}
-                  className="btn btn-outline-light btn-sm"
-                  style={{ marginRight: '10px' }}
-                >
-                  Logout
-                </button>
+              </li>            </div>
+              {/* User Icon Dropdown */}
+            <div className="user-dropdown-container" ref={dropdownRef}>
+              <div 
+                className="user-icon-wrapper"
+                onClick={toggleDropdown}
+              >
+                <div className="user-icon">
+                  {user ? (
+                    <div className="user-avatar">
+                      <span className="user-initial">
+                        {user.user_metadata?.full_name ? 
+                          user.user_metadata.full_name.charAt(0).toUpperCase() : 
+                          user.email.charAt(0).toUpperCase()
+                        }
+                      </span>
+                    </div>
+                  ) : (
+                    <i className="fas fa-user"></i>
+                  )}
+                </div>
               </div>
-            ) : (
-              <div className="d-flex">
-                <li className="nav-item me-2">
-                  <Link
-                    to="/Login"
-                    className="btn btn-outline-light nav-link"
-                    style={{ padding: '8px 16px' }}
-                  >
-                    LOGIN
-                  </Link>
-                </li>
-                <li className="nav-item">
-                  <Link
-                    to="/Register"
-                    type="button"
-                    className="btn btn-dark nav-link"
-                    id="signup_button"
-                  >
-                    <b>SIGN UP</b>
-                  </Link>
-                </li>
-              </div>
-            )}
+
+              {/* Dropdown Menu */}
+              {showDropdown && (
+                <div className="user-dropdown">
+                  <div className="dropdown-arrow"></div>
+                  
+                  {user ? (
+                    <div className="dropdown-content">
+                      <div className="user-info">
+                        <div className="user-name">
+                          {user.user_metadata?.full_name || 'User'}
+                        </div>
+                        <div className="user-email">
+                          {user.email}
+                        </div>
+                      </div>
+                      
+                      <div className="dropdown-divider"></div>
+                      
+                      <Link 
+                        to="/Dashboard" 
+                        className="dropdown-item"
+                        onClick={closeDropdown}
+                      >
+                        <i className="fas fa-tachometer-alt me-2"></i>
+                        Dashboard
+                      </Link>
+                      
+                      <Link 
+                        to="/Profile" 
+                        className="dropdown-item"
+                        onClick={closeDropdown}
+                      >
+                        <i className="fas fa-user-cog me-2"></i>
+                        Profile Settings
+                      </Link>
+                      
+                      <div className="dropdown-divider"></div>
+                      
+                      <button 
+                        onClick={handleLogout}
+                        className="dropdown-item logout-btn"
+                      >
+                        <i className="fas fa-sign-out-alt me-2"></i>
+                        Logout
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="dropdown-content">
+                      <div className="auth-message">
+                        <i className="fas fa-user-plus mb-2"></i>
+                        <p>Join Recycle Hub today!</p>
+                      </div>
+                      
+                      <Link 
+                        to="/Login" 
+                        className="dropdown-btn login-btn"
+                        onClick={closeDropdown}
+                      >
+                        <i className="fas fa-sign-in-alt me-2"></i>
+                        Login
+                      </Link>
+                      
+                      <Link 
+                        to="/Register" 
+                        className="dropdown-btn signup-btn"
+                        onClick={closeDropdown}
+                      >
+                        <i className="fas fa-user-plus me-2"></i>
+                        Sign Up
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}            </div>
           </ul>
         </div>
       </nav>
