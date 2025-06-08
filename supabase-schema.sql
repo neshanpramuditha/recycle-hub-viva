@@ -333,9 +333,13 @@ SELECT
     p.*,
     pr.full_name as seller_name,
     pr.phone as seller_phone,
+    pr.email as seller_email,
     pr.location as seller_location,
+    pr.avatar_url as seller_avatar_url,
     pr.rating as seller_rating,
     pr.total_ratings as seller_total_ratings,
+    pr.bio as seller_bio,
+    pr.is_verified as seller_is_verified,
     c.name as category_name,
     c.description as category_description,
     COALESCE(pi.image_url, '/image/placeholder.jpg') as primary_image

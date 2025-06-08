@@ -339,16 +339,164 @@
   border-left: 4px solid #28a745;
 }
 
+/* Enhanced Seller Information Styles */
+.seller-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.seller-avatar {
+  margin-right: 15px;
+}
+
+.avatar-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #28a745;
+}
+
+.avatar-placeholder {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #28a745;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.seller-info-content {
+  flex: 1;
+}
+
 .seller-name {
   font-size: 1.1rem;
   font-weight: 600;
   color: #212529;
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.verified-badge {
+  color: #28a745;
+  font-size: 1rem;
 }
 
 .seller-rating {
-  color: #ffc107;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-bottom: 8px;
+}
+
+.stars {
+  color: #ffc107;
+  font-size: 1rem;
+}
+
+.rating-text {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.rating-count {
+  color: #6c757d;
+  font-size: 0.85rem;
+}
+
+.seller-contact-info {
+  margin: 15px 0;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  color: #495057;
+}
+
+.contact-item i {
+  color: #28a745;
+  width: 16px;
+  font-size: 0.9rem;
+}
+
+.seller-bio {
+  margin: 15px 0;
+  padding: 12px;
+  background: white;
+  border-radius: 6px;
+  border-left: 3px solid #28a745;
+}
+
+.seller-bio h4 {
+  font-size: 1rem;
+  color: #495057;
+  margin-bottom: 8px;
+}
+
+.seller-bio p {
+  color: #6c757d;
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.seller-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-contact-seller,
+.btn-whatsapp-seller {
+  flex: 1;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-contact-seller {
+  background: #007bff;
+  color: white;
+}
+
+.btn-contact-seller:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+.btn-whatsapp-seller {
+  background: #25D366;
+  color: white;
+}
+
+.btn-whatsapp-seller:hover:not(:disabled) {
+  background: #1cb352;
+}
+
+.btn-contact-seller:disabled,
+.btn-whatsapp-seller:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
 }
 
 .seller-rating span {

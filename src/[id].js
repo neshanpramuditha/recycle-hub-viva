@@ -55,20 +55,33 @@ export default function ProductSingle() {
       window.open(`tel:${product.seller_phone}`);
     }
   };
-
   const handleWhatsApp = () => {
     if (product?.seller_phone) {
       const message = `Hi! I'm interested in your ${
         product.title
       } listed on Recycle Hub for LKR ${product.price.toLocaleString()}`;
+      
+      // Clean the phone number and format for WhatsApp
+      let phoneNumber = product.seller_phone.replace(/[^0-9]/g, "");
+      
+      // If it's a Sri Lankan number starting with 0, convert to international format
+      if (phoneNumber.startsWith('0') && phoneNumber.length === 10) {
+        phoneNumber = '94' + phoneNumber.substring(1); // Replace 0 with 94
+      }
+      // If it already starts with 94, use as is
+      else if (phoneNumber.startsWith('94')) {
+        phoneNumber = phoneNumber;
+      }
+      // If it doesn't start with 0 or 94, assume it needs 94 prefix
+      else if (phoneNumber.length === 9) {
+        phoneNumber = '94' + phoneNumber;
+      }
+      
       window.open(
-        `https://wa.me/${product.seller_phone.replace(
-          /[^0-9]/g,
-          ""
-        )}?text=${encodeURIComponent(message)}`
+        `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
       );
     }
-  };  const handleAddToFavorites = async () => {
+  };const handleAddToFavorites = async () => {
     if (!user) {
       toast.error("Please login to add items to favorites!");
       navigate("/auth/login");
@@ -313,19 +326,94 @@ export default function ProductSingle() {
                 <h3>Seller Information</h3>
                 <div className="seller-card">
                   <div className="seller-details">
-                    <div className="seller-name">{product.seller_name || 'Anonymous Seller'}</div>
-                    {product.seller_rating && (
-                      <div className="seller-rating">
-                        {"★".repeat(Math.floor(product.seller_rating))}
-                        {"☆".repeat(5 - Math.floor(product.seller_rating))}
-                        <span>({product.seller_rating}/5)</span>
-                        {product.seller_total_ratings && (
-                          <span className="rating-count"> - {product.seller_total_ratings} ratings</span>
+                    <div className="seller-header">
+                      <div className="seller-avatar">
+                        {product.seller_avatar_url ? (
+                          <img 
+                            src={product.seller_avatar_url} 
+                            alt={product.seller_name} 
+                            className="avatar-image"
+                          />
+                        ) : (
+                          <div className="avatar-placeholder">
+                            {(product.seller_name || 'A').charAt(0).toUpperCase()}
+                          </div>
                         )}
                       </div>
+                      <div className="seller-info-content">
+                        <div className="seller-name">
+                          {product.seller_name || 'Anonymous Seller'}
+                          {product.seller_is_verified && (
+                            <span className="verified-badge" title="Verified Seller">
+                              <i className="fas fa-check-circle"></i>
+                            </span>
+                          )}
+                        </div>
+                        
+                        {product.seller_rating && (
+                          <div className="seller-rating">
+                            <div className="stars">
+                              {"★".repeat(Math.floor(product.seller_rating))}
+                              {"☆".repeat(5 - Math.floor(product.seller_rating))}
+                            </div>
+                            <span className="rating-text">
+                              ({product.seller_rating}/5)
+                            </span>
+                            {product.seller_total_ratings && (
+                              <span className="rating-count">
+                                {product.seller_total_ratings} review{product.seller_total_ratings !== 1 ? 's' : ''}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="seller-contact-info">
+                      <div className="contact-item">
+                        <i className="fas fa-map-marker-alt"></i>
+                        <span>{product.seller_location || product.location || 'Location not specified'}</span>
+                      </div>
+                      
+                      {product.seller_phone && (
+                        <div className="contact-item">
+                          <i className="fas fa-phone"></i>
+                          <span>{product.seller_phone}</span>
+                        </div>
+                      )}
+                      
+                      {product.seller_email && (
+                        <div className="contact-item">
+                          <i className="fas fa-envelope"></i>
+                          <span>{product.seller_email}</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {product.seller_bio && (
+                      <div className="seller-bio">
+                        <h4>About the Seller</h4>
+                        <p>{product.seller_bio}</p>
+                      </div>
                     )}
-                    <div className="seller-location">
-                      📍 {product.seller_location || product.location}
+                    
+                    <div className="seller-actions">
+                      <button 
+                        onClick={handleContactSeller}
+                        className="btn btn-contact-seller"
+                        disabled={!product.seller_phone}
+                      >
+                        <i className="fas fa-phone"></i>
+                        Call Seller
+                      </button>
+                      <button 
+                        onClick={handleWhatsApp}
+                        className="btn btn-whatsapp-seller"
+                        disabled={!product.seller_phone}
+                      >
+                        <i className="fab fa-whatsapp"></i>
+                        WhatsApp
+                      </button>
                     </div>
                   </div>
                 </div>
