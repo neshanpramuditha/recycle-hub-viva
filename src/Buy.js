@@ -1,42 +1,94 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Buy.css';
-import { getAllProducts } from './lib/productQueries';
+import { getAllProducts, getCategories, addCategory } from './lib/productQueries';
 
 export default function Buy() {
-  const navigate = useNavigate();  const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
+
+  const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const categories = ['All', 'Electronics', 'Furniture', 'Sports', 'Clothing', 'Books', 'Vehicle Parts', 'Others'];
-
+  const [showAddCategory, setShowAddCategory] = useState(false);
+  const [newCategory, setNewCategory] = useState({ name: '', description: '' });
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
   // Load products from Supabase
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        const data = await getAllProducts();
-        setProducts(data || []);
-        setFilteredProducts(data || []);
+        
+        // Fetch both products and categories
+        const [productsData, categoriesData] = await Promise.all([
+          getAllProducts(),
+          getCategories()
+        ]);
+        
+        setProducts(productsData || []);
+        setFilteredProducts(productsData || []);
+        
+        // Add "All" option to categories
+        const allCategories = [
+          { id: 'all', name: 'All' },
+          ...(categoriesData || [])
+        ];
+        setCategories(allCategories);
+        
       } catch (err) {
-        console.error('Error fetching products:', err);
-        setError('Failed to load products. Please try again later.');
+        console.error('Error fetching data:', err);
+        setError('Failed to load data. Please try again later.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchProducts();
+    fetchData();
   }, []);
 
+  // Handle adding new category
+  const handleAddCategory = async (e) => {
+    e.preventDefault();
+    if (!newCategory.name.trim()) return;
+
+    try {
+      setCategoriesLoading(true);
+      const addedCategory = await addCategory({
+        name: newCategory.name.trim(),
+        description: newCategory.description.trim() || null
+      });
+
+      // Update categories list
+      setCategories(prev => [...prev, addedCategory]);
+      
+      // Reset form and close modal
+      setNewCategory({ name: '', description: '' });
+      setShowAddCategory(false);
+      
+      // Show success message
+      alert('Category added successfully!');
+      
+    } catch (err) {
+      console.error('Error adding category:', err);
+      alert('Failed to add category. Please try again.');
+    } finally {
+      setCategoriesLoading(false);
+    }
+  };
   useEffect(() => {
-    let filtered = products;    // Filter by category
+    let filtered = products;
+
+    // Filter by category
     if (selectedCategory !== 'All') {
-      filtered = filtered.filter(product => product.category_name === selectedCategory);
+      // Find the selected category object
+      const selectedCategoryObj = categories.find(cat => cat.name === selectedCategory);
+      if (selectedCategoryObj && selectedCategoryObj.id !== 'all') {
+        filtered = filtered.filter(product => product.category_name === selectedCategory);
+      }
     }
 
     // Filter by search term
@@ -67,7 +119,7 @@ export default function Buy() {
     }
 
     setFilteredProducts(filtered);
-  }, [selectedCategory, searchTerm, sortBy, products]);
+  }, [selectedCategory, searchTerm, sortBy, products, categories]);
 
   const handleProductClick = (productId) => {
     navigate(`/product/${productId}`);
@@ -99,21 +151,26 @@ export default function Buy() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-              </div>
-
-              {/* Categories */}
+              </div>              {/* Categories */}
               <div className="filter-group">
                 <label>Category</label>
                 <div className="category-filters">
                   {categories.map(category => (
                     <button
-                      key={category}
-                      className={`category-btn ${selectedCategory === category ? 'active' : ''}`}
-                      onClick={() => setSelectedCategory(category)}
+                      key={category.id || category.name}
+                      className={`category-btn ${selectedCategory === category.name ? 'active' : ''}`}
+                      onClick={() => setSelectedCategory(category.name)}
                     >
-                      {category}
+                      {category.name}
                     </button>
                   ))}
+                  <button
+                    className="category-btn add-category-btn"
+                    onClick={() => setShowAddCategory(true)}
+                    title="Add new category"
+                  >
+                    <i className="fas fa-plus"></i> Add Category
+                  </button>
                 </div>
               </div>
 
@@ -206,6 +263,69 @@ export default function Buy() {
           </div>
         </div>
       </div>
+
+      {/* Add Category Modal */}
+      {showAddCategory && (
+        <div className="modal-overlay" onClick={() => setShowAddCategory(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Add New Category</h3>
+              <button 
+                className="modal-close"
+                onClick={() => setShowAddCategory(false)}
+              >
+                ×
+              </button>
+            </div>
+            
+            <form onSubmit={handleAddCategory} className="add-category-form">
+              <div className="form-group">
+                <label htmlFor="categoryName">Category Name *</label>
+                <input
+                  type="text"
+                  id="categoryName"
+                  className="form-control"
+                  placeholder="Enter category name"
+                  value={newCategory.name}
+                  onChange={(e) => setNewCategory(prev => ({ ...prev, name: e.target.value }))
+                  }
+                  required
+                />
+              </div>
+              
+              <div className="form-group">
+                <label htmlFor="categoryDescription">Description (Optional)</label>
+                <textarea
+                  id="categoryDescription"
+                  className="form-control"
+                  placeholder="Enter category description"
+                  rows="3"
+                  value={newCategory.description}
+                  onChange={(e) => setNewCategory(prev => ({ ...prev, description: e.target.value }))
+                  }
+                />
+              </div>
+              
+              <div className="modal-actions">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setShowAddCategory(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={categoriesLoading || !newCategory.name.trim()}
+                >
+                  {categoriesLoading ? 'Adding...' : 'Add Category'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

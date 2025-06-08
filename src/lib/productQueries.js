@@ -380,3 +380,29 @@ export async function getUserFavorites(userId) {
     throw error;
   }
 }
+
+// Add a new category
+export async function addCategory(categoryData) {
+  try {
+    const { data, error } = await supabase
+      .from('categories')
+      .insert([{
+        name: categoryData.name,
+        description: categoryData.description || null,
+        icon_url: categoryData.icon_url || '/icons/others.svg',
+        is_active: true
+      }])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error adding category:', error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error in addCategory:', error);
+    throw error;
+  }
+}
