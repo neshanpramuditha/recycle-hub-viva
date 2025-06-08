@@ -342,8 +342,7 @@ SELECT
 FROM products p
 LEFT JOIN profiles pr ON p.seller_id = pr.id
 LEFT JOIN categories c ON p.category_id = c.id
-LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_primary = true
-WHERE p.status = 'available';
+LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_primary = true;
 
 -- Add search_vector column to products table for full-text search
 ALTER TABLE products ADD COLUMN IF NOT EXISTS search_vector tsvector;

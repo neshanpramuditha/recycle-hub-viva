@@ -1,111 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Buy.css';
+import { getAllProducts } from './lib/productQueries';
 
 export default function Buy() {
-  const navigate = useNavigate();
-  const [products, setProducts] = useState([]);
+  const navigate = useNavigate();  const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Mock products data
-  const mockProducts = [
-    {
-      id: 1,
-      name: "Vintage Leather Sofa",
-      price: 15000,
-      originalPrice: 25000,
-      category: "Furniture",
-      condition: "Good",
-      image: "/image/1.jpg",
-      location: "Colombo",
-      datePosted: "2024-12-01",
-      negotiable: true
-    },
-    {
-      id: 2,
-      name: "iPhone 12 Pro",
-      price: 89000,
-      originalPrice: 120000,
-      category: "Electronics",
-      condition: "Excellent",
-      image: "/image/5.png",
-      location: "Kandy",
-      datePosted: "2024-12-03",
-      negotiable: false
-    },
-    {
-      id: 3,
-      name: "Mountain Bike",
-      price: 25000,
-      originalPrice: 35000,
-      category: "Sports",
-      condition: "Good",
-      image: "/image/3.png",
-      location: "Galle",
-      datePosted: "2024-12-02",
-      negotiable: true
-    },
-    {
-      id: 4,
-      name: "Wooden Dining Table",
-      price: 18000,
-      originalPrice: 30000,
-      category: "Furniture",
-      condition: "Fair",
-      image: "/image/4.jpg",
-      location: "Negombo",
-      datePosted: "2024-11-30",
-      negotiable: true
-    },
-    {
-      id: 5,
-      name: "Samsung TV 43 inch",
-      price: 45000,
-      originalPrice: 65000,
-      category: "Electronics",
-      condition: "Good",
-      image: "/image/6.jpg",
-      location: "Colombo",
-      datePosted: "2024-12-04",
-      negotiable: false
-    },
-    {
-      id: 6,
-      name: "Office Chair",
-      price: 12000,
-      originalPrice: 20000,
-      category: "Furniture",
-      condition: "Excellent",
-      image: "/image/7.jpg",
-      location: "Kurunegala",
-      datePosted: "2024-12-01",
-      negotiable: true
-    }
-  ];
+  const categories = ['All', 'Electronics', 'Furniture', 'Sports', 'Clothing', 'Books', 'Vehicle Parts', 'Others'];
 
-  const categories = ['All', 'Electronics', 'Furniture', 'Sports', 'Clothing', 'Books', 'Others'];
-
+  // Load products from Supabase
   useEffect(() => {
-    setProducts(mockProducts);
-    setFilteredProducts(mockProducts);
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await getAllProducts();
+        setProducts(data || []);
+        setFilteredProducts(data || []);
+      } catch (err) {
+        console.error('Error fetching products:', err);
+        setError('Failed to load products. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
   }, []);
 
   useEffect(() => {
-    let filtered = products;
-
-    // Filter by category
+    let filtered = products;    // Filter by category
     if (selectedCategory !== 'All') {
-      filtered = filtered.filter(product => product.category === selectedCategory);
+      filtered = filtered.filter(product => product.category_name === selectedCategory);
     }
 
     // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(product =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.category_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         product.location.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
@@ -119,10 +57,10 @@ export default function Buy() {
         filtered.sort((a, b) => b.price - a.price);
         break;
       case 'newest':
-        filtered.sort((a, b) => new Date(b.datePosted) - new Date(a.datePosted));
+        filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         break;
       case 'oldest':
-        filtered.sort((a, b) => new Date(a.datePosted) - new Date(b.datePosted));
+        filtered.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
         break;
       default:
         break;
@@ -194,9 +132,7 @@ export default function Buy() {
                 </select>
               </div>
             </div>
-          </div>
-
-          {/* Products Grid */}
+          </div>          {/* Products Grid */}
           <div className="col-md-9">
             <div className="products-header">
               <h2>
@@ -205,49 +141,68 @@ export default function Buy() {
               </h2>
             </div>
 
-            <div className="products-grid">
-              {filteredProducts.length > 0 ? (
-                filteredProducts.map(product => (
-                  <div
-                    key={product.id}
-                    className="product-card"
-                    onClick={() => handleProductClick(product.id)}
-                  >
-                    <div className="product-image-container">
-                      <img src={product.image} alt={product.name} className="product-image" />
-                      <div className="product-badges">
-                        {product.negotiable && <span className="badge badge-negotiable">Negotiable</span>}
-                        <span className={`badge badge-condition ${product.condition.toLowerCase()}`}>
-                          {product.condition}
-                        </span>
+            {loading ? (
+              <div className="loading-container">
+                <div className="spinner"></div>
+                <p>Loading products...</p>
+              </div>
+            ) : error ? (
+              <div className="error-container">
+                <h3>Error</h3>
+                <p>{error}</p>
+                <button onClick={() => window.location.reload()} className="btn btn-primary">
+                  Try Again
+                </button>
+              </div>
+            ) : (
+              <div className="products-grid">
+                {filteredProducts.length > 0 ? (
+                  filteredProducts.map(product => (
+                    <div
+                      key={product.id}
+                      className="product-card"
+                      onClick={() => handleProductClick(product.id)}
+                    >
+                      <div className="product-image-container">
+                        <img 
+                          src={product.primary_image || '/image/placeholder.jpg'} 
+                          alt={product.title} 
+                          className="product-image" 
+                        />
+                        <div className="product-badges">
+                          {product.is_negotiable && <span className="badge badge-negotiable">Negotiable</span>}
+                          <span className={`badge badge-condition ${product.condition.toLowerCase()}`}>
+                            {product.condition}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="product-info">
+                        <h3 className="product-name">{product.title}</h3>
+                        <div className="product-pricing">
+                          <span className="current-price">LKR {product.price.toLocaleString()}</span>
+                          {product.original_price && product.original_price > product.price && (
+                            <span className="original-price">LKR {product.original_price.toLocaleString()}</span>
+                          )}
+                        </div>
+                        <div className="product-meta">
+                          <span className="product-location">📍 {product.location}</span>
+                          <span className="product-category">🏷️ {product.category_name}</span>
+                        </div>
+                        <div className="product-date">
+                          Posted: {new Date(product.created_at).toLocaleDateString()}
+                        </div>
                       </div>
                     </div>
-                    
-                    <div className="product-info">
-                      <h3 className="product-name">{product.name}</h3>
-                      <div className="product-pricing">
-                        <span className="current-price">LKR {product.price.toLocaleString()}</span>
-                        {product.originalPrice > product.price && (
-                          <span className="original-price">LKR {product.originalPrice.toLocaleString()}</span>
-                        )}
-                      </div>
-                      <div className="product-meta">
-                        <span className="product-location">📍 {product.location}</span>
-                        <span className="product-category">🏷️ {product.category}</span>
-                      </div>
-                      <div className="product-date">
-                        Posted: {new Date(product.datePosted).toLocaleDateString()}
-                      </div>
-                    </div>
+                  ))
+                ) : (
+                  <div className="no-products">
+                    <h3>No products found</h3>
+                    <p>Try adjusting your filters or search terms.</p>
                   </div>
-                ))
-              ) : (
-                <div className="no-products">
-                  <h3>No products found</h3>
-                  <p>Try adjusting your filters or search terms.</p>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

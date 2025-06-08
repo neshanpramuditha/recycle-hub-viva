@@ -1,0 +1,382 @@
+import { supabase } from './supabase';
+import { uploadProductImages, saveProductImagesToDB } from './storageHelpers';
+
+// Get all available products with seller and category info
+export async function getAllProducts() {
+  try {
+    const { data, error } = await supabase
+      .from('products_with_details')
+      .select('*')
+      .eq('status', 'available')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching products:', error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error in getAllProducts:', error);
+    throw error;
+  }
+}
+
+// Get products by category
+export async function getProductsByCategory(categoryName) {
+  try {
+    const { data, error } = await supabase
+      .from('products_with_details')
+      .select('*')
+      .eq('status', 'available')
+      .eq('category_name', categoryName)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching products by category:', error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error in getProductsByCategory:', error);
+    throw error;
+  }
+}
+
+// Get single product by ID with full details
+export async function getProductById(productId) {
+  try {
+    // Get product with seller and category details
+    const { data: product, error: productError } = await supabase
+      .from('products_with_details')
+      .select('*')
+      .eq('id', productId)
+      .single();
+
+    if (productError) {
+      console.error('Error fetching product:', productError);
+      throw productError;
+    }
+
+    // Get product images
+    const { data: images, error: imagesError } = await supabase
+      .from('product_images')
+      .select('*')
+      .eq('product_id', productId)
+      .order('display_order');
+
+    if (imagesError) {
+      console.error('Error fetching product images:', imagesError);
+    }
+
+    // Get product specifications
+    const { data: specifications, error: specsError } = await supabase
+      .from('product_specifications')
+      .select('*')
+      .eq('product_id', productId);
+
+    if (specsError) {
+      console.error('Error fetching product specifications:', specsError);
+    }
+
+    // Increment view count
+    await incrementProductViews(productId);
+
+    return {
+      ...product,
+      images: images || [],
+      specifications: specifications || []
+    };
+  } catch (error) {
+    console.error('Error in getProductById:', error);
+    throw error;
+  }
+}
+
+// Search products
+export async function searchProducts(searchTerm) {
+  try {
+    const { data, error } = await supabase
+      .from('products_with_details')
+      .select('*')
+      .textSearch('search_vector', searchTerm)
+      .eq('status', 'available')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error searching products:', error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error in searchProducts:', error);
+    throw error;
+  }
+}
+
+// Increment product views
+export async function incrementProductViews(productId) {
+  try {
+    const { error } = await supabase.rpc('increment_product_views', {
+      product_id: productId
+    });
+
+    if (error) {
+      console.error('Error incrementing product views:', error);
+    }
+  } catch (error) {
+    console.error('Error in incrementProductViews:', error);
+  }
+}
+
+// Get user's products (for dashboard/profile)
+export async function getUserProducts(userId) {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .select(`
+        *,
+        categories (
+          name,
+          description
+        ),
+        product_images (
+          image_url,
+          is_primary
+        )
+      `)
+      .eq('seller_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching user products:', error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error in getUserProducts:', error);
+    throw error;
+  }
+}
+
+// Add new product
+export async function addProduct(productData) {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .insert([productData])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error adding product:', error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error in addProduct:', error);
+    throw error;
+  }
+}
+
+// Add new product with images
+export async function addProductWithImages(productData, imageFiles = []) {
+  try {
+    // First, add the product
+    const { data: product, error: productError } = await supabase
+      .from('products')
+      .insert([{
+        seller_id: productData.seller_id,
+        category_id: productData.category_id,
+        title: productData.title,
+        description: productData.description,
+        price: productData.price,
+        original_price: productData.original_price,
+        condition: productData.condition,
+        is_negotiable: productData.is_negotiable || false,
+        location: productData.location,
+        status: 'available'
+      }])
+      .select()
+      .single();
+
+    if (productError) {
+      console.error('Error adding product:', productError);
+      throw productError;
+    }
+
+    // If images are provided, upload them
+    if (imageFiles && imageFiles.length > 0) {
+      const uploadedImages = await uploadProductImages(imageFiles, product.id);
+      
+      if (uploadedImages.length > 0) {
+        await saveProductImagesToDB(product.id, uploadedImages);
+      }
+    }
+
+    return product;
+  } catch (error) {
+    console.error('Error in addProductWithImages:', error);
+    throw error;
+  }
+}
+
+// Add product specifications
+export async function addProductSpecifications(productId, specifications) {
+  try {
+    if (!specifications || specifications.length === 0) return [];
+
+    const specRecords = specifications.map(spec => ({
+      product_id: productId,
+      spec_name: spec.name,
+      spec_value: spec.value
+    }));
+
+    const { data, error } = await supabase
+      .from('product_specifications')
+      .insert(specRecords)
+      .select();
+
+    if (error) {
+      console.error('Error adding specifications:', error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error in addProductSpecifications:', error);
+    throw error;
+  }
+}
+
+// Update product
+export async function updateProduct(productId, updates) {
+  try {
+    const { data, error } = await supabase
+      .from('products')
+      .update(updates)
+      .eq('id', productId)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating product:', error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error in updateProduct:', error);
+    throw error;
+  }
+}
+
+// Delete product
+export async function deleteProduct(productId) {
+  try {
+    const { error } = await supabase
+      .from('products')
+      .delete()
+      .eq('id', productId);
+
+    if (error) {
+      console.error('Error deleting product:', error);
+      throw error;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error in deleteProduct:', error);
+    throw error;
+  }
+}
+
+// Get all categories
+export async function getCategories() {
+  try {
+    const { data, error } = await supabase
+      .from('categories')
+      .select('*')
+      .eq('is_active', true)
+      .order('name');
+
+    if (error) {
+      console.error('Error fetching categories:', error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error in getCategories:', error);
+    throw error;
+  }
+}
+
+// Get similar products by category (excluding current product)
+export async function getSimilarProducts(productId, categoryId, limit = 4) {
+  try {
+    const { data, error } = await supabase
+      .from('products_with_details')
+      .select('*')
+      .eq('status', 'available')
+      .eq('category_id', categoryId)
+      .neq('id', productId)
+      .limit(limit)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching similar products:', error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error in getSimilarProducts:', error);
+    throw error;
+  }
+}
+
+// Get user's favorite products
+export async function getUserFavorites(userId) {
+  try {
+    // First get the product IDs from favorites table
+    const { data: favoriteIds, error: favError } = await supabase
+      .from('favorites')
+      .select('product_id')
+      .eq('user_id', userId);
+
+    if (favError) {
+      console.error('Error fetching favorite IDs:', favError);
+      throw favError;
+    }
+
+    if (!favoriteIds || favoriteIds.length === 0) {
+      return [];
+    }
+
+    // Extract product IDs
+    const productIds = favoriteIds.map(fav => fav.product_id);
+
+    // Get the actual product details
+    const { data: products, error: productError } = await supabase
+      .from('products_with_details')
+      .select('*')
+      .in('id', productIds)
+      .eq('status', 'available')
+      .order('created_at', { ascending: false });
+
+    if (productError) {
+      console.error('Error fetching favorite products:', productError);
+      throw productError;
+    }
+
+    return products;
+  } catch (error) {
+    console.error('Error in getUserFavorites:', error);
+    throw error;
+  }
+}
