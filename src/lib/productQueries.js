@@ -253,6 +253,44 @@ export async function addProductSpecifications(productId, specifications) {
   }
 }
 
+// Delete product specifications
+export async function deleteProductSpecifications(productId) {
+  try {
+    const { error } = await supabase
+      .from('product_specifications')
+      .delete()
+      .eq('product_id', productId);
+
+    if (error) {
+      console.error('Error deleting specifications:', error);
+      throw error;
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error in deleteProductSpecifications:', error);
+    throw error;
+  }
+}
+
+// Update product specifications (replaces all existing specifications)
+export async function updateProductSpecifications(productId, specifications) {
+  try {
+    // First delete existing specifications
+    await deleteProductSpecifications(productId);
+    
+    // Then add new ones if any
+    if (specifications && specifications.length > 0) {
+      return await addProductSpecifications(productId, specifications);
+    }
+    
+    return [];
+  } catch (error) {
+    console.error('Error in updateProductSpecifications:', error);
+    throw error;
+  }
+}
+
 // Update product
 export async function updateProduct(productId, updates) {
   try {

@@ -220,11 +220,13 @@ export default function Buy() {
                       className="product-card"
                       onClick={() => handleProductClick(product.id)}
                     >
-                      <div className="product-image-container">
-                        <img 
-                          src={product.primary_image || '/image/placeholder.jpg'} 
+                      <div className="product-image-container">                        <img 
+                          src={product.primary_image || '/image/placeholder.svg'} 
                           alt={product.title} 
-                          className="product-image" 
+                          className="product-image"
+                          onError={(e) => {
+                            e.target.src = '/image/placeholder.svg';
+                          }}
                         />
                         <div className="product-badges">
                           {product.is_negotiable && <span className="badge badge-negotiable">Negotiable</span>}

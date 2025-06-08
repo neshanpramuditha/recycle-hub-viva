@@ -16,12 +16,14 @@ import Login from "./auth/login/login.js";
 import { AuthProvider } from "./contexts/AuthContext.js";
 import ProtectedRoute from "./components/ProtectedRoute.js";
 import Dashboard from "./components/Dashboard.js";
+import EditProductForm from "./components/EditProductForm.js";
 
 export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Navigation_bar />        <Routes>
+        <Navigation_bar />{" "}
+        <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/About" element={<About />} />
           <Route path="/Services" element={<Services />} />
@@ -31,30 +33,51 @@ export default function App() {
           <Route path="/product/:id" element={<ProductSingle />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/Login" element={<Login />} />
-          
           {/* User Dashboard - Protected Route */}
-          <Route path="/Dashboard" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } />
-          
+          <Route
+            path="/Dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Edit Product - Protected Route */}
+          <Route
+            path="/edit-product/:id"
+            element={
+              <ProtectedRoute>
+                <EditProductForm />
+              </ProtectedRoute>
+            }
+          />
+
           {/* Protected Routes - Require Authentication */}
-          <Route path="/Sale" element={
-            <ProtectedRoute>
-              <Sale />
-            </ProtectedRoute>
-          } />
-          <Route path="/Sale_Add_Item" element={
-            <ProtectedRoute>
-              <Sale_Add_Item />
-            </ProtectedRoute>
-          } />
-          <Route path="/Add_Item_form" element={
-            <ProtectedRoute>
-              <Add_Item_form />
-            </ProtectedRoute>
-          } />
+          <Route
+            path="/Sale"
+            element={
+              <ProtectedRoute>
+                <Sale />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/Sale_Add_Item"
+            element={
+              <ProtectedRoute>
+                <Sale_Add_Item />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/Add_Item_form"
+            element={
+              <ProtectedRoute>
+                <Add_Item_form />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

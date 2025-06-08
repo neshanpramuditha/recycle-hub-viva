@@ -228,12 +228,13 @@ export default function Dashboard() {
       ) : userProducts.length > 0 ? (
         <div className="products-grid">
           {userProducts.map((product) => (
-            <div key={product.id} className="product-card">
-              <div className="product-image-container">
-                <img
-                  src={product.primary_image || "/image/placeholder.jpg"}
+            <div key={product.id} className="product-card">              <div className="product-image-container">                <img
+                  src={product.primary_image || '/image/placeholder.svg'}
                   alt={product.title}
                   className="product-image"
+                  onError={(e) => {
+                    e.target.src = '/image/placeholder.svg';
+                  }}
                 />
                 <div className="product-status">
                   <span className={`status-badge ${product.status}`}>
@@ -317,11 +318,13 @@ export default function Dashboard() {
         <div className="products-grid">
           {favoriteProducts.map((product) => (
             <div key={product.id} className="product-card">
-              <div className="product-image-container">
-                <img
-                  src={product.primary_image || "/image/placeholder.jpg"}
+              <div className="product-image-container">                <img
+                  src={product.primary_image || "/image/placeholder.svg"}
                   alt={product.title}
                   className="product-image"
+                  onError={(e) => {
+                    e.target.src = '/image/placeholder.svg';
+                  }}
                 />
                 <div className="favorite-badge">
                   <i className="fas fa-heart text-danger"></i>
@@ -815,13 +818,15 @@ export default function Dashboard() {
                 <div className="row">
                   {userProducts.slice(0, 4).map((product) => (
                     <div key={product.id} className="col-md-3 col-6 mb-3">
-                      <div className="product-card-mini">
-                        <img
+                      <div className="product-card-mini">                        <img
                           src={
-                            product.primary_image || "/image/placeholder.jpg"
+                            product.primary_image || "/image/placeholder.svg"
                           }
                           alt={product.title}
                           className="product-image-mini"
+                          onError={(e) => {
+                            e.target.src = '/image/placeholder.svg';
+                          }}
                         />
                         <div className="product-info-mini">
                           <h6>{product.title}</h6>
