@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getProductById, getSimilarProducts } from "./lib/productQueries";
+import { getProductById, getSimilarProducts, addToFavorites, removeFromFavorites, isProductFavorited } from "./lib/productQueries";
+import { useAuth } from "./contexts/AuthContext";
+import toast, { Toaster } from 'react-hot-toast';
 import "./ProductSingle.css";
 
 export default function ProductSingle() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [product, setProduct] = useState(null);
   const [similarProducts, setSimilarProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [error, setError] = useState(null);
-  useEffect(() => {
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [favoritesLoading, setFavoritesLoading] = useState(false);  useEffect(() => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
@@ -23,6 +27,12 @@ export default function ProductSingle() {
         if (productData?.category_id) {
           const similar = await getSimilarProducts(productData.id, productData.category_id);
           setSimilarProducts(similar);
+        }
+
+        // Check if product is favorited (only if user is logged in)
+        if (user && productData) {
+          const favorited = await isProductFavorited(user.id, productData.id);
+          setIsFavorited(favorited);
         }
       } catch (err) {
         console.error('Error fetching product:', err);
@@ -35,7 +45,7 @@ export default function ProductSingle() {
     if (id) {
       fetchProduct();
     }
-  }, [id]);
+  }, [id, user]);
 
   const handleImageChange = (index) => {
     setSelectedImage(index);
@@ -58,16 +68,62 @@ export default function ProductSingle() {
         )}?text=${encodeURIComponent(message)}`
       );
     }
-  };
+  };  const handleAddToFavorites = async () => {
+    if (!user) {
+      toast.error("Please login to add items to favorites!");
+      navigate("/auth/login");
+      return;
+    }
 
-  const handleAddToFavorites = () => {
-    // Add to favorites logic here
-    alert("Added to favorites!");
-  };
+    if (!product) return;
 
+    try {
+      setFavoritesLoading(true);
+      
+      if (isFavorited) {
+        // Remove from favorites
+        await removeFromFavorites(user.id, product.id);
+        setIsFavorited(false);
+        
+        // Update the local favorites count
+        setProduct(prev => ({
+          ...prev,
+          favorites_count: Math.max(0, (prev.favorites_count || 0) - 1)
+        }));
+        
+        toast.success("Removed from favorites!", {
+          icon: '💔',
+          duration: 3000,
+        });
+      } else {
+        // Add to favorites
+        await addToFavorites(user.id, product.id);
+        setIsFavorited(true);
+        
+        // Update the local favorites count
+        setProduct(prev => ({
+          ...prev,
+          favorites_count: (prev.favorites_count || 0) + 1
+        }));
+        
+        toast.success("Added to favorites!", {
+          icon: '❤️',
+          duration: 3000,
+        });
+      }
+    } catch (err) {
+      console.error('Error toggling favorite:', err);
+      toast.error("Failed to update favorites. Please try again.");
+    } finally {
+      setFavoritesLoading(false);
+    }
+  };
   const handleBuyNow = () => {
     // Buy now logic here
-    alert(`Proceeding to buy ${quantity} x ${product.title}`);
+    toast.success(`Proceeding to buy ${quantity} x ${product.title}`, {
+      icon: '🛒',
+      duration: 4000,
+    });
   };
   if (loading) {
     return (
@@ -239,12 +295,18 @@ export default function ProductSingle() {
                 </button>
                 <button onClick={handleWhatsApp} className="btn btn-whatsapp">
                   💬 WhatsApp
-                </button>
-                <button
+                </button>                <button
                   onClick={handleAddToFavorites}
-                  className="btn btn-favorite"
+                  className={`btn ${isFavorited ? 'btn-favorited' : 'btn-favorite'}`}
+                  disabled={favoritesLoading}
                 >
-                  ❤ Add to Favorites
+                  {favoritesLoading ? (
+                    <><i className="fas fa-spinner fa-spin"></i> Loading...</>
+                  ) : isFavorited ? (
+                    <><i className="fas fa-heart"></i> Remove from Favorites</>
+                  ) : (
+                    <><i className="far fa-heart"></i> Add to Favorites</>
+                  )}
                 </button>
               </div>              {/* Seller Information */}
               <div className="seller-info">
@@ -325,10 +387,31 @@ export default function ProductSingle() {
                   ))}
                 </div>
               </div>
-            </div>
-          </div>
+            </div>          </div>
         )}
       </div>
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+          success: {
+            style: {
+              background: '#4ade80',
+              color: '#fff',
+            },
+          },
+          error: {
+            style: {
+              background: '#ef4444',
+              color: '#fff',
+            },
+          },
+        }}
+      />
     </div>
   );
 }

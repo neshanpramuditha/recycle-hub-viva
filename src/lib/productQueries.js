@@ -406,3 +406,90 @@ export async function addCategory(categoryData) {
     throw error;
   }
 }
+
+// Add product to favorites
+export async function addToFavorites(userId, productId) {
+  try {
+    const { data, error } = await supabase
+      .from('favorites')
+      .insert([{
+        user_id: userId,
+        product_id: productId
+      }])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error adding to favorites:', error);
+      throw error;
+    }
+
+    // Update the favorites count in products table
+    const { error: updateError } = await supabase.rpc('increment_favorites_count', {
+      product_id: productId
+    });
+
+    if (updateError) {
+      console.error('Error updating favorites count:', updateError);
+      // Don't throw here as the favorite was still added
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error in addToFavorites:', error);
+    throw error;
+  }
+}
+
+// Remove product from favorites
+export async function removeFromFavorites(userId, productId) {
+  try {
+    const { error } = await supabase
+      .from('favorites')
+      .delete()
+      .eq('user_id', userId)
+      .eq('product_id', productId);
+
+    if (error) {
+      console.error('Error removing from favorites:', error);
+      throw error;
+    }
+
+    // Update the favorites count in products table
+    const { error: updateError } = await supabase.rpc('decrement_favorites_count', {
+      product_id: productId
+    });
+
+    if (updateError) {
+      console.error('Error updating favorites count:', updateError);
+      // Don't throw here as the favorite was still removed
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error in removeFromFavorites:', error);
+    throw error;
+  }
+}
+
+// Check if product is in user's favorites
+export async function isProductFavorited(userId, productId) {
+  try {
+    const { data, error } = await supabase
+      .from('favorites')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('product_id', productId)
+      .single();
+
+    if (error && error.code !== 'PGRST116') { // PGRST116 is "not found" error
+      console.error('Error checking if favorited:', error);
+      throw error;
+    }
+
+    return !!data;
+  } catch (error) {
+    console.error('Error in isProductFavorited:', error);
+    return false;
+  }
+}
