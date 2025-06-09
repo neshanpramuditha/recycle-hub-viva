@@ -184,7 +184,7 @@ export async function addProduct(productData) {
 }
 
 // Add new product with images
-export async function addProductWithImages(productData, imageFiles = []) {
+export async function addProductWithImages(productData, processedImages = []) {
   try {
     // First, add the product
     const { data: product, error: productError } = await supabase
@@ -209,13 +209,9 @@ export async function addProductWithImages(productData, imageFiles = []) {
       throw productError;
     }
 
-    // If images are provided, upload them
-    if (imageFiles && imageFiles.length > 0) {
-      const uploadedImages = await uploadProductImages(imageFiles, product.id);
-      
-      if (uploadedImages.length > 0) {
-        await saveProductImagesToDB(product.id, uploadedImages);
-      }
+    // If images are provided, save them to database
+    if (processedImages && processedImages.length > 0) {
+      await saveProductImagesToDB(product.id, processedImages);
     }
 
     return product;

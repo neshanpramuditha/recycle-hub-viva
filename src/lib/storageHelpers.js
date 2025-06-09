@@ -194,3 +194,53 @@ export function validateImageFile(file) {
 
   return { valid: true };
 }
+
+/**
+ * Process URL images for a product
+ * @param {Array<string>} imageUrls - Array of image URLs
+ * @param {number} productId - Product ID for organizing images
+ * @returns {Promise<Array<{url: string, path: string}>>}
+ */
+export async function processProductImageUrls(imageUrls, productId) {
+  try {
+    const validUrls = imageUrls.filter(url => url && url.trim());
+    
+    return validUrls.map((url, index) => ({
+      url: url.trim(),
+      path: `url-${productId}-${index}-${Date.now()}` // Unique identifier for URL images
+    }));
+  } catch (error) {
+    console.error('Error processing image URLs:', error);
+    return [];
+  }
+}
+
+/**
+ * Combine file uploads and URL images for a product
+ * @param {FileList} files - Array of image files to upload
+ * @param {Array<string>} imageUrls - Array of image URLs
+ * @param {number} productId - Product ID for organizing images
+ * @returns {Promise<Array<{url: string, path: string}>>}
+ */
+export async function processAllProductImages(files, imageUrls, productId) {
+  try {
+    const uploadPromises = [];
+    
+    // Process file uploads
+    if (files && files.length > 0) {
+      const uploadedFiles = await uploadProductImages(files, productId);
+      uploadPromises.push(...uploadedFiles);
+    }
+    
+    // Process URL images
+    if (imageUrls && imageUrls.length > 0) {
+      const urlImages = await processProductImageUrls(imageUrls, productId);
+      uploadPromises.push(...urlImages);
+    }
+    
+    return uploadPromises;
+  } catch (error) {
+    console.error('Error processing all product images:', error);
+    return [];
+  }
+}

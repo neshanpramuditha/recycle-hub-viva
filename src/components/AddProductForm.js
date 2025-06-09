@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { getCategories, addProductWithImages, addProductSpecifications } from '../lib/productQueries';
-import { validateImageFile, compressImage } from '../lib/storageHelpers';
+import { validateImageFile, compressImage, processAllProductImages } from '../lib/storageHelpers';
 import './AddProductForm.css';
 
 export default function AddProductForm() {
@@ -24,11 +24,13 @@ export default function AddProductForm() {
     is_negotiable: false,
     location: ''
   });
-
   // Image handling
   const [imageFiles, setImageFiles] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [imageErrors, setImageErrors] = useState([]);
+  const [imageUrls, setImageUrls] = useState(['']);
+  const [urlPreviews, setUrlPreviews] = useState([]);
+  const [urlErrors, setUrlErrors] = useState([]);
 
   // Specifications
   const [specifications, setSpecifications] = useState([
@@ -86,7 +88,6 @@ export default function AddProductForm() {
     setImagePreviews(prev => [...prev, ...previews]);
     setImageErrors(prev => [...prev, ...errors]);
   };
-
   // Remove image
   const removeImage = (index) => {
     // Revoke URL to prevent memory leaks
@@ -95,6 +96,75 @@ export default function AddProductForm() {
     setImageFiles(prev => prev.filter((_, i) => i !== index));
     setImagePreviews(prev => prev.filter((_, i) => i !== index));
     setImageErrors(prev => prev.filter((_, i) => i !== index));
+  };
+
+  // Handle URL input changes
+  const handleUrlChange = (index, value) => {
+    setImageUrls(prev => prev.map((url, i) => i === index ? value : url));
+    
+    // Clear previous error
+    setUrlErrors(prev => prev.map((error, i) => i === index ? null : error));
+    
+    // Validate URL and create preview
+    if (value.trim()) {
+      validateImageUrl(value.trim(), index);
+    } else {
+      setUrlPreviews(prev => prev.map((preview, i) => i === index ? null : preview));
+    }
+  };
+
+  // Validate image URL
+  const validateImageUrl = (url, index) => {
+    // Basic URL validation
+    try {
+      new URL(url);
+      
+      // Check if it looks like an image URL
+      const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+      const hasImageExtension = imageExtensions.some(ext => 
+        url.toLowerCase().includes(ext)
+      );
+      
+      if (!hasImageExtension && !url.includes('unsplash') && !url.includes('imgur') && !url.includes('cloudinary')) {
+        setUrlErrors(prev => prev.map((error, i) => 
+          i === index ? 'URL should point to an image file' : error
+        ));
+        return;
+      }
+      
+      // Test if image loads
+      const img = new Image();
+      img.onload = () => {
+        setUrlPreviews(prev => prev.map((preview, i) => i === index ? url : preview));
+        setUrlErrors(prev => prev.map((error, i) => i === index ? null : error));
+      };
+      img.onerror = () => {
+        setUrlErrors(prev => prev.map((error, i) => 
+          i === index ? 'Unable to load image from this URL' : error
+        ));
+        setUrlPreviews(prev => prev.map((preview, i) => i === index ? null : preview));
+      };
+      img.src = url;
+      
+    } catch (e) {
+      setUrlErrors(prev => prev.map((error, i) => 
+        i === index ? 'Please enter a valid URL' : error
+      ));
+    }
+  };
+
+  // Add URL input field
+  const addUrlField = () => {
+    setImageUrls(prev => [...prev, '']);
+    setUrlPreviews(prev => [...prev, null]);
+    setUrlErrors(prev => [...prev, null]);
+  };
+
+  // Remove URL field
+  const removeUrlField = (index) => {
+    setImageUrls(prev => prev.filter((_, i) => i !== index));
+    setUrlPreviews(prev => prev.filter((_, i) => i !== index));
+    setUrlErrors(prev => prev.filter((_, i) => i !== index));
   };
 
   // Handle specification changes
@@ -121,10 +191,8 @@ export default function AddProductForm() {
     if (!user) {
       setError('You must be logged in to add a product');
       return;
-    }
-
-    if (imageFiles.length === 0) {
-      setError('Please add at least one image');
+    }    if (imageFiles.length === 0 && imageUrls.filter(url => url.trim()).length === 0) {
+      setError('Please add at least one image (file upload or URL)');
       return;
     }
 
@@ -139,10 +207,10 @@ export default function AddProductForm() {
         category_id: parseInt(formData.category_id),
         price: parseFloat(formData.price),
         original_price: formData.original_price ? parseFloat(formData.original_price) : null
-      };
-
-      // Add product with images
-      const product = await addProductWithImages(productData, imageFiles);
+      };      // Add product with images
+      const validUrls = imageUrls.filter(url => url && url.trim());
+      const allImages = await processAllProductImages(imageFiles, validUrls, Date.now());
+      const product = await addProductWithImages(productData, allImages);
 
       // Add specifications if any
       const validSpecs = specifications.filter(spec => spec.name && spec.value);
@@ -313,13 +381,12 @@ export default function AddProductForm() {
                       required
                     />
                   </div>
-                </div>
-
-                {/* Images */}
+                </div>                {/* Images */}
                 <div className="form-section">
                   <h4>Product Images *</h4>
                   <p className="form-text">Upload at least one image. The first image will be the main image.</p>
                   
+                  {/* File Upload */}
                   <div className="image-upload-area">
                     <input
                       type="file"
@@ -342,7 +409,7 @@ export default function AddProductForm() {
                       {imagePreviews.map((preview, index) => (
                         <div key={index} className="image-preview">
                           <img src={preview} alt={`Preview ${index + 1}`} />
-                          {index === 0 && <span className="primary-badge">Main</span>}
+                          {index === 0 && imagePreviews.length > 0 && urlPreviews.filter(p => p).length === 0 && <span className="primary-badge">Main</span>}
                           <button
                             type="button"
                             onClick={() => removeImage(index)}
@@ -357,6 +424,63 @@ export default function AddProductForm() {
                       ))}
                     </div>
                   )}
+
+                  {/* URL Upload */}
+                  <div className="url-upload-section">
+                    <h5>Or add images by URL</h5>
+                    <p className="form-text">Paste image URLs from the web</p>
+                    
+                    {imageUrls.map((url, index) => (
+                      <div key={index} className="url-input-group">
+                        <div className="row">
+                          <div className="col-md-10">
+                            <input
+                              type="url"
+                              value={url}
+                              onChange={(e) => handleUrlChange(index, e.target.value)}
+                              className={`form-control ${urlErrors[index] ? 'is-invalid' : ''}`}
+                              placeholder="https://example.com/image.jpg"
+                            />
+                            {urlErrors[index] && (
+                              <div className="invalid-feedback">{urlErrors[index]}</div>
+                            )}
+                          </div>
+                          <div className="col-md-2">
+                            {imageUrls.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => removeUrlField(index)}
+                                className="btn btn-danger btn-sm"
+                              >
+                                Remove
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    
+                    <button
+                      type="button"
+                      onClick={addUrlField}
+                      className="btn btn-secondary btn-sm"
+                    >
+                      Add Another URL
+                    </button>
+
+                    {/* URL Previews */}
+                    {urlPreviews.some(p => p) && (
+                      <div className="image-previews">
+                        {urlPreviews.map((preview, index) => preview && (
+                          <div key={`url-${index}`} className="image-preview">
+                            <img src={preview} alt={`URL Preview ${index + 1}`} />
+                            {index === 0 && imagePreviews.length === 0 && <span className="primary-badge">Main</span>}
+                            <span className="url-badge">URL</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Specifications */}

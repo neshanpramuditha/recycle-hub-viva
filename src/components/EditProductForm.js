@@ -7,7 +7,7 @@ import {
   updateProduct, 
   updateProductSpecifications
 } from '../lib/productQueries';
-import { validateImageFile, compressImage, uploadProductImages, saveProductImagesToDB } from '../lib/storageHelpers';
+import { validateImageFile, compressImage, uploadProductImages, saveProductImagesToDB, processAllProductImages } from '../lib/storageHelpers';
 import './AddProductForm.css';
 
 export default function EditProductForm() {
@@ -32,12 +32,14 @@ export default function EditProductForm() {
     is_negotiable: false,
     location: ''
   });
-
   // Image handling
   const [imageFiles, setImageFiles] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [imageErrors, setImageErrors] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
+  const [imageUrls, setImageUrls] = useState(['']);
+  const [urlPreviews, setUrlPreviews] = useState([]);
+  const [urlErrors, setUrlErrors] = useState([]);
 
   // Specifications
   const [specifications, setSpecifications] = useState([
@@ -151,10 +153,78 @@ export default function EditProductForm() {
     setImagePreviews(prev => prev.filter((_, i) => i !== index));
     setImageErrors(prev => prev.filter((_, i) => i !== index));
   };
-
   // Remove existing image
   const removeExistingImage = (index) => {
     setExistingImages(prev => prev.filter((_, i) => i !== index));
+  };
+
+  // Handle URL input changes
+  const handleUrlChange = (index, value) => {
+    setImageUrls(prev => prev.map((url, i) => i === index ? value : url));
+    
+    // Clear previous error
+    setUrlErrors(prev => prev.map((error, i) => i === index ? null : error));
+    
+    // Validate URL and create preview
+    if (value.trim()) {
+      validateImageUrl(value.trim(), index);
+    } else {
+      setUrlPreviews(prev => prev.map((preview, i) => i === index ? null : preview));
+    }
+  };
+
+  // Validate image URL
+  const validateImageUrl = (url, index) => {
+    // Basic URL validation
+    try {
+      new URL(url);
+      
+      // Check if it looks like an image URL
+      const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+      const hasImageExtension = imageExtensions.some(ext => 
+        url.toLowerCase().includes(ext)
+      );
+      
+      if (!hasImageExtension && !url.includes('unsplash') && !url.includes('imgur') && !url.includes('cloudinary')) {
+        setUrlErrors(prev => prev.map((error, i) => 
+          i === index ? 'URL should point to an image file' : error
+        ));
+        return;
+      }
+      
+      // Test if image loads
+      const img = new Image();
+      img.onload = () => {
+        setUrlPreviews(prev => prev.map((preview, i) => i === index ? url : preview));
+        setUrlErrors(prev => prev.map((error, i) => i === index ? null : error));
+      };
+      img.onerror = () => {
+        setUrlErrors(prev => prev.map((error, i) => 
+          i === index ? 'Unable to load image from this URL' : error
+        ));
+        setUrlPreviews(prev => prev.map((preview, i) => i === index ? null : preview));
+      };
+      img.src = url;
+      
+    } catch (e) {
+      setUrlErrors(prev => prev.map((error, i) => 
+        i === index ? 'Please enter a valid URL' : error
+      ));
+    }
+  };
+
+  // Add URL input field
+  const addUrlField = () => {
+    setImageUrls(prev => [...prev, '']);
+    setUrlPreviews(prev => [...prev, null]);
+    setUrlErrors(prev => [...prev, null]);
+  };
+
+  // Remove URL field
+  const removeUrlField = (index) => {
+    setImageUrls(prev => prev.filter((_, i) => i !== index));
+    setUrlPreviews(prev => prev.filter((_, i) => i !== index));
+    setUrlErrors(prev => prev.filter((_, i) => i !== index));
   };
 
   // Handle specification changes
@@ -181,11 +251,19 @@ export default function EditProductForm() {
     if (!user) {
       setError('You must be logged in to edit a product');
       return;
+    }    // Check if there are any images (existing, new files, or URLs)
+    const validUrls = imageUrls.filter(url => url.trim());
+    const totalImages = existingImages.length + imageFiles.length + validUrls.length;
+    
+    if (totalImages === 0) {
+      setError('Please keep at least one image');
+      return;
     }
 
-    // Check if there are any images (existing or new)
-    if (existingImages.length === 0 && imageFiles.length === 0) {
-      setError('Please keep at least one image');
+    // Check for URL validation errors
+    const hasUrlErrors = urlErrors.some(error => error !== null);
+    if (hasUrlErrors) {
+      setError('Please fix the URL errors before submitting');
       return;
     }
 
@@ -203,37 +281,31 @@ export default function EditProductForm() {
         condition: formData.condition,
         is_negotiable: formData.is_negotiable,
         location: formData.location
-      };
-
-      // Update product data
+      };      // Update product data
       const updatedProduct = await updateProduct(parseInt(id), updatedData);
 
-      // Handle new images if any
-      if (imageFiles.length > 0) {
-        const uploadedImages = await uploadProductImages(imageFiles, updatedProduct.id);
+      // Process all new images (files and URLs)
+      const validUrls = imageUrls.filter(url => url.trim());
+      let allNewImages = [];
+      
+      if (imageFiles.length > 0 || validUrls.length > 0) {
+        allNewImages = await processAllProductImages(imageFiles, validUrls, updatedProduct.id);
+      }
+
+      // If we have new images or existing images were modified
+      if (allNewImages.length > 0 || existingImages.length !== originalProduct.images?.length) {
+        // Combine existing and new images
+        const allImages = [
+          ...existingImages.map((img) => ({
+            url: img.image_url,
+            path: img.image_url
+          })),
+          ...allNewImages
+        ];
         
-        if (uploadedImages.length > 0) {
-          // Combine existing and new images
-          const allImages = [
-            ...existingImages.map((img, index) => ({
-              url: img.image_url,
-              path: img.image_url
-            })),
-            ...uploadedImages
-          ];
-          
-          // Update all images in database
-          await saveProductImagesToDB(updatedProduct.id, allImages);
-        }
-      } else if (existingImages.length !== originalProduct.images?.length) {
-        // Only existing images were modified (some removed)
-        const remainingImages = existingImages.map((img, index) => ({
-          url: img.image_url,
-          path: img.image_url
-        }));
-        
-        await saveProductImagesToDB(updatedProduct.id, remainingImages);
-      }      // Update specifications
+        // Update all images in database
+        await saveProductImagesToDB(updatedProduct.id, allImages);
+      }// Update specifications
       const validSpecs = specifications.filter(spec => spec.name && spec.value);
       await updateProductSpecifications(updatedProduct.id, validSpecs);
 
@@ -472,9 +544,7 @@ export default function EditProductForm() {
                       <div>Click to add more images</div>
                       <div className="upload-subtitle">JPEG, PNG, WebP, GIF (max 5MB each)</div>
                     </label>
-                  </div>
-
-                  {/* New Image Previews */}
+                  </div>                  {/* New Image Previews */}
                   {imagePreviews.length > 0 && (
                     <div className="image-previews">
                       {imagePreviews.map((preview, index) => (
@@ -495,6 +565,62 @@ export default function EditProductForm() {
                       ))}
                     </div>
                   )}
+
+                  {/* URL Upload Section */}
+                  <div className="url-upload-section">
+                    <h5>Or Add Images by URL</h5>
+                    <p className="form-text text-muted">
+                      You can also add images by providing direct URLs to images hosted online.
+                    </p>
+                    
+                    {imageUrls.map((url, index) => (
+                      <div key={index} className="url-input-group">
+                        <div className="input-group">
+                          <input
+                            type="url"
+                            value={url}
+                            onChange={(e) => handleUrlChange(index, e.target.value)}
+                            placeholder="https://example.com/image.jpg"
+                            className={`form-control ${urlErrors[index] ? 'is-invalid' : ''}`}
+                          />
+                          {imageUrls.length > 1 && (
+                            <div className="input-group-append">
+                              <button
+                                type="button"
+                                onClick={() => removeUrlField(index)}
+                                className="btn btn-outline-danger"
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                        {urlErrors[index] && (
+                          <div className="invalid-feedback d-block">
+                            {urlErrors[index]}
+                          </div>
+                        )}
+                        {urlPreviews[index] && (
+                          <div className="url-preview mt-2">
+                            <img 
+                              src={urlPreviews[index]} 
+                              alt="URL Preview" 
+                              className="url-preview-img"
+                            />
+                            <span className="url-badge">URL</span>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                    
+                    <button
+                      type="button"
+                      onClick={addUrlField}
+                      className="btn btn-outline-primary btn-sm"
+                    >
+                      Add Another URL
+                    </button>
+                  </div>
                 </div>
 
                 {/* Specifications */}
