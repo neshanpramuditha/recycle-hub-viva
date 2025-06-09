@@ -16,76 +16,135 @@ import Login from "./auth/login/login.js";
 import ForgotPassword from "./auth/forgot-password/ForgotPassword.js";
 import ResetPassword from "./auth/reset-password/ResetPassword.js";
 import { AuthProvider } from "./contexts/AuthContext.js";
+import { ThemeProvider } from "./contexts/ThemeContext.js";
 import ProtectedRoute from "./components/ProtectedRoute.js";
 import Dashboard from "./components/Dashboard.js";
 import EditProductForm from "./components/EditProductForm.js";
+import Layout from "./components/Layout.js";
+import "./styles/themes.css";
 import AIChat from "./components/AIChat.js";
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Navigation_bar />{" "}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/About" element={<About />} />
-          <Route path="/Services" element={<Services />} />
-          <Route path="/Buy_And_Sale" element={<Buy_And_Sale />} />
-          <Route path="/Contact" element={<Contact />} />
-          <Route path="/Buy" element={<Buy />} />          <Route path="/product/:id" element={<ProductSingle />} />
-          <Route path="/Register" element={<Register />} />
-          <Route path="/Login" element={<Login />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          {/* User Dashboard - Protected Route */}
-          <Route
-            path="/Dashboard"
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* Edit Product - Protected Route */}
-          <Route
-            path="/edit-product/:id"
-            element={
-              <ProtectedRoute>
-                <EditProductForm />
-              </ProtectedRoute>
-            }
-          />
-
-          {/* Protected Routes - Require Authentication */}
-          <Route
-            path="/Sale"
-            element={
-              <ProtectedRoute>
-                <Sale />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/Sale_Add_Item"
-            element={
-              <ProtectedRoute>
-                <Sale_Add_Item />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/Add_Item_form"
-            element={
-              <ProtectedRoute>
-                <Add_Item_form />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-        {/* AI Chat Component - Available on all pages */}
-        <AIChat />
-      </BrowserRouter>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            {/* Public pages with Layout (Navbar + Footer) */}
+            <Route
+              path="/"
+              element={
+                <Layout>
+                  <Home />
+                </Layout>
+              }
+            />
+            <Route
+              path="/About"
+              element={
+                <Layout>
+                  <About />
+                </Layout>
+              }
+            />
+            <Route
+              path="/Services"
+              element={
+                <Layout>
+                  <Services />
+                </Layout>
+              }
+            />
+            <Route
+              path="/Buy_And_Sale"
+              element={
+                <Layout>
+                  <Buy_And_Sale />
+                </Layout>
+              }
+            />
+            <Route
+              path="/Contact"
+              element={
+                <Layout>
+                  <Contact />
+                </Layout>
+              }
+            />
+            <Route
+              path="/Buy"
+              element={
+                <Layout>
+                  <Buy />
+                </Layout>
+              }
+            />
+            <Route
+              path="/product/:id"
+              element={
+                <Layout>
+                  <ProductSingle />
+                </Layout>
+              }
+            />
+            {/* Auth pages without Layout */}
+            <Route path="/Register" element={<Register />} />
+            <Route path="/Login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            {/* Dashboard pages without Layout - Protected Routes */}
+            <Route
+              path="/Dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/edit-product/:id"
+              element={
+                <ProtectedRoute>
+                  <EditProductForm />
+                </ProtectedRoute>
+              }
+            />
+            {/* Protected pages with Layout */}
+            <Route
+              path="/Sale"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Sale />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/Sale_Add_Item"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Sale_Add_Item />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/Add_Item_form"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Add_Item_form />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />{" "}
+          </Routes>
+          {/* AI Chat Component - Available on all pages */}
+          <AIChat />
+        </BrowserRouter>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

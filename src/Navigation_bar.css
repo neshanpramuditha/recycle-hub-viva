@@ -1,14 +1,31 @@
 /* Responsive Navigation Bar Styles */
+
+/* Fixed navbar positioning */
+.navbar {
+  position: fixed !important;
+  top: 0;
+  width: 100%;
+  z-index: 1030;
+  background: var(--gradient-eco) !important;
+  box-shadow: 0 2px 10px var(--shadow-medium);
+  transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+  background: var(--bg-secondary) !important;
+  backdrop-filter: blur(10px);
+}
+
 #Recycle_Hub {
   font-size: clamp(24px, 4vw, 35px);
   font-family: Impact, Arial Black, sans-serif;
   padding-left: 20px;
-  color: white;
+  color: var(--text-primary);
   text-decoration: none;
 }
 
 #Recycle_Hub:hover {
-  color: #f8f9fa;
+  color: var(--text-accent);
   text-decoration: none;
 }
 
@@ -38,11 +55,13 @@
   transition: all 0.3s ease;
   padding: 0.5rem 1rem;
   border-radius: 5px;
+  color: var(--text-primary);
 }
 
 .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--green-light);
   transform: translateY(-2px);
+  color: var(--text-accent);
 }
 
 #signup_button {
@@ -57,6 +76,20 @@
   background-color: #495057;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Theme Toggle Container */
+.theme-toggle-container {
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+}
+
+@media (max-width: 991px) {
+  .theme-toggle-container {
+    margin: 0.5rem 0;
+    justify-content: center;
+  }
 }
 
 /* Responsive Design */

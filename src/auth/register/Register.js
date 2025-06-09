@@ -132,7 +132,6 @@ export default function Register() {  const [formData, setFormData] = useState({
       setIsGoogleLoading(false);
     }
   };
-
   return (
     <div>
       <Toaster />

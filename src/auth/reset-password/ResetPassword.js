@@ -140,7 +140,6 @@ export default function ResetPassword() {  const [formData, setFormData] = useSt
       setIsLoading(false)
     }
   }
-
   if (!isValidSession) {
     return (
       <div>
@@ -172,7 +171,6 @@ export default function ResetPassword() {  const [formData, setFormData] = useSt
       </div>
     )
   }
-
   return (
     <div>
       <Toaster />

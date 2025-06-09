@@ -109,7 +109,6 @@ export default function Login() {
       setIsGoogleLoading(false)
     }
   }
-
   return (
     <div>
       <Toaster />

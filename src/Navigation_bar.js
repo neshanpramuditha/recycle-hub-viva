@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext";
+import ThemeToggle from "./components/ThemeToggle";
 import "./Navigation_bar.css";
 
 export default function Navigation_bar() {
@@ -89,8 +90,13 @@ export default function Navigation_bar() {
               <li className="nav-item">
                 <Link to="/Contact" className="nav-link active" id="link5">
                   Contact
-                </Link>
-              </li>            </div>
+                </Link>              </li>            </div>
+              
+              {/* Theme Toggle */}
+              <div className="theme-toggle-container">
+                <ThemeToggle />
+              </div>
+              
               {/* User Icon Dropdown */}
             <div className="user-dropdown-container" ref={dropdownRef}>
               <div 

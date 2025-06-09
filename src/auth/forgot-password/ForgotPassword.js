@@ -85,7 +85,6 @@ export default function ForgotPassword() {
       setIsLoading(false)
     }
   }
-
   if (emailSent) {
     return (
       <div>
@@ -141,9 +140,9 @@ export default function ForgotPassword() {
       </div>
     )
   }
-
   return (
     <div>
+      <Navigation_bar />
       <Toaster />
       <div id="background-image-forgot">
         <div className="container-fluid py-5">

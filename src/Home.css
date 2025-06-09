@@ -4,26 +4,57 @@
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-position: center;
+    position: relative;
+}
+
+#background_image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(16, 185, 129, 0.2);
+    z-index: 1;
+}
+
+#background_image > * {
+    position: relative;
+    z-index: 2;
 }
 
 #Recycle_Hub_home{
     font-size:95px;
     font-family:times;
-    color:white;
+    color: var(--text-primary);
     margin-left: 30px;
-    
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-#Buy_and_Sell_home{font-size: 40px;
-                   margin-left:30px;
-                   color:white;
-                   font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-                  
-                   }
+#Buy_and_Sell_home{
+    font-size: 40px;
+    margin-left:30px;
+    color: var(--text-secondary);
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
 
 #button_home{
    font-size:20px;
    padding:10px 16px;
    margin-left: 30px;
    margin-bottom: 325px;
+   background: var(--gradient-eco);
+   border: none;
+   border-radius: 25px;
+   color: var(--text-primary);
+   font-weight: 600;
+   transition: all 0.3s ease;
+   box-shadow: 0 4px 12px var(--shadow-medium);
+}
+
+#button_home:hover {
+   background: var(--green-secondary);
+   transform: translateY(-2px);
+   box-shadow: 0 6px 16px var(--shadow-heavy);
 }
