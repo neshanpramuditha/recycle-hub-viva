@@ -22,7 +22,7 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
+
   // Profile update state
   const [profileData, setProfileData] = useState({
     fullName: "",
@@ -30,14 +30,14 @@ export default function Dashboard() {
     location: "",
   });
   const [profileLoading, setProfileLoading] = useState(false);
-  
+
   // Notification preferences state
   const [notificationPrefs, setNotificationPrefs] = useState({
     emailNotifications: true,
     productNotifications: true,
     marketingEmails: false,
   });
-  
+
   const [stats, setStats] = useState({
     totalProducts: 0,
     activeProducts: 0,
@@ -157,24 +157,23 @@ export default function Dashboard() {
 
       // Update profile table
       const { error: profileError } = await supabase
-        .from('profiles')
+        .from("profiles")
         .update({
           full_name: profileData.fullName,
           phone: profileData.phoneNumber,
           location: profileData.location,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', user.id);
+        .eq("id", user.id);
 
       if (profileError) throw profileError;
 
       setSuccess("Profile updated successfully!");
-      
+
       // Clear success message after 3 seconds
       setTimeout(() => {
         setSuccess("");
       }, 3000);
-
     } catch (error) {
       console.error("Profile update error:", error);
       setError("Failed to update profile. Please try again.");
@@ -192,22 +191,21 @@ export default function Dashboard() {
     try {
       // Update notification preferences in profile table
       const { error } = await supabase
-        .from('profiles')
+        .from("profiles")
         .update({
           notification_preferences: notificationPrefs,
           updated_at: new Date().toISOString(),
         })
-        .eq('id', user.id);
+        .eq("id", user.id);
 
       if (error) throw error;
 
       setSuccess("Notification preferences updated successfully!");
-      
+
       // Clear success message after 3 seconds
       setTimeout(() => {
         setSuccess("");
       }, 3000);
-
     } catch (error) {
       console.error("Notification update error:", error);
       setError("Failed to update notification preferences. Please try again.");
@@ -218,7 +216,7 @@ export default function Dashboard() {
 
   const handleProfileInputChange = (e) => {
     const { name, value } = e.target;
-    setProfileData(prev => ({
+    setProfileData((prev) => ({
       ...prev,
       [name]: value,
     }));
@@ -226,7 +224,7 @@ export default function Dashboard() {
 
   const handleNotificationChange = (e) => {
     const { name, checked } = e.target;
-    setNotificationPrefs(prev => ({
+    setNotificationPrefs((prev) => ({
       ...prev,
       [name]: checked,
     }));
@@ -352,12 +350,16 @@ export default function Dashboard() {
       ) : userProducts.length > 0 ? (
         <div className="products-grid">
           {userProducts.map((product) => (
-            <div key={product.id} className="product-card">              <div className="product-image-container">                <img
-                  src={product.primary_image || '/image/placeholder.svg'}
+            <div key={product.id} className="product-card">
+              {" "}
+              <div className="product-image-container">
+                {" "}
+                <img
+                  src={product.primary_image || "/image/placeholder.svg"}
                   alt={product.title}
                   className="product-image"
                   onError={(e) => {
-                    e.target.src = '/image/placeholder.svg';
+                    e.target.src = "/image/placeholder.svg";
                   }}
                 />
                 <div className="product-status">
@@ -365,13 +367,12 @@ export default function Dashboard() {
                     {product.status}
                   </span>
                 </div>
-              </div>
-              <div className="product-info">
+              </div>              <div className="product-info">
                 <h5>{product.title}</h5>
                 <p className="product-price">
                   LKR {product.price?.toLocaleString()}
                 </p>
-                <p className="product-category">{product.category}</p>
+                <p className="product-category">{product.category_name}</p>
                 <div className="product-stats">
                   <span>
                     <i className="fas fa-eye"></i> {product.views || 0}
@@ -442,24 +443,25 @@ export default function Dashboard() {
         <div className="products-grid">
           {favoriteProducts.map((product) => (
             <div key={product.id} className="product-card">
-              <div className="product-image-container">                <img
+              <div className="product-image-container">
+                {" "}
+                <img
                   src={product.primary_image || "/image/placeholder.svg"}
                   alt={product.title}
                   className="product-image"
                   onError={(e) => {
-                    e.target.src = '/image/placeholder.svg';
+                    e.target.src = "/image/placeholder.svg";
                   }}
                 />
                 <div className="favorite-badge">
                   <i className="fas fa-heart text-danger"></i>
                 </div>
-              </div>
-              <div className="product-info">
+              </div>              <div className="product-info">
                 <h5>{product.title}</h5>
                 <p className="product-price">
                   LKR {product.price?.toLocaleString()}
                 </p>
-                <p className="product-category">{product.category}</p>
+                <p className="product-category">{product.category_name}</p>
                 <div className="product-stats">
                   <span>
                     <i className="fas fa-eye"></i> {product.views || 0}
@@ -635,16 +637,16 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="btn btn-success"
                 disabled={profileLoading}
               >
                 {profileLoading ? (
                   <>
-                    <span 
-                      className="spinner-border spinner-border-sm me-2" 
-                      role="status" 
+                    <span
+                      className="spinner-border spinner-border-sm me-2"
+                      role="status"
                       aria-hidden="true"
                     ></span>
                     Saving...
@@ -676,7 +678,10 @@ export default function Dashboard() {
                   checked={notificationPrefs.emailNotifications}
                   onChange={handleNotificationChange}
                 />
-                <label className="form-check-label" htmlFor="emailNotifications">
+                <label
+                  className="form-check-label"
+                  htmlFor="emailNotifications"
+                >
                   Email notifications for new messages
                 </label>
               </div>
@@ -709,16 +714,16 @@ export default function Dashboard() {
                   Marketing emails and promotions
                 </label>
               </div>
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 className="btn btn-success"
                 disabled={profileLoading}
               >
                 {profileLoading ? (
                   <>
-                    <span 
-                      className="spinner-border spinner-border-sm me-2" 
-                      role="status" 
+                    <span
+                      className="spinner-border spinner-border-sm me-2"
+                      role="status"
                       aria-hidden="true"
                     ></span>
                     Saving...
@@ -740,19 +745,25 @@ export default function Dashboard() {
             </h5>
           </div>
           <div className="card-body">
-            <button 
+            <button
               className="btn btn-outline-warning mb-3"
-              onClick={() => navigate('/reset-password')}
+              onClick={() => navigate("/reset-password")}
             >
               <i className="fas fa-key me-2"></i>Change Password
             </button>
             <br />
-            <button 
+            <button
               className="btn btn-outline-danger"
               onClick={() => {
-                if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                if (
+                  window.confirm(
+                    "Are you sure you want to delete your account? This action cannot be undone."
+                  )
+                ) {
                   // Add delete account functionality here
-                  alert('Account deletion functionality will be implemented soon.');
+                  alert(
+                    "Account deletion functionality will be implemented soon."
+                  );
                 }
               }}
             >
@@ -1026,14 +1037,16 @@ export default function Dashboard() {
                 <div className="row">
                   {userProducts.slice(0, 4).map((product) => (
                     <div key={product.id} className="col-md-3 col-6 mb-3">
-                      <div className="product-card-mini">                        <img
+                      <div className="product-card-mini">
+                        {" "}
+                        <img
                           src={
                             product.primary_image || "/image/placeholder.svg"
                           }
                           alt={product.title}
                           className="product-image-mini"
                           onError={(e) => {
-                            e.target.src = '/image/placeholder.svg';
+                            e.target.src = "/image/placeholder.svg";
                           }}
                         />
                         <div className="product-info-mini">
@@ -1066,25 +1079,28 @@ export default function Dashboard() {
         </div>
       </div>
     </div>
-  );  return (
+  );
+  return (
     <div className="dashboard-layout">
       {/* Mobile Menu Toggle */}
-      <button 
+      <button
         className="mobile-menu-toggle"
         onClick={toggleMobileMenu}
         aria-label="Toggle menu"
       >
-        <i className={`fas ${isMobileMenuOpen ? 'fa-times' : 'fa-bars'}`}></i>
+        <i className={`fas ${isMobileMenuOpen ? "fa-times" : "fa-bars"}`}></i>
       </button>
 
       {/* Mobile Overlay */}
-      <div 
-        className={`sidebar-overlay ${isMobileMenuOpen ? 'active' : ''}`}
+      <div
+        className={`sidebar-overlay ${isMobileMenuOpen ? "active" : ""}`}
         onClick={closeMobileMenu}
       ></div>
 
       {/* Sidebar */}
-      <div className={`dashboard-sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
+      <div
+        className={`dashboard-sidebar ${isMobileMenuOpen ? "mobile-open" : ""}`}
+      >
         <div className="sidebar-header">
           <div className="user-info">
             <div className="user-avatar">

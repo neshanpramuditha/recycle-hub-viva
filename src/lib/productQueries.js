@@ -135,18 +135,8 @@ export async function incrementProductViews(productId) {
 export async function getUserProducts(userId) {
   try {
     const { data, error } = await supabase
-      .from('products')
-      .select(`
-        *,
-        categories (
-          name,
-          description
-        ),
-        product_images (
-          image_url,
-          is_primary
-        )
-      `)
+      .from('products_with_details')
+      .select('*')
       .eq('seller_id', userId)
       .order('created_at', { ascending: false });
 
