@@ -19,6 +19,7 @@ import { AuthProvider } from "./contexts/AuthContext.js";
 import ProtectedRoute from "./components/ProtectedRoute.js";
 import Dashboard from "./components/Dashboard.js";
 import EditProductForm from "./components/EditProductForm.js";
+import AIChat from "./components/AIChat.js";
 
 export default function App() {
   return (
@@ -82,6 +83,8 @@ export default function App() {
             }
           />
         </Routes>
+        {/* AI Chat Component - Available on all pages */}
+        <AIChat />
       </BrowserRouter>
     </AuthProvider>
   );
