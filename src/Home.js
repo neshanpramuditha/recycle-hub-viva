@@ -4,40 +4,152 @@ import Services from "./Services";
 
 export default function Home() {
   return (
-    <div>
-      <div id="background_image">
+    <div className="home-page-container">
+      {/* Hero Section */}
+      <div id="home_background_image">
         <div className="container">
           <div className="row">
-            <div className="col-es-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 col-xxl-12">
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <span id="Recycle_Hub_home">Recycle &nbsp; Hub</span>
-              <br />
-              <span id="Buy_and_Sell_home">
-                Buy & Sell Second-Hand Items Easily
-              </span>{" "}
-              <br />
-              <br />
-              <a
-                href="/Services"
-                type="button"
-                id="button_home"
-                className="btn btn-success"
-              >
-                VIEW SERVICES
-              </a>
-              &nbsp;&nbsp;
-              <a href="/Buy" type="button" className="btn btn-outline-success">
-                BROWSE PRODUCTS
-              </a>
+            <div className="col-12">
+              <div className="home-hero-content">
+                <h1 id="Recycle_Hub_home">Recycle Hub</h1>
+                <p id="Buy_and_Sell_home">
+                  Buy & Sell Second-Hand Items Easily
+                </p>
+                <p className="home-hero-description">
+                  Join our eco-friendly marketplace where sustainability meets convenience. 
+                  Give new life to pre-loved items and reduce environmental impact.
+                </p>
+                <div className="home-hero-buttons">
+                  <a
+                    href="/Services"
+                    type="button"
+                    id="home_button_primary"
+                    className="home-btn-primary"
+                  >
+                    VIEW SERVICES
+                  </a>
+                  <a href="/Buy" type="button" className="home-btn-secondary">
+                    BROWSE PRODUCTS
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Features Section */}
+      <section className="home-features-section">
+        <div className="container">
+          <div className="row">
+            <div className="col-12 text-center">
+              <h2 className="home-section-title">Why Choose Recycle Hub?</h2>
+              <p className="home-section-subtitle">
+                Making sustainable shopping accessible for everyone
+              </p>
+            </div>
+          </div>
+          <div className="row home-features-grid">
+            <div className="col-md-4">
+              <div className="home-feature-card">
+                <div className="home-feature-icon">
+                  <i className="fas fa-recycle"></i>
+                </div>
+                <h3>Eco-Friendly</h3>
+                <p>Reduce waste by giving items a second life. Every purchase contributes to a cleaner planet.</p>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="home-feature-card">
+                <div className="home-feature-icon">
+                  <i className="fas fa-shield-alt"></i>
+                </div>
+                <h3>Secure Trading</h3>
+                <p>Safe and secure transactions with verified sellers and quality-checked products.</p>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="home-feature-card">
+                <div className="home-feature-icon">
+                  <i className="fas fa-dollar-sign"></i>
+                </div>
+                <h3>Great Deals</h3>
+                <p>Find amazing deals on quality second-hand items at unbeatable prices.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Statistics Section */}
+      <section className="home-stats-section">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-3 col-6">
+              <div className="home-stat-item">
+                <h3 className="home-stat-number">10K+</h3>
+                <p className="home-stat-label">Happy Customers</p>
+              </div>
+            </div>
+            <div className="col-md-3 col-6">
+              <div className="home-stat-item">
+                <h3 className="home-stat-number">50K+</h3>
+                <p className="home-stat-label">Items Sold</p>
+              </div>
+            </div>
+            <div className="col-md-3 col-6">
+              <div className="home-stat-item">
+                <h3 className="home-stat-number">25K+</h3>
+                <p className="home-stat-label">CO₂ Saved</p>
+              </div>
+            </div>
+            <div className="col-md-3 col-6">
+              <div className="home-stat-item">
+                <h3 className="home-stat-number">100+</h3>
+                <p className="home-stat-label">Cities Covered</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="home-how-it-works">
+        <div className="container">
+          <div className="row">
+            <div className="col-12 text-center">
+              <h2 className="home-section-title">How It Works</h2>
+              <p className="home-section-subtitle">
+                Simple steps to start your sustainable shopping journey
+              </p>
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-md-4">
+              <div className="home-step-card">
+                <div className="home-step-number">1</div>
+                <h4>Browse & Discover</h4>
+                <p>Explore thousands of quality second-hand items from electronics to furniture.</p>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="home-step-card">
+                <div className="home-step-number">2</div>
+                <h4>Buy or Sell</h4>
+                <p>Purchase items you love or list your own products to earn while helping the environment.</p>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="home-step-card">
+                <div className="home-step-number">3</div>
+                <h4>Make Impact</h4>
+                <p>Every transaction contributes to reducing waste and creating a sustainable future.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <Services />
     </div>
   );

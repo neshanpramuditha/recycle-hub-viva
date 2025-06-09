@@ -1,126 +1,118 @@
 import React from 'react';
 import "./Services.css";
-import 'bootstrap-icons/font/bootstrap-icons.css';
-
-let mode=0;
-
- function MainServices()
- {
-       //light=0
-       //dark=1;
-
-       switch(mode)
-       {
-          case 0:
-
-            mode=1;
-
-              document.body.style.backgroundColor="#01002E";
-              document.getElementById("Classic_Collectors_Hub").style.color="white";
-              document.getElementById("Classic_Collectors_Hub").style.borderBottom="3px solid white";
-              document.getElementById("light_services").style.color="white";
-              document.getElementById("light_services").className="bi bi-moon-fill";
-              document.getElementById("light_services").style.borderBottom="3px solid white";
-               break;
-
-          case 1:
-
-            mode=0;
-
-            document.body.style.backgroundColor=" rgb(238, 245, 223)";
-            document.getElementById("Classic_Collectors_Hub").style.color="black";
-            document.getElementById("Classic_Collectors_Hub").style.borderBottom="3px solid black";
-            document.getElementById("light_services").style.color="black";
-            document.getElementById("light_services").className="bi bi-moon";
-            document.getElementById("light_services").style.borderBottom="3px solid black";
-            
-
-            break;
-       }
- }
 
 export default function Services() {
+  const services = [
+    {
+      id: 1,
+      title: "Plastic Items",
+      image: "/image/2.jpg",
+      description: "Recycle plastic bottles, containers, and household plastic items. Help reduce plastic waste in our environment.",
+      link: "/Plastic_Item"
+    },
+    {
+      id: 2,
+      title: "Glass Items",
+      image: "/image/5.png",
+      description: "Glass bottles, jars, and containers can be given a new life. Quality glass items for eco-friendly living.",
+      link: "/Glasses"
+    },
+    {
+      id: 3,
+      title: "Tyres",
+      image: "/image/6.jpg",
+      description: "Used tyres for various purposes including garden decorations, playground equipment, and recycling.",
+      link: "/Tyre"
+    },
+    {
+      id: 4,
+      title: "Electronic Devices",
+      image: "/image/8.jpg",
+      description: "Smartphones, laptops, tablets, and other electronic devices. Certified refurbished electronics.",
+      link: "/Electronic_Device"
+    },
+    {
+      id: 5,
+      title: "Iron & Metal",
+      image: "/image/7.jpg",
+      description: "Iron bars, metal scraps, and construction materials. Quality metal items for industrial use.",
+      link: "/Iron_Bar"
+    },
+    {
+      id: 6,
+      title: "Books",
+      image: "/image/9.jpg",
+      description: "Second-hand books, textbooks, novels, and educational materials. Knowledge sharing made affordable.",
+      link: "/Book"
+    }
+  ];
+
   return (
-    <div>
-      <div id="background">
-      <div class="container">
-        <div class="row">
-          <div class="col-12 mt-4">
-            <br/><br/><br/>
-            <center>
-              <a href="#"><i id="light_services" className="bi bi-moon"  onClick={MainServices} ></i></a>
-              <span id="Classic_Collectors_Hub"><b>Classic Collectors Hub.</b></span>
-            </center>
+    <section className="services-container">
+      <div className="container">
+        <div className="row">
+          <div className="col-12">
+            <h2 id="Classic_Collectors_Hub">
+              <b>Our Services</b>
+            </h2>
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-es-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
-            <div class="card mt-5" id="card_01_services">
-              <img id="card_01_image_services"  src="/image/2.jpg" alt="Plastic Item"/>
-              <div class="card-body" id="card_body_services">
-                <span id="Plastic_Item" >Plastic Item</span>
-                <a href="/Plastic_Item" type="button" id="button_services" class="btn btn-outline-success mb-5">GO HERE</a>
-                <br/>
+        <div className="row services-grid">
+          {services.map((service) => (
+            <div key={service.id} className="col-lg-4 col-md-6 col-sm-12">
+              <div className="service-card">
+                <img 
+                  src={service.image} 
+                  alt={service.title}
+                  className="service-card-image"
+                />
+                <div className="service-card-body">
+                  <h3 className="service-card-title">{service.title}</h3>
+                  <p className="service-card-text">{service.description}</p>
+                  <a 
+                    href={service.link} 
+                    className="service-card-button"
+                  >
+                    Explore Now
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
+          ))}
+        </div>
 
-          <div class="col-es-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
-            <div class="card mt-5" id="card_02_services">
-              <img id="card_02_image_services" src="/image/5.png" alt="Vidhuru Item"/>
-              <div class="card-body" id="card_body_services">
-                <span  id="Vidhuru_Item">Glasses</span>
-                <a href="/Glasses" type="button"  id="button_services" class="btn btn-outline-success mb-5">GO HERE</a>
-              </div>
+        {/* Additional Features Section */}
+        <div className="row mt-5">
+          <div className="col-12 text-center">
+            <h3 className="section-subtitle" style={{color: 'var(--text-secondary)', marginBottom: '40px'}}>
+              Why Choose Our Services?
+            </h3>
+          </div>
+          <div className="col-md-4 text-center mb-4">
+            <div className="feature-highlight">
+              <i className="fas fa-leaf" style={{fontSize: '2.5rem', color: 'var(--green-primary)', marginBottom: '15px'}}></i>
+              <h4 style={{color: 'var(--text-primary)', marginBottom: '10px'}}>Eco-Friendly</h4>
+              <p style={{color: 'var(--text-secondary)'}}>100% environmentally conscious recycling processes</p>
             </div>
           </div>
-
-          <div class="col-es-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
-            <div class="card mt-5" id="card_03_services">
-              <img id="card_03_image_services"  src="/image/6.jpg" alt="Tyres"/>
-              <div class="card-body" id="card_body_services">
-                <span id="The_Tyres">Tyres</span>
-                <a href="/Tyre" type="button" id="button_services" class="btn btn-outline-success">GO HERE</a>
-              </div>
+          <div className="col-md-4 text-center mb-4">
+            <div className="feature-highlight">
+              <i className="fas fa-handshake" style={{fontSize: '2.5rem', color: 'var(--green-primary)', marginBottom: '15px'}}></i>
+              <h4 style={{color: 'var(--text-primary)', marginBottom: '10px'}}>Fair Pricing</h4>
+              <p style={{color: 'var(--text-secondary)'}}>Competitive prices for both buyers and sellers</p>
             </div>
           </div>
-
-          <div class="col-es-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
-            <div class="card mt-5" id="card_04_services">
-              <img id="card_04_image_services"  src="/image/8.jpg" alt="Electronic Device"/>
-              <div class="card-body" id="card_body_services">
-                <span id="Electronic_Device">Electronic Device</span>
-                <a href="/Electronic_Device"  type="button" id="button_services" class="btn btn-outline-success">GO HERE</a>
-              </div>
+          <div className="col-md-4 text-center mb-4">
+            <div className="feature-highlight">
+              <i className="fas fa-shipping-fast" style={{fontSize: '2.5rem', color: 'var(--green-primary)', marginBottom: '15px'}}></i>
+              <h4 style={{color: 'var(--text-primary)', marginBottom: '10px'}}>Fast Service</h4>
+              <p style={{color: 'var(--text-secondary)'}}>Quick pickup and delivery across all locations</p>
             </div>
           </div>
-
-          <div class="col-es-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
-            <div class="card mt-5" id="card_05_services">
-              <img id="card_05_image_services"  src="/image/7.jpg" alt="Iron Bars"/>
-              <div class="card-body" id="card_body_services">
-                <span id="Iron_bars">Iron bars</span>
-                <a href="/Iron_Bar"  type="button" id="button_services" class="btn btn-outline-success">GO HERE</a>
-              </div>
-            </div>
-          </div>
-
-
-            <div class="col-es-12 col-sm-12 col-md-6 col-lg-6 col-xl-4 col-xxl-4">
-                 <div id="card_06_services" class="card mt-5">
-                     <img id="card_06_image_services" src="/image/9.jpg" alt="books"/>
-
-                     <div class="card-body" id="card_body_services">
-                         <span id="book">BOOKS</span>
-                         <a href="/Book" type="button" id="button_services" class="btn btn-outline-success">GO HERE</a>
-                     </div>
-                  </div>
-            </div>
         </div>
       </div>
-      </div>
-    </div>
+    </section>
   );
 }
 

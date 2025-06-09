@@ -14,9 +14,9 @@ const ThemeToggle = () => {
     >
       <div className="toggle-icon">
         {theme === 'light' ? (
-          <i className="bi bi-moon-fill"></i>
+          <i className="fas fa-moon"></i>
         ) : (
-          <i className="bi bi-sun-fill"></i>
+          <i className="fas fa-sun"></i>
         )}
       </div>
       <span className="toggle-text">
