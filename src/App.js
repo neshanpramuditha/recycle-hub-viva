@@ -13,6 +13,8 @@ import Sale_Add_Item from "./Sale_Add_Item.js";
 import Add_Item_form from "./Add_Item_form.js";
 import Register from "./auth/register/Register.js";
 import Login from "./auth/login/login.js";
+import ForgotPassword from "./auth/forgot-password/ForgotPassword.js";
+import ResetPassword from "./auth/reset-password/ResetPassword.js";
 import { AuthProvider } from "./contexts/AuthContext.js";
 import ProtectedRoute from "./components/ProtectedRoute.js";
 import Dashboard from "./components/Dashboard.js";
@@ -29,10 +31,11 @@ export default function App() {
           <Route path="/Services" element={<Services />} />
           <Route path="/Buy_And_Sale" element={<Buy_And_Sale />} />
           <Route path="/Contact" element={<Contact />} />
-          <Route path="/Buy" element={<Buy />} />
-          <Route path="/product/:id" element={<ProductSingle />} />
+          <Route path="/Buy" element={<Buy />} />          <Route path="/product/:id" element={<ProductSingle />} />
           <Route path="/Register" element={<Register />} />
           <Route path="/Login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           {/* User Dashboard - Protected Route */}
           <Route
             path="/Dashboard"

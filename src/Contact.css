@@ -1,131 +1,122 @@
-#Main-topic-contact{
-             font-size:45px;
-             font-family:impact;
-             border-bottom: 3px solid black;
-
+#Main-topic-contact {
+  font-size: 45px;
+  font-family: impact;
+  border-bottom: 3px solid black;
 }
 
-#question-contact{
-            font-size:25px;
-            margin-left: 380px;
-            font-family: Times;
+#question-contact {
+  font-size: 25px;
+  margin-left: 380px;
+  font-family: Times;
 }
 
-#Email-contact{
-         font-size:22px;
-         font-family: Times;
-         margin-left:100px;
-
+#Email-contact {
+  font-size: 22px;
+  font-family: Times;
+  margin-left: 100px;
 }
 
-#input-01-contact{
-          width:500px;
-          margin-left:100px;
+#input-01-contact {
+  width: 500px;
+  margin-left: 100px;
 }
 
-#input-02-contact{
-    width:500px;
-    margin-left:100px;
+#input-02-contact {
+  width: 500px;
+  margin-left: 100px;
 }
 
-#name-contact{
-         font-size:22px;
-         font-family: Times;
-         margin-left:100px;
+#name-contact {
+  font-size: 22px;
+  font-family: Times;
+  margin-left: 100px;
 }
 
-#massage-contact{
-    font-size:22px;
-    font-family: Times;
-    margin-left:100px;
+#massage-contact {
+  font-size: 22px;
+  font-family: Times;
+  margin-left: 100px;
 }
 
-#textarea-contact{
-    margin-left:100px;
-    width:1100px;
+#textarea-contact {
+  margin-left: 100px;
+  width: 1100px;
 }
 
-#submit-contact{
-       padding: 5px 30px;
-       font-size:30px;
-       font-family:Times;
-       margin-left: 570px;
+#submit-contact {
+  padding: 5px 30px;
+  font-size: 30px;
+  font-family: Times;
+  margin-left: 570px;
 }
 
-#social-media-contact{
-      background-color: black;
+#social-media-contact {
+  background-color: black;
 }
 
-#Facebook-contact{
-    font-size: 27px;
-    font-family: Times;
-    color:white;
-    margin-left: 120px;
-    border-bottom: 2px solid white;
-    
-
+#Facebook-contact {
+  font-size: 27px;
+  font-family: Times;
+  color: white;
+  margin-left: 120px;
+  border-bottom: 2px solid white;
 }
 
-#link-01-contact{
-     color:white;
-     font-size: 20px;
-     font-family: Times;
-     margin-left: 40px;
+#link-01-contact {
+  color: white;
+  font-size: 20px;
+  font-family: Times;
+  margin-left: 40px;
 }
 
-#Whatsapp-contact{
-    font-size: 27px;
-    font-family: Times;
-    color:white;
-    margin-left: 120px;
-    border-bottom: 2px solid white;
+#Whatsapp-contact {
+  font-size: 27px;
+  font-family: Times;
+  color: white;
+  margin-left: 120px;
+  border-bottom: 2px solid white;
 }
 
-#link-02-contact{
-    color:white;
-    font-size: 20px;
-    font-family: Times;
-    margin-left: 70px;
+#link-02-contact {
+  color: white;
+  font-size: 20px;
+  font-family: Times;
+  margin-left: 70px;
 }
 
-#link-03-contact{
-    color:white;
-    font-size: 20px;
-    font-family: Times;
-   
+#link-03-contact {
+  color: white;
+  font-size: 20px;
+  font-family: Times;
 }
 
-#Phone-contact{
-    font-size: 27px;
-    font-family: Times;
-    color:white;
-    margin-left: 120px;
-    border-bottom: 2px solid white;
+#Phone-contact {
+  font-size: 27px;
+  font-family: Times;
+  color: white;
+  margin-left: 120px;
+  border-bottom: 2px solid white;
 }
 
-#link-04-contact{
-    color:white;
-    font-size: 20px;
-    font-family: Times;
-    margin-left: 120px;
+#link-04-contact {
+  color: white;
+  font-size: 20px;
+  font-family: Times;
+  margin-left: 120px;
 }
 
-#link-05-contact{
-    color:white;
-    font-size: 20px;
-    font-family: Times;
-
+#link-05-contact {
+  color: white;
+  font-size: 20px;
+  font-family: Times;
 }
 
-
-#background{
-     
+#background {
 }
 
-#light_contact{
-       font-size: 38px;
-       margin-left: 480px;
-       border-bottom: 3px solid black;
-       color:black;
-       
+#light_contact {
+  font-size: 38px;
+  margin-left: 480px;
+  border-bottom: 3px solid black;
+  color: black;
 }

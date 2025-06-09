@@ -293,15 +293,26 @@ CREATE TRIGGER favorites_count_trigger
     AFTER INSERT OR DELETE ON favorites
     FOR EACH ROW EXECUTE FUNCTION update_favorites_count();
 
--- Function to handle new user registration
+-- Auto-create profile when user signs up
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.profiles (id, email, full_name)
-  VALUES (NEW.id, NEW.email, NEW.raw_user_meta_data->>'full_name');
+  INSERT INTO public.profiles (id, email, full_name, phone, location)
+  VALUES (
+    NEW.id,
+    NEW.email,
+    NEW.raw_user_meta_data->>'full_name',
+    NEW.raw_user_meta_data->>'phone_number',
+    NEW.raw_user_meta_data->>'location'
+  );
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Trigger the function every time a user is created
+CREATE OR REPLACE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
 -- Function to increment product views
 CREATE OR REPLACE FUNCTION increment_product_views(product_id INTEGER)
@@ -312,11 +323,6 @@ BEGIN
   WHERE id = product_id;
 END;
 $$ LANGUAGE plpgsql;
-
--- Trigger for new user registration
-CREATE TRIGGER on_auth_user_created
-  AFTER INSERT ON auth.users
-  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
 -- 13. Insert sample data for testing
 
@@ -399,3 +405,6 @@ LEFT JOIN profiles pr ON p.seller_id = pr.id
 LEFT JOIN categories c ON p.category_id = c.id
 LEFT JOIN product_images pi ON p.id = pi.product_id AND pi.is_primary = true
 WHERE p.status = 'available';
+
+-- Add notification preferences column to profiles table
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS notification_preferences JSONB DEFAULT '{"emailNotifications": true, "productNotifications": true, "marketingEmails": false}';

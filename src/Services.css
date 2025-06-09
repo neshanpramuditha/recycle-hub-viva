@@ -1,166 +1,156 @@
-#Classic_Collectors_Hub{ /*main topic*/
-                         font-family:times;
-                         font-size:40px; 
-                         border-bottom:3px solid black;                      
+#Classic_Collectors_Hub {
+  /*main topic*/
+  font-family: times;
+  font-size: 40px;
+  border-bottom: 3px solid black;
 }
 
-#card_01_image_services{ /*all card image*/
-                      width:350px;
-                      height:150px;
-                    align-self: center;
-                      
-}
-
-#card_01_services{ /* all cards*/
-                width:350px;
-                height:280px;
-                border-left-width:none ;
-}
-
-
-#card_02_image_services{ /*all card image*/
-    width:350px;
-    height:150px;
+#card_01_image_services {
+  /*all card image*/
+  width: 350px;
+  height: 150px;
   align-self: center;
-    
 }
 
-
-#card_02_services{ /* all cards*/
-width:350px;
-height:280px;
-border-left-width:none ;
+#card_01_services {
+  /* all cards*/
+  width: 350px;
+  height: 280px;
+  border-left-width: none;
 }
 
-
-
-#card_03_image_services{ /*all card image*/
-    width:350px;
-    height:150px;
+#card_02_image_services {
+  /*all card image*/
+  width: 350px;
+  height: 150px;
   align-self: center;
-    
 }
 
-#card_03_services{ /* all cards*/
-width:350px;
-height:280px;
-margin-bottom: 40px;
-border-left-width:none ;
+#card_02_services {
+  /* all cards*/
+  width: 350px;
+  height: 280px;
+  border-left-width: none;
 }
 
-
-
-#card_04_image_services{ /*all card image*/
-    width:350px;
-    height:150px;
+#card_03_image_services {
+  /*all card image*/
+  width: 350px;
+  height: 150px;
   align-self: center;
-    
 }
 
-#card_04_services{ /* all cards*/
-width:350px;
-height:280px;
-margin-bottom: 40px;
-border-left-width:none ;
+#card_03_services {
+  /* all cards*/
+  width: 350px;
+  height: 280px;
+  margin-bottom: 40px;
+  border-left-width: none;
 }
 
-
-
-#card_05_image_services{ /*all card image*/
-    width:350px;
-    height:150px;
+#card_04_image_services {
+  /*all card image*/
+  width: 350px;
+  height: 150px;
   align-self: center;
-    
 }
 
-#card_05_services{ /* all cards*/
-width:350px;
-height:280px;
-margin-bottom: 40px;
-border-left-width:none ;
+#card_04_services {
+  /* all cards*/
+  width: 350px;
+  height: 280px;
+  margin-bottom: 40px;
+  border-left-width: none;
 }
 
-
-
-#card_06_image_services{ /*all card image*/
-    width:350px;
-    height:150px;
+#card_05_image_services {
+  /*all card image*/
+  width: 350px;
+  height: 150px;
   align-self: center;
-    
 }
 
-#card_06_services{ /* all cards*/
-width:350px;
-height:280px;
-margin-bottom: 40px;
-border-left-width:none ;
+#card_05_services {
+  /* all cards*/
+  width: 350px;
+  height: 280px;
+  margin-bottom: 40px;
+  border-left-width: none;
 }
 
-
-
-
-
-    
-
-
-#button_services{ /*all buttons in the card*/
-    font-family: impact;
-    font-size: 23px;
-    margin-left:100px;
-    margin-top: 10px;  
+#card_06_image_services {
+  /*all card image*/
+  width: 350px;
+  height: 150px;
+  align-self: center;
 }
 
-#The_Tyres{/*only tyer words*/
-    margin-left:115px;
-    font-family: impact;
-    font-size: 27px;
+#card_06_services {
+  /* all cards*/
+  width: 350px;
+  height: 280px;
+  margin-bottom: 40px;
+  border-left-width: none;
 }
 
-#Vidhuru_Item{ /*only vidhuru item*/
-    margin-left:102px;
-    font-family: impact;
-    font-size: 27px;
+#button_services {
+  /*all buttons in the card*/
+  font-family: impact;
+  font-size: 23px;
+  margin-left: 100px;
+  margin-top: 10px;
 }
 
-#Plastic_Item{/*only plastic item*/
-    margin-left:90px;
-    font-family: impact;
-    font-size: 27px;
+#The_Tyres {
+  /*only tyer words*/
+  margin-left: 115px;
+  font-family: impact;
+  font-size: 27px;
 }
 
-#Iron_bars{/*only iron bars*/
-    margin-left: 100px;
-    font-family: impact;
-    font-size: 27px;
+#Vidhuru_Item {
+  /*only vidhuru item*/
+  margin-left: 102px;
+  font-family: impact;
+  font-size: 27px;
 }
 
-#Electronic_Device{/*only add css for Electronic Device*/
-    margin-left: 60px;
-    font-family: impact;
-    font-size: 27px;
+#Plastic_Item {
+  /*only plastic item*/
+  margin-left: 90px;
+  font-family: impact;
+  font-size: 27px;
 }
 
-#book{ /*only boos*/
-    margin-left:110px;
-    font-family: impact;
-    font-size: 27px;
-    
+#Iron_bars {
+  /*only iron bars*/
+  margin-left: 100px;
+  font-family: impact;
+  font-size: 27px;
 }
 
-
-#card_body_services{/*add css for all card body*/
-    background-color: rgb(225, 237, 237);
-    height: 50px;
+#Electronic_Device {
+  /*only add css for Electronic Device*/
+  margin-left: 60px;
+  font-family: impact;
+  font-size: 27px;
 }
 
-#light_services{color:black;/*add css for bulb icon*/
-                font-size:36px;
-                border-bottom:3px solid black;
-               }
+#book {
+  /*only boos*/
+  margin-left: 110px;
+  font-family: impact;
+  font-size: 27px;
+}
 
+#card_body_services {
+  /*add css for all card body*/
+  background-color: rgb(225, 237, 237);
+  height: 50px;
+}
 
-
-
-
-
-
+#light_services {
+  color: black; /*add css for bulb icon*/
+  font-size: 36px;
+  border-bottom: 3px solid black;
+}

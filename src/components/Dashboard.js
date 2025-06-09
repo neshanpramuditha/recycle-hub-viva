@@ -7,6 +7,7 @@ import {
   getUserFavorites,
 } from "../lib/productQueries";
 import { deleteImage } from "../lib/storageHelpers";
+import { supabase } from "../lib/supabase";
 import AddProductForm from "./AddProductForm";
 import "./Dashboard.css";
 
@@ -21,6 +22,22 @@ export default function Dashboard() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  // Profile update state
+  const [profileData, setProfileData] = useState({
+    fullName: "",
+    phoneNumber: "",
+    location: "",
+  });
+  const [profileLoading, setProfileLoading] = useState(false);
+  
+  // Notification preferences state
+  const [notificationPrefs, setNotificationPrefs] = useState({
+    emailNotifications: true,
+    productNotifications: true,
+    marketingEmails: false,
+  });
+  
   const [stats, setStats] = useState({
     totalProducts: 0,
     activeProducts: 0,
@@ -28,6 +45,17 @@ export default function Dashboard() {
     totalViews: 0,
     totalFavorites: 0,
   });
+
+  // Initialize profile data when user loads
+  useEffect(() => {
+    if (user) {
+      setProfileData({
+        fullName: user?.user_metadata?.full_name || "",
+        phoneNumber: user?.user_metadata?.phone_number || "",
+        location: user?.user_metadata?.location || "",
+      });
+    }
+  }, [user]);
 
   // Load user products and stats
   useEffect(() => {
@@ -108,6 +136,102 @@ export default function Dashboard() {
       setLoading(false);
     }
   };
+
+  const handleUpdateProfile = async (e) => {
+    e.preventDefault();
+    setProfileLoading(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      // Update auth user metadata
+      const { error: authError } = await supabase.auth.updateUser({
+        data: {
+          full_name: profileData.fullName,
+          phone_number: profileData.phoneNumber,
+          location: profileData.location,
+        },
+      });
+
+      if (authError) throw authError;
+
+      // Update profile table
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({
+          full_name: profileData.fullName,
+          phone: profileData.phoneNumber,
+          location: profileData.location,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', user.id);
+
+      if (profileError) throw profileError;
+
+      setSuccess("Profile updated successfully!");
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setSuccess("");
+      }, 3000);
+
+    } catch (error) {
+      console.error("Profile update error:", error);
+      setError("Failed to update profile. Please try again.");
+    } finally {
+      setProfileLoading(false);
+    }
+  };
+
+  const handleUpdateNotifications = async (e) => {
+    e.preventDefault();
+    setProfileLoading(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      // Update notification preferences in profile table
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          notification_preferences: notificationPrefs,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      setSuccess("Notification preferences updated successfully!");
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setSuccess("");
+      }, 3000);
+
+    } catch (error) {
+      console.error("Notification update error:", error);
+      setError("Failed to update notification preferences. Please try again.");
+    } finally {
+      setProfileLoading(false);
+    }
+  };
+
+  const handleProfileInputChange = (e) => {
+    const { name, value } = e.target;
+    setProfileData(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleNotificationChange = (e) => {
+    const { name, checked } = e.target;
+    setNotificationPrefs(prev => ({
+      ...prev,
+      [name]: checked,
+    }));
+  };
+
   const handleLogout = async () => {
     try {
       await signOut();
@@ -117,6 +241,11 @@ export default function Dashboard() {
     }
   };
 
+  const handleSectionChange = (sectionId) => {
+    setActiveSection(sectionId);
+    setIsMobileMenuOpen(false); // Close mobile menu when section changes
+  };
+
   // Mobile menu functions
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -124,11 +253,6 @@ export default function Dashboard() {
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
-  };
-
-  const handleSectionChange = (sectionId) => {
-    setActiveSection(sectionId);
-    setIsMobileMenuOpen(false); // Close mobile menu when section changes
   };
 
   // Sidebar menu items
@@ -417,7 +541,6 @@ export default function Dashboard() {
       </div>
     </div>
   );
-
   const renderSettings = () => (
     <div className="dashboard-content">
       <div className="content-header">
@@ -427,6 +550,34 @@ export default function Dashboard() {
         </p>
       </div>
 
+      {error && (
+        <div
+          className="alert alert-danger alert-dismissible fade show"
+          role="alert"
+        >
+          {error}
+          <button
+            type="button"
+            className="btn-close"
+            onClick={() => setError("")}
+          ></button>
+        </div>
+      )}
+
+      {success && (
+        <div
+          className="alert alert-success alert-dismissible fade show"
+          role="alert"
+        >
+          {success}
+          <button
+            type="button"
+            className="btn-close"
+            onClick={() => setSuccess("")}
+          ></button>
+        </div>
+      )}
+
       <div className="settings-sections">
         <div className="card mb-4">
           <div className="card-header">
@@ -435,56 +586,76 @@ export default function Dashboard() {
             </h5>
           </div>
           <div className="card-body">
-            <div className="row">
-              <div className="col-md-6">
-                <div className="mb-3">
-                  <label className="form-label">Full Name</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    defaultValue={user?.user_metadata?.full_name || ""}
-                  />
+            <form onSubmit={handleUpdateProfile}>
+              <div className="row">
+                <div className="col-md-6">
+                  <div className="mb-3">
+                    <label className="form-label">Full Name</label>
+                    <input
+                      type="text"
+                      name="fullName"
+                      className="form-control"
+                      value={profileData.fullName}
+                      onChange={handleProfileInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Email</label>
+                    <input
+                      type="email"
+                      className="form-control"
+                      value={user?.email || ""}
+                      disabled
+                    />
+                  </div>
                 </div>
-                <div className="mb-3">
-                  <label className="form-label">Email</label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    defaultValue={user?.email || ""}
-                    disabled
-                  />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Phone Number</label>
-                  <input
-                    type="tel"
-                    className="form-control"
-                    defaultValue={user?.user_metadata?.phone_number || ""}
-                  />
+                <div className="col-md-6">
+                  <div className="mb-3">
+                    <label className="form-label">Phone Number</label>
+                    <input
+                      type="tel"
+                      name="phoneNumber"
+                      className="form-control"
+                      value={profileData.phoneNumber}
+                      onChange={handleProfileInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Location</label>
+                    <input
+                      type="text"
+                      name="location"
+                      className="form-control"
+                      value={profileData.location}
+                      onChange={handleProfileInputChange}
+                      required
+                    />
+                  </div>
                 </div>
               </div>
-              <div className="col-md-6">
-                <div className="mb-3">
-                  <label className="form-label">City</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    defaultValue={user?.user_metadata?.city || ""}
-                  />
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Address</label>
-                  <textarea
-                    className="form-control"
-                    rows="3"
-                    defaultValue={user?.user_metadata?.address || ""}
-                  ></textarea>
-                </div>
-              </div>
-            </div>
-            <button className="btn btn-success">
-              <i className="fas fa-save me-2"></i>Save Changes
-            </button>
+              <button 
+                type="submit" 
+                className="btn btn-success"
+                disabled={profileLoading}
+              >
+                {profileLoading ? (
+                  <>
+                    <span 
+                      className="spinner-border spinner-border-sm me-2" 
+                      role="status" 
+                      aria-hidden="true"
+                    ></span>
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-save me-2"></i>Save Changes
+                  </>
+                )}
+              </button>
+            </form>
           </div>
         </div>
 
@@ -495,44 +666,70 @@ export default function Dashboard() {
             </h5>
           </div>
           <div className="card-body">
-            <div className="form-check form-switch mb-3">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="emailNotifications"
-                defaultChecked
-              />
-              <label className="form-check-label" htmlFor="emailNotifications">
-                Email notifications for new messages
-              </label>
-            </div>
-            <div className="form-check form-switch mb-3">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="productNotifications"
-                defaultChecked
-              />
-              <label
-                className="form-check-label"
-                htmlFor="productNotifications"
+            <form onSubmit={handleUpdateNotifications}>
+              <div className="form-check form-switch mb-3">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="emailNotifications"
+                  name="emailNotifications"
+                  checked={notificationPrefs.emailNotifications}
+                  onChange={handleNotificationChange}
+                />
+                <label className="form-check-label" htmlFor="emailNotifications">
+                  Email notifications for new messages
+                </label>
+              </div>
+              <div className="form-check form-switch mb-3">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="productNotifications"
+                  name="productNotifications"
+                  checked={notificationPrefs.productNotifications}
+                  onChange={handleNotificationChange}
+                />
+                <label
+                  className="form-check-label"
+                  htmlFor="productNotifications"
+                >
+                  Notifications for product inquiries
+                </label>
+              </div>
+              <div className="form-check form-switch mb-3">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="marketingEmails"
+                  name="marketingEmails"
+                  checked={notificationPrefs.marketingEmails}
+                  onChange={handleNotificationChange}
+                />
+                <label className="form-check-label" htmlFor="marketingEmails">
+                  Marketing emails and promotions
+                </label>
+              </div>
+              <button 
+                type="submit" 
+                className="btn btn-success"
+                disabled={profileLoading}
               >
-                Notifications for product inquiries
-              </label>
-            </div>
-            <div className="form-check form-switch mb-3">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                id="marketingEmails"
-              />
-              <label className="form-check-label" htmlFor="marketingEmails">
-                Marketing emails and promotions
-              </label>
-            </div>
-            <button className="btn btn-success">
-              <i className="fas fa-save me-2"></i>Save Preferences
-            </button>
+                {profileLoading ? (
+                  <>
+                    <span 
+                      className="spinner-border spinner-border-sm me-2" 
+                      role="status" 
+                      aria-hidden="true"
+                    ></span>
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-save me-2"></i>Save Preferences
+                  </>
+                )}
+              </button>
+            </form>
           </div>
         </div>
 
@@ -543,11 +740,22 @@ export default function Dashboard() {
             </h5>
           </div>
           <div className="card-body">
-            <button className="btn btn-outline-warning mb-3">
+            <button 
+              className="btn btn-outline-warning mb-3"
+              onClick={() => navigate('/reset-password')}
+            >
               <i className="fas fa-key me-2"></i>Change Password
             </button>
             <br />
-            <button className="btn btn-outline-danger">
+            <button 
+              className="btn btn-outline-danger"
+              onClick={() => {
+                if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                  // Add delete account functionality here
+                  alert('Account deletion functionality will be implemented soon.');
+                }
+              }}
+            >
               <i className="fas fa-user-times me-2"></i>Delete Account
             </button>
           </div>
