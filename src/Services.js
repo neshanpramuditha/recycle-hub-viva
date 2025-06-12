@@ -9,7 +9,7 @@ export default function Services() {
       image: "/image/2.jpg",
       description:
         "Recycle plastic bottles, containers, and household plastic items. Help reduce plastic waste in our environment.",
-      link: "/Plastic_Item",
+      link: "/Buy",
     },
     {
       id: 2,
@@ -17,7 +17,7 @@ export default function Services() {
       image: "/image/5.png",
       description:
         "Glass bottles, jars, and containers can be given a new life. Quality glass items for eco-friendly living.",
-      link: "/Glasses",
+      link: "/Buy",
     },
     {
       id: 3,
@@ -25,7 +25,7 @@ export default function Services() {
       image: "/image/6.jpg",
       description:
         "Used tyres for various purposes including garden decorations, playground equipment, and recycling.",
-      link: "/Tyre",
+      link: "/Buy",
     },
     {
       id: 4,
@@ -33,7 +33,7 @@ export default function Services() {
       image: "/image/8.jpg",
       description:
         "Smartphones, laptops, tablets, and other electronic devices. Certified refurbished electronics.",
-      link: "/Electronic_Device",
+      link: "/Buy",
     },
     {
       id: 5,
@@ -41,7 +41,7 @@ export default function Services() {
       image: "/image/7.jpg",
       description:
         "Iron bars, metal scraps, and construction materials. Quality metal items for industrial use.",
-      link: "/Iron_Bar",
+      link: "/Buy",
     },
     {
       id: 6,
@@ -49,7 +49,7 @@ export default function Services() {
       image: "/image/9.jpg",
       description:
         "Second-hand books, textbooks, novels, and educational materials. Knowledge sharing made affordable.",
-      link: "/Book",
+      link: "/Buy",
     },
   ];
 

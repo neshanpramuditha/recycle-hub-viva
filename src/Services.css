@@ -3,6 +3,7 @@
 .services-container {
   background-color: var(--bg-primary);
   padding: 80px 0;
+  margin-top: 50px;
   color: var(--text-primary);
 }
 

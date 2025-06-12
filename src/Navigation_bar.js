@@ -8,10 +8,8 @@ export default function Navigation_bar() {
   const { user, signOut } = useAuth();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
-
   // Close dropdown when clicking outside
   useEffect(() => {
-    window.scrollTo(0, 0);
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   getUserProducts,
   deleteProduct,
@@ -367,7 +367,8 @@ export default function Dashboard() {
                     {product.status}
                   </span>
                 </div>
-              </div>              <div className="product-info">
+              </div>{" "}
+              <div className="product-info">
                 <h5>{product.title}</h5>
                 <p className="product-price">
                   LKR {product.price?.toLocaleString()}
@@ -456,7 +457,8 @@ export default function Dashboard() {
                 <div className="favorite-badge">
                   <i className="fas fa-heart text-danger"></i>
                 </div>
-              </div>              <div className="product-info">
+              </div>{" "}
+              <div className="product-info">
                 <h5>{product.title}</h5>
                 <p className="product-price">
                   LKR {product.price?.toLocaleString()}
@@ -1129,6 +1131,10 @@ export default function Dashboard() {
         </nav>
 
         <div className="sidebar-footer">
+          <Link className="btn btn-outline-success w-100" to={"/"}>
+            <i className="fas fa-home-alt me-2"></i>
+            Back to Home
+          </Link>
           <button
             className="btn btn-outline-danger w-100"
             onClick={handleLogout}

@@ -13,10 +13,20 @@ body {
   color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
   line-height: 1.6;
+  padding-top: 0; /* Remove any default padding that might interfere */
+  position: relative;
 }
 
-/* Ensure proper padding for fixed navbar */
-body {
+/* Ensure content doesn't jump behind navbar */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* Account for fixed navbar height */
+}
+
+/* Root container */
+#root {
+  position: relative;
+  min-height: 100vh;
 }
 
 code {
@@ -29,9 +39,15 @@ code {
   font-size: 0.9em;
 }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
+/* Selection styling */
+::selection {
+  background-color: var(--green-primary);
+  color: white;
+}
+
+::-moz-selection {
+  background-color: var(--green-primary);
+  color: white;
 }
 
 /* Selection styling */

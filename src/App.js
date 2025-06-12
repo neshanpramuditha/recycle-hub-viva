@@ -21,6 +21,7 @@ import ProtectedRoute from "./components/ProtectedRoute.js";
 import Dashboard from "./components/Dashboard.js";
 import EditProductForm from "./components/EditProductForm.js";
 import Layout from "./components/Layout.js";
+import ScrollToTop from "./components/ScrollToTop.js";
 import "./styles/themes.css";
 import AIChat from "./components/AIChat.js";
 
@@ -29,6 +30,7 @@ export default function App() {
     <ThemeProvider>
       <AuthProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             {/* Public pages with Layout (Navbar + Footer) */}
             <Route
