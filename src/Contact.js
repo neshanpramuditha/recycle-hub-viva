@@ -1,217 +1,137 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Contact.css";
 
-let Mode = 0;
-function MainContact() {
-  //light=0
-  //dark=1
+function Contact() {
+  const [formData, setFormData] = useState({
+    email: '',
+    name: '',
+    message: ''
+  });
 
-  switch (Mode) {
-    case 0:
-      Mode = 1;
-      document.body.style.backgroundColor = "#01002E";
-      document.getElementById("Main-topic-contact").style.color = "white";
-      document.getElementById("Main-topic-contact").style.borderBottom =
-        "3px solid white";
-      document.getElementById("light_contact").style.color = "white";
-      document.getElementById("light_contact").className = "bi bi-moon-fill";
-      document.getElementById("light_contact").style.borderBottom =
-        "3px solid white";
-      document.getElementById("question-contact").style.color = "white";
-      document.getElementById("Email-contact").style.color = "white";
-      document.getElementById("name-contact").style.color = "white";
-      document.getElementById("massage-contact").style.color = "white";
-      document.getElementById("social-media-contact").style.backgroundColor =
-        "rgb(235, 224, 211)";
-      document.getElementById("Facebook-contact").style.color = "black";
-      document.getElementById("link-01-contact").style.color = "black";
-      document.getElementById("Whatsapp-contact").style.color = "black";
-      document.getElementById("link-02-contact").style.color = "black";
-      document.getElementById("link-03-contact").style.color = "black";
-      document.getElementById("Phone-contact").style.color = "black";
-      document.getElementById("link-04-contact").style.color = "black";
-      document.getElementById("link-05-contact").style.color = "black";
-      document.getElementById("Facebook-contact").style.borderBottom =
-        "2px solid black";
-      document.getElementById("Whatsapp-contact").style.borderBottom =
-        "2px solid black";
-      document.getElementById("Phone-contact").style.borderBottom =
-        "2px solid black";
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
-      break;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.email || !formData.name || !formData.message) {
+      alert("Please fill in all fields");
+      return;
+    }
+    alert(
+      `Your Email Address: ${formData.email}\nYour Name: ${formData.name}\nYour Message: ${formData.message}`
+    );
+  };
 
-    case 1:
-      Mode = 0;
-
-      document.body.style.backgroundColor = "rgb(241, 237, 231)";
-      document.getElementById("Main-topic-contact").style.color = "black";
-      document.getElementById("Main-topic-contact").style.borderBottom =
-        "3px solid black";
-      document.getElementById("light_contact").style.color = "black";
-      document.getElementById("light_contact").className = "bi bi-moon";
-      document.getElementById("light_contact").style.borderBottom =
-        "3px solid black";
-      document.getElementById("question-contact").style.color = "black";
-      document.getElementById("Email-contact").style.color = "black";
-      document.getElementById("name-contact").style.color = "black";
-      document.getElementById("massage-contact").style.color = "black";
-      document.getElementById("social-media-contact").style.backgroundColor =
-        "black";
-      document.getElementById("Facebook-contact").style.color = "white";
-      document.getElementById("link-01-contact").style.color = "white";
-      document.getElementById("Whatsapp-contact").style.color = "white";
-      document.getElementById("link-02-contact").style.color = "white";
-      document.getElementById("link-03-contact").style.color = "white";
-      document.getElementById("Phone-contact").style.color = "white";
-      document.getElementById("link-04-contact").style.color = "white";
-      document.getElementById("link-05-contact").style.color = "white";
-      document.getElementById("Facebook-contact").style.borderBottom =
-        "2px solid white";
-      document.getElementById("Whatsapp-contact").style.borderBottom =
-        "2px solid white";
-      document.getElementById("Phone-contact").style.borderBottom =
-        "2px solid white";
-
-      break;
-  }
-}
-
-function Details_contact() {
-  let email;
-  let name;
-  let massage;
-  email = document.getElementById("input-01-contact").value;
-  name = document.getElementById("input-02-contact").value;
-  massage = document.getElementById("textarea-contact").value;
-
-  alert(
-    "Your Email Address:" +
-      email +
-      "\n" +
-      "your Name:" +
-      name +
-      "\n" +
-      "your Massage:" +
-      massage
-  );
-}
-
-export default function Contact() {
   return (
-    <div>
-      <div id="background">
-        <div class="container">
-          <div class="row">
-            <div class="col-12 mt-5">
-              <br />
-              <br />
-              <a href="#">
-                <i
-                  id="light_contact"
-                  className="bi bi-moon"
-                  onClick={MainContact}
-                ></i>
-              </a>
-              <span id="Main-topic-contact">CONTACT US</span>
-            </div>
-            <div class="col-12 mt-3">
-              <span id="question-contact">
-                Any questions or remark? just write us a massage!
-              </span>
-            </div>
-          </div>
+    <div className="contact-page">
+      <div className="container">
+        {/* Header Section */}
+        <div className="contact-header">
+          <h1 className="contact-title">CONTACT US</h1>
+          <p className="contact-subtitle">
+            Any questions or remarks? Just write us a message!
+          </p>
+        </div>
 
-          <div class="row">
-            <form action="" method="post">
-              <div class="col-12">
-                <table>
-                  <tr>
-                    <th>
-                      <label class="mb-2 mt-4" for="Email" id="Email-contact">
-                        Email:
-                      </label>
-                      <input
-                        id="input-01-contact"
-                        type="text"
-                        class="form-control"
-                        placeholder="Enter yor Email Address"
-                      />
-                    </th>
-                    <th>
-                      <label class="mb-2 mt-4" for="name" id="name-contact">
-                        Name:
-                      </label>
-                      <input
-                        id="input-02-contact"
-                        type="text"
-                        class="form-control"
-                        placeholder="Enter your Name"
-                      />
-                    </th>
-                  </tr>
-                </table>
+        {/* Main Content */}
+        <div className="contact-content">
+          {/* Contact Form */}
+          <div className="contact-form-section">
+            <form onSubmit={handleSubmit} className="contact-form">
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="email">Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="Enter your Email Address"
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="name">Name</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    placeholder="Enter your Name"
+                    required
+                  />
+                </div>
               </div>
-
-              <div class="col-12">
-                <label class="mb-3 mt-3" for="massage" id="massage-contact">
-                  <b>Massage:</b>
-                </label>
+              
+              <div className="form-group">
+                <label htmlFor="message">Message</label>
                 <textarea
-                  id="textarea-contact"
-                  class="form-control"
-                  placeholder="Type Here"
-                  cols="30"
-                  rows="4"
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  placeholder="Type your message here"
+                  rows="6"
+                  required
                 ></textarea>
-                <input
-                  id="submit-contact"
-                  type="submit"
-                  class="btn btn-success mt-5"
-                  placeholder="submit"
-                  onClick={Details_contact}
-                />
               </div>
+              
+              <button type="submit" className="submit-btn">
+                Send Message
+              </button>
             </form>
           </div>
 
-          <div class="row mt-5" id="social-media-contact">
-            <div class="col-es-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4">
-              <br />
-              <br />
-              <span id="Facebook-contact"> Facebook</span>
-              <br />
-              <span id="link-01-contact"> www.facebook.com/Recycle Hub</span>
-              <br />
-              <br />
-            </div>
+          {/* Contact Info */}
+          <div className="contact-info-section">
+            <div className="contact-info-card">
+              <h3>Get in Touch</h3>
+              <p>We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+              
+              <div className="contact-methods">
+                <div className="contact-method">
+                  <div className="contact-icon">
+                    <i className="bi bi-facebook"></i>
+                  </div>
+                  <div className="contact-details">
+                    <h4>Facebook</h4>
+                    <p>www.facebook.com/Recycle Hub</p>
+                  </div>
+                </div>
 
-            <div class="col-es-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4">
-              <br />
-              <br />
-              <span id="Whatsapp-contact">Whatsapp</span>
-              <br />
-              <span id="link-02-contact">0777659081/</span>
-              <span id="link-03-contact">0761426573</span>
-              <br />
-              <br />
-            </div>
+                <div className="contact-method">
+                  <div className="contact-icon">
+                    <i className="bi bi-whatsapp"></i>
+                  </div>
+                  <div className="contact-details">
+                    <h4>WhatsApp</h4>
+                    <p>0777659081 / 0761426573</p>
+                  </div>
+                </div>
 
-            <div class="col-es-12 col-sm-12 col-md-12 col-lg-4 col-xl-4 col-xxl-4">
-              <br />
-              <br />
-              <span id="Phone-contact">Phone(Land Line)</span>
-              <br />
-              <span id="link-04-contact">0119087631/</span>
-              <span id="link-05-contact"> 0112438965</span>
-              <br />
-              <br />
-              <br />
+                <div className="contact-method">
+                  <div className="contact-icon">
+                    <i className="bi bi-telephone"></i>
+                  </div>
+                  <div className="contact-details">
+                    <h4>Phone (Land Line)</h4>
+                    <p>0119087631 / 0112438965</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <br />
-          <br />
         </div>
       </div>
     </div>
   );
 }
+
+export default Contact;
