@@ -11,6 +11,7 @@ export default function Navigation_bar() {
 
   // Close dropdown when clicking outside
   useEffect(() => {
+    window.scrollTo(0, 0);
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false);

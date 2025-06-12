@@ -5,8 +5,6 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    min-height: 100vh;
-    padding-top: 80px; /* Account for fixed navbar */
     padding-bottom: 2rem;
 }
 
