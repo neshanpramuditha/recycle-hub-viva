@@ -2,142 +2,145 @@ import React from "react";
 import "./About.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-let mode = 0;
-
-function MainAbout() {
-  //light=0
-  //dark=1
-
-  switch (mode) {
-    case 0:
-      mode = 1;
-
-      document.body.style.backgroundColor = "#01002E";
-      document.getElementById(
-        "Your_second_hand_marketplace_about"
-      ).style.color = "white";
-      document.getElementById(
-        "Your_second_hand_marketplace_about"
-      ).style.borderBottom = "3px solid white";
-      document.getElementById("light").style.borderBottom = "3px solid white";
-      document.getElementById("Promote_Effective_about").style.color = "white";
-      document.getElementById("Foster_Circular_Economy_about").style.color =
-        "white";
-      document.getElementById("Drive_Behavioral_Change").style.color = "white";
-      document.getElementById("list01_about").style.color = "white";
-      document.getElementById("list02_about").style.color = "white";
-      document.getElementById("list03_about").style.color = "white";
-      document.getElementById("light").style.color = "white";
-      document.getElementById("light").className = "bi bi-moon-fill";
-      document.getElementById("image_about").style.border = "2px solid white";
-      document.getElementById("image_about").style.border = "none";
-
-      break;
-
-    case 1:
-      mode = 0;
-
-      document.body.style.backgroundColor = "rgb(224, 234, 207)";
-      document.getElementById(
-        "Your_second_hand_marketplace_about"
-      ).style.color = "black";
-      document.getElementById(
-        "Your_second_hand_marketplace_about"
-      ).style.borderBottom = "3px solid black";
-      document.getElementById("light").style.borderBottom = "3px solid black";
-      document.getElementById("Promote_Effective_about").style.color = "black";
-      document.getElementById("Foster_Circular_Economy_about").style.color =
-        "black";
-      document.getElementById("Drive_Behavioral_Change").style.color = "black";
-      document.getElementById("list01_about").style.color = "black";
-      document.getElementById("list02_about").style.color = "black";
-      document.getElementById("list03_about").style.color = "black";
-      document.getElementById("light").style.color = "black";
-      document.getElementById("light").className = "bi bi-moon";
-      document.getElementById("image_about").style.border = "none";
-
-      break;
-  }
-}
-
 export default function About() {
   return (
-    <div>
+    <div className="about-page">
       <div id="background_about">
-        <div class="row">
-          <div class="col-12">
-            <br />
-            <br />
-            <br />
-            <br />
-            <a href="#">
-              <i id="light" className="bi bi-moon" onClick={MainAbout}></i>
-            </a>
-            <span id="Your_second_hand_marketplace_about">
-              Your second-hand marketplace.
-            </span>
+        {/* Header Section */}
+        <div className="row">
+          <div className="col-12">
+            <div className="header-section">
+              <div className="hero-content">
+                <h1 className="hero-title">
+                  Your <span className="accent-text">second-hand</span>{" "}
+                  marketplace
+                </h1>
+                <p className="hero-subtitle">
+                  Building a sustainable future through conscious consumption
+                  and recycling
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-es-12 col-sm-12 col-md-12 col-lg-12 col-xl-4 col-xxl-4">
-            <img id="image_about" src="/image/3.png" />
+        </div>{" "}
+        {/* Features Section */}
+        <div className="features-section">
+          <div className="row align-items-center">
+            <div className="col-12 col-lg-5 col-xl-4">
+              <div className="image-container">
+                <img
+                  id="image_about"
+                  src="/image/3.png"
+                  alt="Recycle Hub Marketplace"
+                  className="img-fluid main-image"
+                />
+                <div className="image-overlay"></div>
+              </div>
+            </div>
+
+            <div className="col-12 col-lg-7 col-xl-8">
+              <div className="content-wrapper">
+                {/* Mission Card 1 */}
+                <div className="mission-card">
+                  <div className="card-icon">
+                    <i className="bi bi-recycle"></i>
+                  </div>
+                  <h3 className="card-title">
+                    Promote Effective Waste Reduction, Reuse, and Recycling
+                  </h3>
+                  <div className="card-content">
+                    <div className="objective-item">
+                      <i className="bi bi-check-circle-fill"></i>
+                      <p>
+                        Educate and empower users to reduce, reuse, and recycle
+                        waste effectively through our Waste Sorting Guide,
+                        Upcycling & Repair Hub, and Local Recycling Center
+                        Locator.
+                      </p>
+                    </div>
+                    <div className="objective-item outcome">
+                      <i className="bi bi-graph-up-arrow"></i>
+                      <p>
+                        <strong>Expected Outcome:</strong> Significant reduction
+                        in waste sent to landfills and increased recycling rates
+                        through proper waste sorting and upcycling initiatives.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mission Card 2 */}
+                <div className="mission-card">
+                  <div className="card-icon">
+                    <i className="bi bi-people-fill"></i>
+                  </div>
+                  <h3 className="card-title">
+                    Foster a Circular Economy Through Community Engagement
+                  </h3>
+                  <div className="card-content">
+                    <div className="objective-item">
+                      <i className="bi bi-check-circle-fill"></i>
+                      <p>
+                        Create a thriving Second-Hand Marketplace and Community
+                        Challenges that encourage buying, selling, and donating
+                        second-hand items while building connections with
+                        like-minded individuals and businesses.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mission Card 3 */}
+                <div className="mission-card">
+                  <div className="card-icon">
+                    <i className="bi bi-trophy-fill"></i>
+                  </div>
+                  <h3 className="card-title">
+                    Drive Behavioral Change Through Gamification
+                  </h3>
+                  <div className="card-content">
+                    <div className="objective-item">
+                      <i className="bi bi-check-circle-fill"></i>
+                      <p>
+                        Motivate sustainable habits through our Waste Tracker &
+                        Gamification features, including progress tracking,
+                        rewards system, and community challenges, while making
+                        recycling convenient through our comprehensive location
+                        services.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div class="col-es-12 col-sm-12 col-md-12 col-lg-12 col-xl-8 col-xxl-8">
-            <br />
-            <br />
-            <span id="Promote_Effective_about">
-              <b>Promote Effective Waste Reduction, Reuse, and Recycling</b>
-            </span>
-            <ul class="mt-3" id="list01_about">
-              <li class="lead mb-3">
-                To educate and empower users to reduce, reuse, and recycle waste
-                effectively by providing tools like the Waste Sorting
-                Guide,Upcycling & Repair Hub, and Local Recycling Center
-                Locator.
-              </li>
-
-              <li class="lead  mb-4">
-                Outcome: Users will have the knowledge and resources to properly
-                sort waste , repair and upcycle items, and <br />
-                locate recycling facilities, leading to a significant reduction
-                in waste sent to landfills and an increase in recycling
-                <br /> rates.
-              </li>
-            </ul>
-
-            <span id="Foster_Circular_Economy_about">
-              <b>
-                Foster a Circular Economy Through Community and Marketplace
-                &nbsp;&nbsp;Engagement
-              </b>
-            </span>
-            <ul class="mt-3" id="list02_about">
-              <li class="lead mb-4">
-                Objective: To create a Second-Hand Marketplace and Community
-                Challenges that encourage users to buy, sell,
-                <br /> and donate second-hand items, participate in recycling
-                challenges, and engage with like-minded individuals and
-                businesses.
-              </li>
-            </ul>
-
-            <span id="Drive_Behavioral_Change">
-              <b>
-                {" "}
-                Drive Behavioral Change Through Gamification and Convenience
-              </b>
-            </span>
-            <ul class="mt-3" id="list03_about">
-              <li class="lead">
-                Objective: To motivate users to adopt sustainable habits through
-                Waste Tracker & Gamification features, such as tracking waste
-                reduction progress, earning rewards, and competing in
-                challenges, while also making recycling <br />
-                more convenient through the Local Recycling Center Locator and
-                Business Partnerships.
-              </li>
-            </ul>
+          {/* Stats Section */}
+          <div className="row stats-section">
+            <div className="col-12">
+              <div className="stats-container">
+                <div className="stat-item">
+                  <i className="bi bi-globe"></i>
+                  <h4>1M+</h4>
+                  <p>Items Recycled</p>
+                </div>
+                <div className="stat-item">
+                  <i className="bi bi-people"></i>
+                  <h4>50K+</h4>
+                  <p>Active Users</p>
+                </div>
+                <div className="stat-item">
+                  <i className="bi bi-tree"></i>
+                  <h4>75%</h4>
+                  <p>Waste Reduction</p>
+                </div>
+                <div className="stat-item">
+                  <i className="bi bi-award"></i>
+                  <h4>500+</h4>
+                  <p>Communities</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
