@@ -107,6 +107,19 @@
   color: var(--text-primary);
 }
 
+.form-group input.error,
+.form-group textarea.error {
+  border-color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.05);
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  display: block;
+}
+
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
@@ -136,13 +149,19 @@
   letter-spacing: 0.5px;
 }
 
-.submit-btn:hover {
+.submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 10px 25px var(--shadow-medium);
 }
 
 .submit-btn:active {
   transform: translateY(0);
+}
+
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
 }
 
 /* Contact Info Section */
