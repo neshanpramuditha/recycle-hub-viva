@@ -5,9 +5,10 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 export default function About() {
   return (
     <div className="about-page">
+      {" "}
       <div id="background_about">
         {/* Header Section */}
-        <div className="row">
+        <section className="row">
           <div className="col-12">
             <div className="header-section">
               <div className="hero-content">
@@ -22,11 +23,12 @@ export default function About() {
               </div>
             </div>
           </div>
-        </div>{" "}
+        </section>
+
         {/* Features Section */}
-        <div className="features-section">
+        <section className="features-section">
           <div className="row align-items-center">
-            <div className="col-12 col-lg-5 col-xl-4">
+            <div className="col-12 col-lg-5 col-xl-4 order-lg-1 order-2">
               <div className="image-container">
                 <img
                   id="image_about"
@@ -38,7 +40,7 @@ export default function About() {
               </div>
             </div>
 
-            <div className="col-12 col-lg-7 col-xl-8">
+            <div className="col-12 col-lg-7 col-xl-8 order-lg-2 order-1">
               <div className="content-wrapper">
                 {/* Mission Card 1 */}
                 <div className="mission-card">
@@ -113,36 +115,8 @@ export default function About() {
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Stats Section */}
-          <div className="row stats-section">
-            <div className="col-12">
-              <div className="stats-container">
-                <div className="stat-item">
-                  <i className="bi bi-globe"></i>
-                  <h4>1M+</h4>
-                  <p>Items Recycled</p>
-                </div>
-                <div className="stat-item">
-                  <i className="bi bi-people"></i>
-                  <h4>50K+</h4>
-                  <p>Active Users</p>
-                </div>
-                <div className="stat-item">
-                  <i className="bi bi-tree"></i>
-                  <h4>75%</h4>
-                  <p>Waste Reduction</p>
-                </div>
-                <div className="stat-item">
-                  <i className="bi bi-award"></i>
-                  <h4>500+</h4>
-                  <p>Communities</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+          </div>{" "}
+        </section>
       </div>
     </div>
   );
