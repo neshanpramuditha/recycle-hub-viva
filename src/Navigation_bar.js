@@ -18,11 +18,11 @@ export default function Navigation_bar() {
     };
 
     if (showDropdown) {
-      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [showDropdown]);
 
@@ -31,7 +31,7 @@ export default function Navigation_bar() {
       await signOut();
       setShowDropdown(false);
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     }
   };
 
@@ -83,34 +83,32 @@ export default function Navigation_bar() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/Buy_And_Sale" className="nav-link active" id="link4">
-                  Buy & Sale
+                <Link to="/Buy" className="nav-link active" id="link4">
+                  Buy
                 </Link>
               </li>
               <li className="nav-item">
                 <Link to="/Contact" className="nav-link active" id="link5">
                   Contact
-                </Link>              </li>            </div>
-              
-              {/* Theme Toggle */}
-              <div className="theme-toggle-container">
-                <ThemeToggle />
-              </div>
-              
-              {/* User Icon Dropdown */}
+                </Link>{" "}
+              </li>{" "}
+            </div>
+
+            {/* Theme Toggle */}
+            <div className="theme-toggle-container">
+              <ThemeToggle />
+            </div>
+
+            {/* User Icon Dropdown */}
             <div className="user-dropdown-container" ref={dropdownRef}>
-              <div 
-                className="user-icon-wrapper"
-                onClick={toggleDropdown}
-              >
+              <div className="user-icon-wrapper" onClick={toggleDropdown}>
                 <div className="user-icon">
                   {user ? (
                     <div className="user-avatar">
                       <span className="user-initial">
-                        {user.user_metadata?.full_name ? 
-                          user.user_metadata.full_name.charAt(0).toUpperCase() : 
-                          user.email.charAt(0).toUpperCase()
-                        }
+                        {user.user_metadata?.full_name
+                          ? user.user_metadata.full_name.charAt(0).toUpperCase()
+                          : user.email.charAt(0).toUpperCase()}
                       </span>
                     </div>
                   ) : (
@@ -118,46 +116,43 @@ export default function Navigation_bar() {
                   )}
                 </div>
               </div>
-
               {/* Dropdown Menu */}
               {showDropdown && (
                 <div className="user-dropdown">
                   <div className="dropdown-arrow"></div>
-                  
+
                   {user ? (
                     <div className="dropdown-content">
                       <div className="user-info">
                         <div className="user-name">
-                          {user.user_metadata?.full_name || 'User'}
+                          {user.user_metadata?.full_name || "User"}
                         </div>
-                        <div className="user-email">
-                          {user.email}
-                        </div>
+                        <div className="user-email">{user.email}</div>
                       </div>
-                      
+
                       <div className="dropdown-divider"></div>
-                      
-                      <Link 
-                        to="/Dashboard" 
+
+                      <Link
+                        to="/Dashboard"
                         className="dropdown-item"
                         onClick={closeDropdown}
                       >
                         <i className="fas fa-tachometer-alt me-2"></i>
                         Dashboard
                       </Link>
-                      
-                      <Link 
-                        to="/Profile" 
+
+                      <Link
+                        to="/Profile"
                         className="dropdown-item"
                         onClick={closeDropdown}
                       >
                         <i className="fas fa-user-cog me-2"></i>
                         Profile Settings
                       </Link>
-                      
+
                       <div className="dropdown-divider"></div>
-                      
-                      <button 
+
+                      <button
                         onClick={handleLogout}
                         className="dropdown-item logout-btn"
                       >
@@ -171,18 +166,18 @@ export default function Navigation_bar() {
                         <i className="fas fa-user-plus mb-2"></i>
                         <p>Join Recycle Hub today!</p>
                       </div>
-                      
-                      <Link 
-                        to="/Login" 
+
+                      <Link
+                        to="/Login"
                         className="dropdown-btn login-btn"
                         onClick={closeDropdown}
                       >
                         <i className="fas fa-sign-in-alt me-2"></i>
                         Login
                       </Link>
-                      
-                      <Link 
-                        to="/Register" 
+
+                      <Link
+                        to="/Register"
                         className="dropdown-btn signup-btn"
                         onClick={closeDropdown}
                       >
@@ -192,7 +187,8 @@ export default function Navigation_bar() {
                     </div>
                   )}
                 </div>
-              )}            </div>
+              )}{" "}
+            </div>
           </ul>
         </div>
       </nav>

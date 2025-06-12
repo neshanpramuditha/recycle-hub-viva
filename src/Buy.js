@@ -272,7 +272,7 @@ export default function Buy() {
                 </button>
               </div>
             ) : (
-              <div className="products-grid">
+              <div className="col-lg-4 col-md-6 col-sm-12">
                 {filteredProducts.length > 0 ? (
                   filteredProducts.map((product) => (
                     <div

@@ -55,14 +55,14 @@ export default function App() {
                 </Layout>
               }
             />
-            <Route
+            {/* <Route
               path="/Buy_And_Sale"
               element={
                 <Layout>
                   <Buy_And_Sale />
                 </Layout>
               }
-            />
+            /> */}
             <Route
               path="/Contact"
               element={
