@@ -408,6 +408,20 @@ export async function getUserFavorites(userId) {
 // Add a new category
 export async function addCategory(categoryData) {
   try {
+    // Check if user is authenticated
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError) {
+      console.error('Auth error:', authError);
+      throw new Error('Authentication failed');
+    }
+    
+    if (!user) {
+      throw new Error('You must be logged in to add categories');
+    }
+
+    console.log('Adding category:', categoryData);
+    
     const { data, error } = await supabase
       .from('categories')
       .insert([{
@@ -421,9 +435,10 @@ export async function addCategory(categoryData) {
 
     if (error) {
       console.error('Error adding category:', error);
-      throw error;
+      throw new Error(error.message || 'Failed to add category');
     }
 
+    console.log('Category added successfully:', data);
     return data;
   } catch (error) {
     console.error('Error in addCategory:', error);

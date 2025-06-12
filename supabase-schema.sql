@@ -146,6 +146,14 @@ ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Categories are viewable by everyone" ON categories
   FOR SELECT USING (true);
 
+-- Allow authenticated users to insert categories
+CREATE POLICY "Authenticated users can insert categories" ON categories
+  FOR INSERT TO authenticated WITH CHECK (true);
+
+-- Allow authenticated users to update categories  
+CREATE POLICY "Authenticated users can update categories" ON categories
+  FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+
 -- Products policies
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 

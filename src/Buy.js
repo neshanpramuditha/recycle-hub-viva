@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from 'react-hot-toast';
 import "./Buy.css";
 import {
   getAllProducts,
@@ -41,10 +42,10 @@ export default function Buy() {
           { id: "all", name: "All" },
           ...(categoriesData || []),
         ];
-        setCategories(allCategories);
-      } catch (err) {
+        setCategories(allCategories);      } catch (err) {
         console.error("Error fetching data:", err);
         setError("Failed to load data. Please try again later.");
+        toast.error("Failed to load data. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -52,14 +53,28 @@ export default function Buy() {
 
     fetchData();
   }, []);
-
   // Handle adding new category
   const handleAddCategory = async (e) => {
     e.preventDefault();
-    if (!newCategory.name.trim()) return;
+    if (!newCategory.name.trim()) {
+      toast.error("Please enter a category name");
+      return;
+    }
+
+    // Check if category already exists
+    const existingCategory = categories.find(
+      cat => cat.name.toLowerCase() === newCategory.name.trim().toLowerCase()
+    );
+    
+    if (existingCategory) {
+      toast.error("This category already exists");
+      return;
+    }
 
     try {
       setCategoriesLoading(true);
+      const loadingToast = toast.loading("Adding category...");
+      
       const addedCategory = await addCategory({
         name: newCategory.name.trim(),
         description: newCategory.description.trim() || null,
@@ -73,10 +88,11 @@ export default function Buy() {
       setShowAddCategory(false);
 
       // Show success message
-      alert("Category added successfully!");
+      toast.dismiss(loadingToast);
+      toast.success("Category added successfully!");
     } catch (err) {
       console.error("Error adding category:", err);
-      alert("Failed to add category. Please try again.");
+      toast.error(`Failed to add category: ${err.message || "Please try again"}`);
     } finally {
       setCategoriesLoading(false);
     }
@@ -137,9 +153,31 @@ export default function Buy() {
   const handleProductClick = (productId) => {
     navigate(`/product/${productId}`);
   };
-
   return (
     <div className="buy-container">
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: 'var(--bg-secondary)',
+            color: 'var(--text-primary)',
+            border: '1px solid var(--border-color)',
+          },
+          success: {
+            iconTheme: {
+              primary: 'var(--green-primary)',
+              secondary: 'white',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: 'white',
+            },
+          },
+        }}
+      />
       <div className="buy-header">
         <div className="container">
           <h1 className="buy-title">Browse Second-Hand Items</h1>
