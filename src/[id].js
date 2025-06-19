@@ -8,6 +8,8 @@ import {
   isProductFavorited,
 } from "./lib/productQueries";
 import { useAuth } from "./contexts/AuthContext";
+import { useTheme } from "./contexts/ThemeContext";
+import ThemeToggle from "./components/ThemeToggle";
 import toast, { Toaster } from "react-hot-toast";
 import "./ProductSingle.css";
 
@@ -15,6 +17,7 @@ export default function ProductSingle() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { theme, isDark } = useTheme();
   const [product, setProduct] = useState(null);
   const [similarProducts, setSimilarProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -180,9 +183,11 @@ export default function ProductSingle() {
       </div>
     );
   }
-
   return (
-    <div className="product-single-container">
+    <div className={`product-single-container ${isDark ? 'dark-theme' : 'light-theme'}`}>
+      <div className="theme-toggle-container">
+        <ThemeToggle />
+      </div>
       <div className="container">
         {" "}
         <nav className="breadcrumb-nav">
@@ -526,25 +531,25 @@ export default function ProductSingle() {
             </div>{" "}
           </div>
         )}
-      </div>
-      <Toaster
+      </div>      <Toaster
         position="top-right"
         toastOptions={{
           duration: 3000,
           style: {
-            background: "#363636",
-            color: "#fff",
+            background: isDark ? 'var(--bg-secondary)' : '#fff',
+            color: isDark ? 'var(--text-primary)' : '#333',
+            border: isDark ? '1px solid var(--border-color)' : '1px solid #e2e8f0'
           },
           success: {
             style: {
-              background: "#4ade80",
-              color: "#fff",
+              background: isDark ? 'var(--green-dark)' : '#4ade80',
+              color: '#fff',
             },
           },
           error: {
             style: {
-              background: "#ef4444",
-              color: "#fff",
+              background: isDark ? '#dc2626' : '#ef4444',
+              color: '#fff',
             },
           },
         }}
