@@ -279,16 +279,15 @@ export default function Buy() {
                 >
                   Try Again
                 </button>
-              </div>
-            ) : (
-              <div className="col-lg-4 col-md-6 col-sm-12">
+              </div>            ) : (
+              <div className="row">
                 {filteredProducts.length > 0 ? (
                   filteredProducts.map((product) => (
-                    <div
-                      key={product.id}
-                      className="product-card"
-                      onClick={() => handleProductClick(product.id)}
-                    >
+                    <div key={product.id} className="col-lg-4 col-md-6 col-sm-12 mb-4">
+                      <div
+                        className="product-card"
+                        onClick={() => handleProductClick(product.id)}
+                      >
                       <div className="product-image-container">
                         {" "}
                         <img
@@ -335,18 +334,19 @@ export default function Buy() {
                           <span className="product-category">
                             🏷️ {product.category_name}
                           </span>
-                        </div>
-                        <div className="product-date">
+                        </div>                        <div className="product-date">
                           Posted:{" "}
                           {new Date(product.created_at).toLocaleDateString()}
                         </div>
                       </div>
                     </div>
-                  ))
-                ) : (
-                  <div className="no-products">
-                    <h3>No products found</h3>
-                    <p>Try adjusting your filters or search terms.</p>
+                    </div>
+                  ))                ) : (
+                  <div className="col-12">
+                    <div className="no-products">
+                      <h3>No products found</h3>
+                      <p>Try adjusting your filters or search terms.</p>
+                    </div>
                   </div>
                 )}
               </div>

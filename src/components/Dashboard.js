@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
+import { useTheme } from "../contexts/ThemeContext";
 import { Link, useNavigate } from "react-router-dom";
 import {
   getUserProducts,
@@ -9,10 +10,12 @@ import {
 import { deleteImage } from "../lib/storageHelpers";
 import { supabase } from "../lib/supabase";
 import AddProductForm from "./AddProductForm";
+import ThemeToggle from "./ThemeToggle";
 import "./Dashboard.css";
 
 export default function Dashboard() {
   const { user, signOut } = useAuth();
+  const { theme } = useTheme();
   const navigate = useNavigate();
   // State management
   const [activeSection, setActiveSection] = useState("overview");
@@ -737,6 +740,22 @@ export default function Dashboard() {
                 )}
               </button>
             </form>
+          </div>        </div>
+
+        <div className="card mb-4">
+          <div className="card-header">
+            <h5>
+              <i className="fas fa-palette me-2"></i>Appearance
+            </h5>
+          </div>
+          <div className="card-body">
+            <div className="mb-3">
+              <label className="form-label">Theme Preference</label>
+              <p className="text-muted mb-3">
+                Choose your preferred theme for the application
+              </p>
+              <ThemeToggle />
+            </div>
           </div>
         </div>
 
