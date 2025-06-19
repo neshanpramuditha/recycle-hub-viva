@@ -14,6 +14,7 @@ export default function AddProductForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [profileIncomplete, setProfileIncomplete] = useState(false);
 
   // Form data
   const [formData, setFormData] = useState({
@@ -38,7 +39,6 @@ export default function AddProductForm() {
   const [specifications, setSpecifications] = useState([
     { name: '', value: '' }
   ]);
-
   // Load categories on component mount
   useEffect(() => {
     const fetchCategories = async () => {
@@ -51,6 +51,30 @@ export default function AddProductForm() {
     };
     fetchCategories();
   }, []);
+
+  // Check if user profile is complete
+  const checkProfileCompleteness = () => {
+    if (!user) return false;
+    
+    const requiredFields = [
+      user?.user_metadata?.full_name,
+      user?.user_metadata?.phone_number,
+      user?.user_metadata?.location
+    ];
+    
+    return requiredFields.every(field => field && field.trim() !== '');
+  };
+
+  // Check profile completeness on mount
+  useEffect(() => {
+    if (user) {
+      const isComplete = checkProfileCompleteness();
+      setProfileIncomplete(!isComplete);
+        if (!isComplete) {
+        setError('⚠️ Complete Your Profile First! Please add your full name, phone number, and location in Dashboard Settings before listing products.');
+      }
+    }
+  }, [user]);
 
   // Handle input changes
   const handleInputChange = (e) => {
@@ -190,7 +214,6 @@ export default function AddProductForm() {
   const removeSpecification = (index) => {
     setSpecifications(prev => prev.filter((_, i) => i !== index));
   };
-
   // Form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -198,7 +221,13 @@ export default function AddProductForm() {
     if (!user) {
       setError('You must be logged in to add a product');
       return;
-    }    
+    }
+
+    // Check profile completeness
+    if (!checkProfileCompleteness()) {
+      setError('🚨 Profile Incomplete! Please complete your profile information (full name, phone number, and location) in Dashboard Settings before adding products.');
+      return;
+    }
     
     if (imageFiles.length === 0 && imageUrls.filter(url => url.trim()).length === 0) {
       setError('Please add at least one image (file upload or URL)');
@@ -248,7 +277,6 @@ export default function AddProductForm() {
     <div className="dashboard-content">
       <div className="content-header">
         <h2>
-          <i className="fas fa-plus-circle me-3"></i>
           Add New Product
         </h2>
         <p className="text-muted">Create a new product listing for the marketplace</p>
@@ -260,9 +288,7 @@ export default function AddProductForm() {
           {error}
           <button type="button" className="btn-close" onClick={() => setError('')}></button>
         </div>
-      )}
-
-      {success && (
+      )}      {success && (
         <div className="alert alert-success alert-dismissible fade show" role="alert">
           <i className="fas fa-check-circle me-2"></i>
           {success}
@@ -270,7 +296,48 @@ export default function AddProductForm() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit}>
+      {profileIncomplete && (
+        <div className="card mb-4 border-warning">
+          <div className="card-header bg-warning text-dark">
+            <h5 className="mb-0">
+              <i className="fas fa-user-edit me-2"></i>
+              Profile Incomplete
+            </h5>
+          </div>
+          <div className="card-body">
+            <div className="row align-items-center">              <div className="col-md-8">
+                <h6 className="text-warning mb-2">
+                  <i className="fas fa-exclamation-triangle me-2"></i>
+                  🚨 Complete Your Profile First
+                </h6>
+                <p className="mb-2 fw-bold">
+                  Before adding products, please complete your profile information including:
+                </p>
+                <ul className="mb-3 text-warning">
+                  <li><strong>✓ Full Name</strong></li>
+                  <li><strong>✓ Phone Number</strong></li>
+                  <li><strong>✓ Location</strong></li>
+                </ul>
+                <p className="text-muted small mb-0">
+                  This information helps buyers contact you and builds trust in the marketplace.
+                </p>
+              </div>
+              <div className="col-md-4 text-center">
+                <button
+                  type="button"
+                  onClick={() => navigate('/dashboard?section=settings')}
+                  className="btn btn-warning"
+                >
+                  <i className="fas fa-cog me-2"></i>
+                  Complete Profile
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} style={{ opacity: profileIncomplete ? 0.6 : 1, pointerEvents: profileIncomplete ? 'none' : 'auto' }}>
         <div className="row">
           {/* Left Column */}
           <div className="col-lg-8">

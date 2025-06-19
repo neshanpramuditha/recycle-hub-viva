@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { 
   getCategories, 
   getProductById, 
@@ -14,6 +15,7 @@ export default function EditProductForm() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { user } = useAuth();
+  const { theme } = useTheme();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingProduct, setLoadingProduct] = useState(true);
@@ -344,97 +346,128 @@ export default function EditProductForm() {
       </div>
     );
   }
-
   return (
-    <div className="add-product-container">
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-md-8">
-            <div className="add-product-form">
-              <h2>Edit Product</h2>
-              
-              {error && <div className="alert alert-danger">{error}</div>}
-              {success && <div className="alert alert-success">{success}</div>}
+    <div className="dashboard-content">
+      <div className="content-header">
+        <h2>
+          Edit Product
+        </h2>
+        <p className="text-muted">Update your product listing information</p>
+      </div>
 
-              <form onSubmit={handleSubmit}>
-                {/* Basic Information */}
-                <div className="form-section">
-                  <h4>Basic Information</h4>
-                  
-                  <div className="form-group">
-                    <label>Product Title *</label>
-                    <input
-                      type="text"
-                      name="title"
-                      value={formData.title}
-                      onChange={handleInputChange}
-                      className="form-control"
-                      placeholder="Enter product title"
-                      required
-                    />
-                  </div>
+      {error && (
+        <div className="alert alert-danger alert-dismissible fade show" role="alert">
+          <i className="fas fa-exclamation-triangle me-2"></i>
+          {error}
+          <button type="button" className="btn-close" onClick={() => setError('')}></button>
+        </div>
+      )}
 
-                  <div className="form-group">
-                    <label>Description *</label>
-                    <textarea
-                      name="description"
-                      value={formData.description}
-                      onChange={handleInputChange}
-                      className="form-control"
-                      rows="4"
-                      placeholder="Describe your product in detail"
-                      required
-                    />
-                  </div>
+      {success && (
+        <div className="alert alert-success alert-dismissible fade show" role="alert">
+          <i className="fas fa-check-circle me-2"></i>
+          {success}
+          <button type="button" className="btn-close" onClick={() => setSuccess('')}></button>
+        </div>
+      )}
 
-                  <div className="row">
-                    <div className="col-md-6">
-                      <div className="form-group">
-                        <label>Category *</label>
-                        <select
-                          name="category_id"
-                          value={formData.category_id}
-                          onChange={handleInputChange}
-                          className="form-control"
-                          required
-                        >
-                          <option value="">Select a category</option>
-                          {categories.map(category => (
-                            <option key={category.id} value={category.id}>
-                              {category.name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
+      <form onSubmit={handleSubmit}>
+        <div className="row">
+          {/* Left Column */}
+          <div className="col-lg-8">
+            {/* Basic Information Card */}
+            <div className="card mb-4">
+              <div className="card-header">
+                <h5>
+                  <i className="fas fa-info-circle me-2"></i>
+                  Basic Information
+                </h5>
+              </div>
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-12">
+                    <div className="mb-3">
+                      <label className="form-label">Product Title *</label>
+                      <input
+                        type="text"
+                        name="title"
+                        value={formData.title}
+                        onChange={handleInputChange}
+                        className="form-control"
+                        placeholder="Enter a descriptive product title"
+                        required
+                      />
                     </div>
-                    <div className="col-md-6">
-                      <div className="form-group">
-                        <label>Condition *</label>
-                        <select
-                          name="condition"
-                          value={formData.condition}
-                          onChange={handleInputChange}
-                          className="form-control"
-                          required
-                        >
-                          <option value="Excellent">Excellent</option>
-                          <option value="Good">Good</option>
-                          <option value="Fair">Fair</option>
-                          <option value="Poor">Poor</option>
-                        </select>
-                      </div>
+                  </div>
+                  <div className="col-12">
+                    <div className="mb-3">
+                      <label className="form-label">Description *</label>
+                      <textarea
+                        name="description"
+                        value={formData.description}
+                        onChange={handleInputChange}
+                        className="form-control"
+                        rows="4"
+                        placeholder="Describe your product in detail, including features, condition, and any other relevant information"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <label className="form-label">Category *</label>
+                      <select
+                        name="category_id"
+                        value={formData.category_id}
+                        onChange={handleInputChange}
+                        className="form-control"
+                        required
+                      >
+                        <option value="">Select a category</option>
+                        {categories.map(category => (
+                          <option key={category.id} value={category.id}>
+                            {category.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <label className="form-label">Condition *</label>
+                      <select
+                        name="condition"
+                        value={formData.condition}
+                        onChange={handleInputChange}
+                        className="form-control"
+                        required
+                      >
+                        <option value="Excellent">Excellent</option>
+                        <option value="Good">Good</option>
+                        <option value="Fair">Fair</option>
+                        <option value="Poor">Poor</option>
+                      </select>
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
 
-                {/* Pricing */}
-                <div className="form-section">
-                  <h4>Pricing</h4>
-                  
-                  <div className="row">
-                    <div className="col-md-6">
-                      <div className="form-group">
-                        <label>Current Price (LKR) *</label>
+            {/* Pricing Information */}
+            <div className="card mb-4">
+              <div className="card-header">
+                <h5>
+                  <i className="fas fa-dollar-sign me-2"></i>
+                  Pricing Information
+                </h5>
+              </div>
+              <div className="card-body">
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <label className="form-label">Current Price (LKR) *</label>
+                      <div className="input-group">
+                        <span className="input-group-text">Rs.</span>
                         <input
                           type="number"
                           name="price"
@@ -448,9 +481,12 @@ export default function EditProductForm() {
                         />
                       </div>
                     </div>
-                    <div className="col-md-6">
-                      <div className="form-group">
-                        <label>Original Price (LKR)</label>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="mb-3">
+                      <label className="form-label">Original Price (LKR)</label>
+                      <div className="input-group">
+                        <span className="input-group-text">Rs.</span>
                         <input
                           type="number"
                           name="original_price"
@@ -462,219 +498,279 @@ export default function EditProductForm() {
                           step="0.01"
                         />
                       </div>
+                      <small className="form-text text-muted">Optional: Show savings to buyers</small>
                     </div>
                   </div>
-
-                  <div className="form-group">
-                    <label className="checkbox-label">
+                  <div className="col-12">
+                    <div className="form-check">
                       <input
                         type="checkbox"
                         name="is_negotiable"
                         checked={formData.is_negotiable}
                         onChange={handleInputChange}
+                        className="form-check-input"
+                        id="negotiable"
                       />
-                      Price is negotiable
-                    </label>
+                      <label className="form-check-label" htmlFor="negotiable">
+                        Price is negotiable
+                      </label>
+                    </div>
                   </div>
                 </div>
+              </div>
+            </div>
 
-                {/* Location */}
-                <div className="form-section">
-                  <h4>Location</h4>
-                  <div className="form-group">
-                    <label>Location *</label>
-                    <input
-                      type="text"
-                      name="location"
-                      value={formData.location}
-                      onChange={handleInputChange}
-                      className="form-control"
-                      placeholder="Enter your location"
-                      required
-                    />
-                  </div>
+            {/* Location Information */}
+            <div className="card mb-4">
+              <div className="card-header">
+                <h5>
+                  <i className="fas fa-map-marker-alt me-2"></i>
+                  Location Information
+                </h5>
+              </div>
+              <div className="card-body">
+                <div className="mb-3">
+                  <label className="form-label">Location *</label>
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleInputChange}
+                    className="form-control"
+                    placeholder="Enter the location of the product"
+                    required
+                  />
+                  <small className="form-text text-muted">
+                    Include city, district or area for better visibility
+                  </small>
                 </div>
+              </div>            </div>
 
-                {/* Existing Images */}
-                {existingImages.length > 0 && (
-                  <div className="form-section">
-                    <h4>Current Images</h4>
-                    <p className="form-text">These are your current product images. You can remove them or add new ones.</p>
-                    
-                    <div className="image-previews">
-                      {existingImages.map((image, index) => (
-                        <div key={`existing-${index}`} className="image-preview">
+            {/* Current Images */}
+            {existingImages.length > 0 && (
+              <div className="card mb-4">
+                <div className="card-header">
+                  <h5>
+                    <i className="fas fa-images me-2"></i>
+                    Current Images
+                  </h5>
+                </div>
+                <div className="card-body">
+                  <p className="text-muted mb-3">These are your current product images. You can remove them or add new ones.</p>
+                  
+                  <div className="row">
+                    {existingImages.map((image, index) => (
+                      <div key={`existing-${index}`} className="col-md-3 mb-3">
+                        <div className="image-preview-card">
                           <img 
                             src={image.image_url} 
                             alt={`Product ${index + 1}`}
+                            className="img-fluid rounded"
                             onError={(e) => {
                               e.target.src = '/image/placeholder.svg';
                             }}
                           />
-                          {index === 0 && <span className="primary-badge">Main</span>}
+                          {index === 0 && <span className="badge bg-primary position-absolute top-0 start-0 m-2">Main</span>}
                           <button
                             type="button"
                             onClick={() => removeExistingImage(index)}
-                            className="remove-image-btn"
+                            className="btn btn-danger btn-sm position-absolute top-0 end-0 m-2"
                           >
-                            ×
+                            <i className="fas fa-times"></i>
                           </button>
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                    ))}
                   </div>
-                )}
+                </div>
+              </div>
+            )}
 
-                {/* Add New Images */}
-                <div className="form-section">
-                  <h4>Add New Images</h4>
-                  <p className="form-text">Upload additional images for your product.</p>
-                  
-                  <div className="image-upload-area">
-                    <input
-                      type="file"
-                      id="images"
-                      multiple
-                      accept="image/*"
-                      onChange={handleImageSelect}
-                      className="file-input"
-                    />
-                    <label htmlFor="images" className="file-input-label">
-                      <div className="upload-icon">📸</div>
-                      <div>Click to add more images</div>
-                      <div className="upload-subtitle">JPEG, PNG, WebP, GIF (max 5MB each)</div>
-                    </label>
-                  </div>                  {/* New Image Previews */}
-                  {imagePreviews.length > 0 && (
-                    <div className="image-previews">
-                      {imagePreviews.map((preview, index) => (
-                        <div key={`new-${index}`} className="image-preview">
-                          <img src={preview} alt={`Preview ${index + 1}`} />
-                          <span className="new-badge">New</span>
+            {/* Add New Images */}
+            <div className="card mb-4">
+              <div className="card-header">
+                <h5>
+                  <i className="fas fa-camera me-2"></i>
+                  Add New Images
+                </h5>
+              </div>
+              <div className="card-body">
+                <p className="text-muted mb-3">Upload additional images for your product.</p>
+                
+                <div className="image-upload-area">
+                  <input
+                    type="file"
+                    id="images"
+                    multiple
+                    accept="image/*"
+                    onChange={handleImageSelect}
+                    className="file-input"
+                  />
+                  <label htmlFor="images" className="file-input-label">
+                    <div className="upload-content">
+                      <i className="fas fa-cloud-upload-alt fa-3x mb-3"></i>
+                      <h6>Click to add more images</h6>
+                      <p className="text-muted">JPEG, PNG, WebP, GIF (max 5MB each)</p>
+                    </div>
+                  </label>
+                </div>
+
+                {/* New Image Previews */}
+                {imagePreviews.length > 0 && (
+                  <div className="row mt-3">
+                    {imagePreviews.map((preview, index) => (
+                      <div key={`new-${index}`} className="col-md-3 mb-3">
+                        <div className="image-preview-card">
+                          <img src={preview} alt={`Preview ${index + 1}`} className="img-fluid rounded" />
+                          <span className="badge bg-success position-absolute top-0 start-0 m-2">New</span>
                           <button
                             type="button"
                             onClick={() => removeImage(index)}
-                            className="remove-image-btn"
+                            className="btn btn-danger btn-sm position-absolute top-0 end-0 m-2"
                           >
-                            ×
+                            <i className="fas fa-times"></i>
                           </button>
                           {imageErrors[index] && (
-                            <div className="image-error">{imageErrors[index]}</div>
+                            <div className="alert alert-danger mt-2 p-2 small">{imageErrors[index]}</div>
                           )}
                         </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* URL Upload Section */}
-                  <div className="url-upload-section">
-                    <h5>Or Add Images by URL</h5>
-                    <p className="form-text text-muted">
-                      You can also add images by providing direct URLs to images hosted online.
-                    </p>
-                    
-                    {imageUrls.map((url, index) => (
-                      <div key={index} className="url-input-group">
-                        <div className="input-group">
-                          <input
-                            type="url"
-                            value={url}
-                            onChange={(e) => handleUrlChange(index, e.target.value)}
-                            placeholder="https://example.com/image.jpg"
-                            className={`form-control ${urlErrors[index] ? 'is-invalid' : ''}`}
-                          />
-                          {imageUrls.length > 1 && (
-                            <div className="input-group-append">
-                              <button
-                                type="button"
-                                onClick={() => removeUrlField(index)}
-                                className="btn btn-outline-danger"
-                              >
-                                Remove
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                        {urlErrors[index] && (
-                          <div className="invalid-feedback d-block">
-                            {urlErrors[index]}
-                          </div>
-                        )}
-                        {urlPreviews[index] && (
-                          <div className="url-preview mt-2">
-                            <img 
-                              src={urlPreviews[index]} 
-                              alt="URL Preview" 
-                              className="url-preview-img"
-                            />
-                            <span className="url-badge">URL</span>
-                          </div>
-                        )}
                       </div>
                     ))}
-                    
-                    <button
-                      type="button"
-                      onClick={addUrlField}
-                      className="btn btn-outline-primary btn-sm"
-                    >
-                      Add Another URL
-                    </button>
                   </div>
-                </div>
+                )}
 
-                {/* Specifications */}
-                <div className="form-section">
-                  <h4>Specifications (Optional)</h4>
-                  <p className="form-text">Add technical details or features</p>
+                {/* URL Upload Section */}
+                <div className="mt-4">
+                  <h6>
+                    <i className="fas fa-link me-2"></i>
+                    Or Add Images by URL
+                  </h6>
+                  <p className="text-muted small">
+                    You can also add images by providing direct URLs to images hosted online.
+                  </p>
                   
-                  {specifications.map((spec, index) => (
-                    <div key={index} className="specification-row">
-                      <div className="row">
-                        <div className="col-md-5">
-                          <input
-                            type="text"
-                            placeholder="Specification name (e.g., Brand, Model)"
-                            value={spec.name}
-                            onChange={(e) => handleSpecChange(index, 'name', e.target.value)}
-                            className="form-control"
-                          />
-                        </div>
-                        <div className="col-md-5">
-                          <input
-                            type="text"
-                            placeholder="Value (e.g., Apple, iPhone 12)"
-                            value={spec.value}
-                            onChange={(e) => handleSpecChange(index, 'value', e.target.value)}
-                            className="form-control"
-                          />
-                        </div>
-                        <div className="col-md-2">
-                          {specifications.length > 1 && (
-                            <button
-                              type="button"
-                              onClick={() => removeSpecification(index)}
-                              className="btn btn-danger btn-sm"
-                            >
-                              Remove
-                            </button>
-                          )}
-                        </div>
+                  {imageUrls.map((url, index) => (
+                    <div key={index} className="mb-3">
+                      <div className="input-group">
+                        <span className="input-group-text">
+                          <i className="fas fa-link"></i>
+                        </span>
+                        <input
+                          type="url"
+                          value={url}
+                          onChange={(e) => handleUrlChange(index, e.target.value)}
+                          placeholder="https://example.com/image.jpg"
+                          className={`form-control ${urlErrors[index] ? 'is-invalid' : ''}`}
+                        />
+                        {imageUrls.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => removeUrlField(index)}
+                            className="btn btn-outline-danger"
+                          >
+                            <i className="fas fa-times"></i>
+                          </button>
+                        )}
                       </div>
+                      {urlErrors[index] && (
+                        <div className="invalid-feedback d-block">
+                          {urlErrors[index]}
+                        </div>
+                      )}
+                      {urlPreviews[index] && (
+                        <div className="mt-2">
+                          <img 
+                            src={urlPreviews[index]} 
+                            alt="URL Preview" 
+                            className="img-thumbnail"
+                            style={{ maxWidth: '150px', maxHeight: '150px' }}
+                          />
+                        </div>
+                      )}
                     </div>
                   ))}
-
+                  
                   <button
                     type="button"
-                    onClick={addSpecification}
-                    className="btn btn-secondary btn-sm"
+                    onClick={addUrlField}
+                    className="btn btn-outline-primary btn-sm"
                   >
-                    Add Specification
+                    <i className="fas fa-plus me-2"></i>
+                    Add Another URL
                   </button>
                 </div>
+              </div>
+            </div>
 
-                {/* Submit Button */}
-                <div className="form-actions">
+            {/* Product Specifications */}
+            <div className="card mb-4">
+              <div className="card-header">
+                <h5>
+                  <i className="fas fa-list me-2"></i>
+                  Product Specifications
+                </h5>
+              </div>
+              <div className="card-body">
+                <p className="text-muted mb-3">Add detailed specifications for your product (optional)</p>
+                
+                {specifications.map((spec, index) => (
+                  <div key={index} className="row mb-3">
+                    <div className="col-md-4">
+                      <input
+                        type="text"
+                        value={spec.name}
+                        onChange={(e) => handleSpecChange(index, 'name', e.target.value)}
+                        placeholder="Specification name (e.g., Brand, Model)"
+                        className="form-control"
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <input
+                        type="text"
+                        value={spec.value}
+                        onChange={(e) => handleSpecChange(index, 'value', e.target.value)}
+                        placeholder="Specification value (e.g., Apple, iPhone 13)"
+                        className="form-control"
+                      />
+                    </div>
+                    <div className="col-md-2">
+                      {specifications.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeSpecification(index)}
+                          className="btn btn-outline-danger"
+                        >
+                          <i className="fas fa-times"></i>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+                
+                <button
+                  type="button"
+                  onClick={addSpecification}
+                  className="btn btn-outline-primary btn-sm"
+                >
+                  <i className="fas fa-plus me-2"></i>
+                  Add Specification
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column - Actions & Tips */}
+          <div className="col-lg-4">
+            {/* Actions Card */}
+            <div className="card mb-4">
+              <div className="card-header">
+                <h6>
+                  <i className="fas fa-cog me-2"></i>
+                  Actions
+                </h6>
+              </div>
+              <div className="card-body">
+                <div className="d-grid gap-2">
                   <button
                     type="submit"
                     disabled={loading}
@@ -682,27 +778,61 @@ export default function EditProductForm() {
                   >
                     {loading ? (
                       <>
-                        <span className="spinner"></span>
+                        <span className="spinner-border spinner-border-sm me-2"></span>
                         Updating Product...
                       </>
                     ) : (
-                      'Update Product'
+                      <>
+                        <i className="fas fa-save me-2"></i>
+                        Update Product
+                      </>
                     )}
                   </button>
                   
                   <button
                     type="button"
                     onClick={() => navigate('/dashboard')}
-                    className="btn btn-secondary btn-lg"
+                    className="btn btn-outline-secondary"
                   >
-                    Cancel
+                    <i className="fas fa-arrow-left me-2"></i>
+                    Back to Dashboard
                   </button>
                 </div>
-              </form>
+              </div>
+            </div>
+
+            {/* Tips Card */}
+            <div className="card">
+              <div className="card-header">
+                <h6>
+                  <i className="fas fa-lightbulb me-2"></i>
+                  Tips for Better Listing
+                </h6>
+              </div>
+              <div className="card-body">
+                <ul className="list-unstyled mb-0">
+                  <li className="mb-2">
+                    <i className="fas fa-check text-success me-2"></i>
+                    Keep product information up to date
+                  </li>
+                  <li className="mb-2">
+                    <i className="fas fa-check text-success me-2"></i>
+                    Use clear, high-quality photos
+                  </li>
+                  <li className="mb-2">
+                    <i className="fas fa-check text-success me-2"></i>
+                    Update pricing based on market trends
+                  </li>
+                  <li className="mb-0">
+                    <i className="fas fa-check text-success me-2"></i>
+                    Respond promptly to buyer inquiries
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
