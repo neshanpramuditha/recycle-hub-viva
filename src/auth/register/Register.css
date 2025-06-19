@@ -1,4 +1,10 @@
-/* Responsive Register Page Styles */
+/* Register Page Styles with Dark/Light Theme Support */
+
+.register-page {
+  min-height: 100vh;
+  transition: all 0.3s ease;
+  position: relative;
+}
 
 #background-image-register {
   background-image: url(/image/14.jpg);
@@ -7,19 +13,43 @@
   background-size: cover;
   min-height: 100vh;
   padding-bottom: 2rem;
+  position: relative;
+}
+
+/* Theme overlay for background image */
+#background-image-register::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.dark-theme #background-image-register::before {
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 #second-div-register {
-  background-color: rgba(239, 211, 183, 0.95);
+  background-color: var(--bg-secondary);
   border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(5px);
+  box-shadow: 0 10px 30px var(--shadow-heavy);
+  backdrop-filter: blur(10px);
   margin: 1rem;
+  border: 1px solid var(--border-color);
+  position: relative;
+  z-index: 1;
+}
+
+.dark-theme #second-div-register {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 #create-account-register {
   font-size: clamp(20px, 4vw, 27px);
-  color: #2c3e50;
+  color: var(--text-primary);
   font-weight: bold;
   display: block;
   text-align: center;
@@ -29,11 +59,11 @@
 #Banking-Information-register {
   font-size: clamp(18px, 3vw, 25px);
   font-weight: bold;
-  color: #2c3e50;
+  color: var(--text-primary);
   display: block;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #28a745;
+  border-bottom: 2px solid var(--green-primary);
 }
 
 #Bank-Name-register {
@@ -43,20 +73,27 @@
 /* Form styling */
 .form-control {
   border-radius: 8px;
-  border: 2px solid #dee2e6;
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   transition: all 0.3s ease;
   font-size: clamp(14px, 2.5vw, 16px);
   padding: 0.75rem;
 }
 
+.form-control::placeholder {
+  color: var(--text-muted);
+}
+
 .form-control:focus {
-  border-color: #28a745;
-  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+  border-color: var(--green-primary);
+  box-shadow: 0 0 0 0.2rem var(--shadow-light);
+  background-color: var(--bg-primary);
 }
 
 label {
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
   font-size: clamp(14px, 2.5vw, 16px);
 }
@@ -65,7 +102,7 @@ label {
   font-size: clamp(16px, 3vw, 20px);
   padding: 0.75rem 2rem;
   border-radius: 25px;
-  background-color: #28a745;
+  background: var(--gradient-eco);
   border: none;
   transition: all 0.3s ease;
   font-weight: bold;
@@ -73,16 +110,18 @@ label {
   display: inline-block;
   min-width: 120px;
   cursor: pointer;
+  color: white;
 }
 
 #submit-register:hover:not(:disabled) {
-  background-color: #218838;
+  background: var(--gradient-eco);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+  box-shadow: 0 6px 20px var(--shadow-medium);
+  filter: brightness(1.1);
 }
 
 #submit-register:disabled {
-  background-color: #6c757d;
+  background-color: var(--text-muted);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
@@ -95,41 +134,112 @@ label {
 
 /* Password toggle button styling */
 .input-group .btn-outline-secondary {
-    border-color: #dee2e6;
-    background-color: #f8f9fa;
-    color: #6c757d;
+    border-color: var(--border-color);
+    background-color: var(--bg-tertiary);
+    color: var(--text-secondary);
     transition: all 0.3s ease;
 }
 
 .input-group .btn-outline-secondary:hover {
-    background-color: #e9ecef;
-    border-color: #adb5bd;
-    color: #495057;
+    background-color: var(--bg-accent);
+    border-color: var(--border-accent);
+    color: var(--text-primary);
 }
 
 .input-group .btn-outline-secondary:focus {
-    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
-    border-color: #28a745;
+    box-shadow: 0 0 0 0.2rem var(--shadow-light);
+    border-color: var(--green-primary);
 }
 
 /* Login link styling */
 .text-success {
-    color: #28a745 !important;
+    color: var(--green-primary) !important;
 }
 
 .text-success:hover {
-    color: #218838 !important;
+    color: var(--green-secondary) !important;
     text-decoration: underline !important;
 }
 
 /* Input group focus styling */
 .input-group:focus-within .form-control {
-    border-color: #28a745;
-    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+    border-color: var(--green-primary);
+    box-shadow: 0 0 0 0.2rem var(--shadow-light);
 }
 
 .input-group:focus-within .btn-outline-secondary {
-    border-color: #28a745;
+    border-color: var(--green-primary);
+}
+
+/* Divider Styling */
+.divider {
+    position: relative;
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: var(--border-color);
+}
+
+.divider span {
+    background-color: var(--bg-secondary);
+    padding: 0 1rem;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+/* Dark theme specific adjustments */
+.dark-theme .form-control {
+    background-color: var(--bg-tertiary);
+    border-color: var(--border-color);
+}
+
+.dark-theme .form-control:focus {
+    background-color: var(--bg-tertiary);
+}
+
+.dark-theme .input-group .btn-outline-secondary {
+    background-color: var(--bg-accent);
+    border-color: var(--border-color);
+}
+
+.dark-theme .input-group .btn-outline-secondary:hover {
+    background-color: var(--bg-tertiary);
+}
+
+/* Google Button Styling */
+.btn-google {
+    background-color: #4285f4;
+    border-color: #4285f4;
+    color: white;
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-google:hover:not(:disabled) {
+    background-color: #3367d6;
+    border-color: #3367d6;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.4);
+}
+
+.btn-google:disabled {
+    background-color: var(--text-muted);
+    border-color: var(--text-muted);
+    color: white;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 /* Responsive Design */

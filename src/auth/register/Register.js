@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { useAuth } from "../../contexts/AuthContext";
+import { useTheme } from "../../contexts/ThemeContext";
 import "./Register.css";
 
 export default function Register() {  const [formData, setFormData] = useState({
@@ -14,8 +15,8 @@ export default function Register() {  const [formData, setFormData] = useState({
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
   const { signUp, signInWithGoogle } = useAuth();
+  const { theme, isDark } = useTheme();
   const navigate = useNavigate();
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -131,10 +132,29 @@ export default function Register() {  const [formData, setFormData] = useState({
     } finally {
       setIsGoogleLoading(false);
     }
-  };
-  return (
-    <div>
-      <Toaster />
+  };  return (
+    <div className={`register-page ${isDark ? 'dark-theme' : 'light-theme'}`}>
+      <Toaster 
+        toastOptions={{
+          style: {
+            background: isDark ? 'var(--bg-secondary)' : '#fff',
+            color: isDark ? 'var(--text-primary)' : '#333',
+            border: isDark ? '1px solid var(--border-color)' : '1px solid #e2e8f0'
+          },
+          success: {
+            style: {
+              background: isDark ? 'var(--green-dark)' : '#10b981',
+              color: '#fff'
+            }
+          },
+          error: {
+            style: {
+              background: isDark ? '#dc2626' : '#ef4444',
+              color: '#fff'
+            }
+          }
+        }}
+      />
       <div id="background-image-register">
         <div className="container-fluid py-5">
           <div className="row justify-content-center">
@@ -147,21 +167,11 @@ export default function Register() {  const [formData, setFormData] = useState({
                 <div className="text-center mb-4">
                   <span id="create-account-register">CREATE ACCOUNT</span>
                 </div>
-                <div className="mb-4">
-                  <button
+                <div className="mb-4">                  <button
                     type="button"
                     className="btn btn-google w-100 mb-3"
                     onClick={handleGoogleSignup}
                     disabled={isGoogleLoading || isLoading}
-                    style={{
-                      backgroundColor: "#4285f4",
-                      color: "white",
-                      border: "none",
-                      padding: "12px",
-                      borderRadius: "8px",
-                      fontSize: "16px",
-                      fontWeight: "500",
-                    }}
                   >
                     {isGoogleLoading ? (
                       <>
@@ -179,36 +189,8 @@ export default function Register() {  const [formData, setFormData] = useState({
                       </>
                     )}
                   </button>
-                </div>
-                <div
-                  className="divider mb-4"
-                  style={{
-                    textAlign: "center",
-                    margin: "20px 0",
-                    position: "relative",
-                  }}
-                >
-                  <span
-                    style={{
-                      backgroundColor: "white",
-                      padding: "0 15px",
-                      color: "#666",
-                      fontSize: "14px",
-                    }}
-                  >
-                    or
-                  </span>
-                  <div
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "0",
-                      right: "0",
-                      height: "1px",
-                      backgroundColor: "#ddd",
-                      zIndex: "-1",
-                    }}
-                  ></div>
+                </div>                <div className="divider mb-4">
+                  <span>or</span>
                 </div>
                 <div className="mt-3">
                   <form onSubmit={handleSubmit}>
@@ -245,12 +227,10 @@ export default function Register() {  const [formData, setFormData] = useState({
                         value={formData.password}
                         onChange={handleInputChange}
                         required
-                      />
-                      <button
+                      />                      <button
                         className="btn btn-outline-secondary"
                         type="button"
                         onClick={togglePasswordVisibility}
-                        style={{ borderColor: "#dee2e6" }}
                       >
                         <i
                           className={`fas ${
@@ -281,17 +261,11 @@ export default function Register() {  const [formData, setFormData] = useState({
                       required
                     />
                     <div className="text-center">
-                      {" "}
-                      <button
+                      {" "}                      <button
                         type="submit"
                         id="submit-register"
                         className="btn btn-success w-100"
                         disabled={isLoading || isGoogleLoading}
-                        style={{
-                          padding: "12px",
-                          fontSize: "16px",
-                          fontWeight: "600",
-                        }}
                       >
                         {isLoading ? (
                           <>

@@ -23,7 +23,6 @@ import EditProductForm from "./components/EditProductForm.js";
 import Layout from "./components/Layout.js";
 import ScrollToTop from "./components/ScrollToTop.js";
 import "./styles/themes.css";
-import AIChat from "./components/AIChat.js";
 
 export default function App() {
   return (
@@ -144,7 +143,6 @@ export default function App() {
             />{" "}
           </Routes>
           {/* AI Chat Component - Available on all pages */}
-          <AIChat />
         </BrowserRouter>
       </AuthProvider>
     </ThemeProvider>
