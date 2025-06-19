@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
+import { useTheme } from "./contexts/ThemeContext";
 import "./Buy.css";
 import {
   getAllProducts,
@@ -10,6 +11,7 @@ import {
 
 export default function Buy() {
   const navigate = useNavigate();
+  const { theme, isDark } = useTheme();
 
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -152,25 +154,32 @@ export default function Buy() {
 
   const handleProductClick = (productId) => {
     navigate(`/product/${productId}`);
-  };
-  return (
-    <div className="buy-container">
+  };  return (
+    <div className={`buy-container ${isDark ? 'dark-theme' : 'light-theme'}`}>
       <Toaster 
         position="top-right"
         toastOptions={{
           duration: 4000,
           style: {
-            background: 'var(--bg-secondary)',
-            color: 'var(--text-primary)',
-            border: '1px solid var(--border-color)',
+            background: isDark ? 'var(--bg-secondary)' : '#fff',
+            color: isDark ? 'var(--text-primary)' : '#333',
+            border: isDark ? '1px solid var(--border-color)' : '1px solid #e2e8f0'
           },
           success: {
+            style: {
+              background: isDark ? 'var(--green-dark)' : '#10b981',
+              color: '#fff'
+            },
             iconTheme: {
               primary: 'var(--green-primary)',
               secondary: 'white',
             },
           },
           error: {
+            style: {
+              background: isDark ? '#dc2626' : '#ef4444',
+              color: '#fff'
+            },
             iconTheme: {
               primary: '#ef4444',
               secondary: 'white',

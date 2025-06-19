@@ -389,15 +389,15 @@
       size:40px;
 }
 
-/* Modern Buy Page Styles */
 .buy-container {
   min-height: 100vh;
-  background-color: #f8f9fa;
+  background-color: var(--bg-primary);
   margin-top: 50px;
+  transition: all 0.3s ease;
 }
 
 .buy-header {
-  background: linear-gradient(135deg, #28a745, #20c997);
+  background: var(--gradient-eco);
   color: white;
   padding: 60px 0;
   text-align: center;
@@ -408,29 +408,32 @@
   font-size: 3rem;
   font-weight: 700;
   margin-bottom: 15px;
+  color: white;
 }
 
 .buy-subtitle {
   font-size: 1.2rem;
   opacity: 0.9;
+  color: white;
 }
 
 .filters-section {
-  background: white;
+  background: var(--bg-secondary);
   padding: 25px;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px var(--shadow-light);
   position: sticky;
   top: 20px;
   margin-bottom: 20px;
+  border: 1px solid var(--border-color);
 }
 
 .filters-section h3 {
-  color: #212529;
+  color: var(--text-primary);
   margin-bottom: 25px;
   font-size: 1.5rem;
   font-weight: 600;
-  border-bottom: 2px solid #28a745;
+  border-bottom: 2px solid var(--green-primary);
   padding-bottom: 10px;
 }
 
@@ -441,7 +444,7 @@
 .filter-group label {
   display: block;
   font-weight: 600;
-  color: #495057;
+  color: var(--text-primary);
   margin-bottom: 10px;
 }
 
@@ -449,17 +452,23 @@
 .filter-group select {
   width: 100%;
   padding: 10px 15px;
-  border: 2px solid #e9ecef;
+  border: 2px solid var(--border-color);
   border-radius: 6px;
   font-size: 14px;
   transition: border-color 0.3s ease;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.filter-group input::placeholder {
+  color: var(--text-muted);
 }
 
 .filter-group input:focus,
 .filter-group select:focus {
   outline: none;
-  border-color: #28a745;
-  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+  border-color: var(--green-primary);
+  box-shadow: 0 0 0 3px var(--shadow-light);
 }
 
 .category-filters {
@@ -470,9 +479,9 @@
 
 .category-btn {
   padding: 12px 15px;
-  border: 2px solid #e9ecef;
-  background: white;
-  color: #495057;
+  border: 2px solid var(--border-color);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -481,14 +490,15 @@
 }
 
 .category-btn:hover {
-  border-color: #28a745;
-  background: #f8f9fa;
+  border-color: var(--green-primary);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
 }
 
 .category-btn.active {
-  background: #28a745;
+  background: var(--green-primary);
   color: white;
-  border-color: #28a745;
+  border-color: var(--green-primary);
 }
 
 .products-header {
@@ -499,14 +509,14 @@
 }
 
 .products-header h2 {
-  color: #212529;
+  color: var(--text-primary);
   font-size: 2rem;
   font-weight: 600;
   margin: 0;
 }
 
 .products-count {
-  color: #6c757d;
+  color: var(--text-muted);
   font-size: 1rem;
   font-weight: 400;
   margin-left: 10px;
