@@ -1,18 +1,20 @@
 .add-product-container {
-  background: #f8f9fa;
+  background: var(--background-color);
   min-height: 100vh;
+  color: var(--text-color);
 }
 
 .add-product-form {
-  background: white;
+  background: var(--surface-color);
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow);
   padding: 40px;
   margin-bottom: 40px;
+  border: 1px solid var(--border-color);
 }
 
 .add-product-form h2 {
-  color: #28a745;
+  color: var(--success-color);
   font-weight: 600;
   margin-bottom: 30px;
   text-align: center;
@@ -21,7 +23,7 @@
 .form-section {
   margin-bottom: 40px;
   padding-bottom: 30px;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .form-section:last-child {
@@ -30,7 +32,7 @@
 }
 
 .form-section h4 {
-  color: #495057;
+  color: var(--text-color);
   font-weight: 600;
   margin-bottom: 20px;
   font-size: 18px;
@@ -42,27 +44,56 @@
 
 .form-group label {
   font-weight: 600;
-  color: #495057;
+  color: var(--text-color);
   margin-bottom: 8px;
   display: block;
 }
 
 .form-control {
-  border: 2px solid #e9ecef;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
   padding: 12px 16px;
   font-size: 14px;
   transition: border-color 0.3s, box-shadow 0.3s;
+  background-color: var(--surface-color);
+  color: var(--text-color);
 }
 
 .form-control:focus {
-  border-color: #28a745;
+  border-color: var(--success-color);
   box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+  background-color: var(--surface-color);
+  color: var(--text-color);
+}
+
+/* Additional theme support for form elements */
+.add-product-form select.form-control {
+  background-color: var(--surface-color);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+.add-product-form select.form-control:focus {
+  background-color: var(--surface-color);
+  color: var(--text-color);
+  border-color: var(--success-color);
+}
+
+.add-product-form textarea.form-control {
+  background-color: var(--surface-color);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+.add-product-form textarea.form-control:focus {
+  background-color: var(--surface-color);
+  color: var(--text-color);
+  border-color: var(--success-color);
 }
 
 .form-text {
   font-size: 14px;
-  color: #6c757d;
+  color: var(--text-muted);
   margin-bottom: 15px;
   font-style: italic;
 }
@@ -77,20 +108,23 @@
 
 .checkbox-label input[type="checkbox"] {
   margin: 0;
+  accent-color: var(--success-color);
 }
 
 /* Image Upload Styles */
 .image-upload-area {
-  border: 2px dashed #28a745;
+  border: 2px dashed var(--success-color);
   border-radius: 12px;
   padding: 40px 20px;
   text-align: center;
   margin-bottom: 20px;
   transition: background-color 0.3s;
+  background-color: var(--surface-color);
+  color: var(--text-color);
 }
 
 .image-upload-area:hover {
-  background-color: #f8fff9;
+  background-color: var(--hover-background);
 }
 
 .file-input {
@@ -99,7 +133,7 @@
 
 .file-input-label {
   cursor: pointer;
-  color: #28a745;
+  color: var(--success-color);
   font-weight: 600;
   margin: 0;
 }
@@ -107,11 +141,12 @@
 .upload-icon {
   font-size: 48px;
   margin-bottom: 10px;
+  color: var(--success-color);
 }
 
 .upload-subtitle {
   font-size: 12px;
-  color: #6c757d;
+  color: var(--text-muted);
   font-weight: normal;
   margin-top: 5px;
 }
@@ -135,19 +170,19 @@
   height: 120px;
   object-fit: cover;
   border-radius: 8px;
-  border: 2px solid #e9ecef;
+  border: 2px solid var(--border-color);
   transition: border-color 0.3s ease;
 }
 
 .image-preview:hover img {
-  border-color: #28a745;
+  border-color: var(--success-color);
 }
 
 .primary-badge {
   position: absolute;
   top: 8px;
   left: 8px;
-  background: #28a745;
+  background: var(--success-color);
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
@@ -220,23 +255,27 @@
 }
 
 .btn-success {
-  background: #28a745;
-  border-color: #28a745;
+  background: var(--success-color);
+  border-color: var(--success-color);
+  color: white;
 }
 
 .btn-success:hover {
-  background: #218838;
-  border-color: #1e7e34;
+  background: var(--success-hover-color);
+  border-color: var(--success-hover-color);
+  color: white;
 }
 
 .btn-secondary {
-  background: #6c757d;
-  border-color: #6c757d;
+  background: var(--text-muted);
+  border-color: var(--text-muted);
+  color: white;
 }
 
 .btn-secondary:hover {
-  background: #5a6268;
-  border-color: #545b62;
+  background: var(--text-color);
+  border-color: var(--text-color);
+  color: var(--background-color);
 }
 
 /* Spinner */
@@ -260,17 +299,19 @@
   border-radius: 8px;
   padding: 15px;
   margin-bottom: 20px;
-  border: none;
+  border: 1px solid var(--border-color);
 }
 
 .alert-danger {
-  background-color: #f8d7da;
-  color: #721c24;
+  background-color: var(--danger-light);
+  color: var(--danger-color);
+  border-color: var(--danger-color);
 }
 
 .alert-success {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: var(--success-light);
+  color: var(--success-color);
+  border-color: var(--success-color);
 }
 
 /* Loading and error states */
@@ -281,13 +322,14 @@
   justify-content: center;
   min-height: 50vh;
   text-align: center;
+  color: var(--text-color);
 }
 
 .loading-container .spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #28a745;
+  border: 4px solid var(--border-color);
+  border-top: 4px solid var(--success-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 20px;
@@ -296,11 +338,11 @@
 .error-container {
   text-align: center;
   padding: 40px;
-  color: #dc3545;
+  color: var(--danger-color);
 }
 
 .error-container h2 {
-  color: #dc3545;
+  color: var(--danger-color);
   margin-bottom: 20px;
 }
 
@@ -308,11 +350,11 @@
 .url-upload-section {
   margin-top: 30px;
   padding-top: 20px;
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid var(--border-color);
 }
 
 .url-upload-section h5 {
-  color: #495057;
+  color: var(--text-color);
   font-weight: 600;
   margin-bottom: 10px;
 }
@@ -325,7 +367,7 @@
   position: absolute;
   top: 8px;
   right: 8px;
-  background: #17a2b8;
+  background: var(--info-color);
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
@@ -337,12 +379,12 @@
 .invalid-feedback {
   display: block;
   font-size: 12px;
-  color: #dc3545;
+  color: var(--danger-color);
   margin-top: 5px;
 }
 
 .form-control.is-invalid {
-  border-color: #dc3545;
+  border-color: var(--danger-color);
 }
 
 /* Responsive Design */
@@ -367,4 +409,21 @@
   .specification-row .col-md-2 {
     margin-top: 10px;
   }
+}
+
+.add-product-form,
+.add-product-form * {
+  color: inherit;
+}
+
+.add-product-form p,
+.add-product-form span,
+.add-product-form div {
+  color: var(--text-color);
+}
+
+/* Toast and alert overrides */
+.add-product-form .alert-dismissible .btn-close {
+  background-color: transparent;
+  opacity: 0.8;
 }

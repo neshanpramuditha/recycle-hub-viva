@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { getCategories, addProductWithImages, addProductSpecifications } from '../lib/productQueries';
 import { validateImageFile, compressImage, processAllProductImages } from '../lib/storageHelpers';
 import './AddProductForm.css';
@@ -8,6 +9,7 @@ import './AddProductForm.css';
 export default function AddProductForm() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { theme } = useTheme();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
