@@ -316,7 +316,6 @@ const AIChat = () => {
       if (isProductQuery && !isGreeting) {
         const relevantProducts = createProductContext(message);
         const stats = calculateProductStats();
-
         if (relevantProducts.length > 0) {
           hasResults = true;
           contextData = `\n\nACTUAL AVAILABLE PRODUCTS (${
@@ -329,7 +328,9 @@ const AIChat = () => {
                   p.price || 0
                 ).toLocaleString()} | ${p.condition} | ${
                   p.location
-                } | Seller: ${p.seller_name}`
+                } | Seller: ${
+                  p.seller_name
+                } | Link: http://localhost:3000/product/${p.id}`
             )
             .join("\n")}`;
 
@@ -373,14 +374,21 @@ IMPORTANT RULES:
 - For greetings (hi/hello/hey), respond warmly and briefly without mentioning products
 - For product queries, ONLY mention products if they appear in "ACTUAL AVAILABLE PRODUCTS" above
 - If no products found, clearly state "Sorry, I don't see any [requested item] available right now"
+- When mentioning products, include clickable links using this format: [Product Name](http://localhost:3000/product/{ID})
+- Use the exact product ID from the Link field in the product data
 - Be honest about what's actually available vs not available
 - Keep responses concise and natural
 - Don't make up product information
 - If asked about specific items not in the list, say they're not currently available
 
+RESPONSE FORMAT:
+- If products are available, mention 2-3 specific items with their links
+- Format: "I found [Product Name](http://localhost:3000/product/{ID}) for LKR {price}"
+- Include key details like price, condition, and location
+
 ${
   hasResults
-    ? "Use the actual product data above to give specific recommendations."
+    ? "Use the actual product data above to give specific recommendations with clickable links."
     : ""
 }
 ${isGreeting ? "This is just a greeting - keep it short and friendly." : ""}
@@ -569,6 +577,55 @@ Respond appropriately:`,
       minute: "2-digit",
     });
   };
+  // Function to render message content with clickable links
+  const renderMessageContent = (content) => {
+    // Parse markdown-style links [text](url)
+    const linkRegex = /\[([^\]]+)\]\(([^\)]+)\)/g;
+    const parts = [];
+    let lastIndex = 0;
+    let match;
+
+    while ((match = linkRegex.exec(content)) !== null) {
+      // Add text before the link
+      if (match.index > lastIndex) {
+        parts.push(content.substring(lastIndex, match.index));
+      }
+
+      // Add the link
+      const linkUrl = match[2];
+      const linkText = match[1];
+
+      parts.push(
+        <a
+          key={match.index}
+          href={linkUrl}
+          className="product-link"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            // Navigate to the product page
+            if (linkUrl.startsWith("/product/")) {
+              window.open(linkUrl, "_blank");
+            } else {
+              window.open(linkUrl, "_blank", "noopener,noreferrer");
+            }
+          }}
+        >
+          {linkText}
+        </a>
+      );
+
+      lastIndex = match.index + match[0].length;
+    }
+
+    // Add remaining text
+    if (lastIndex < content.length) {
+      parts.push(content.substring(lastIndex));
+    }
+
+    return parts.length > 1 ? parts : content;
+  };
+
   const suggestedQuestions = [
     "Find furniture under LKR 20,000",
     "What's available in Colombo?",
@@ -654,7 +711,9 @@ Respond appropriately:`,
                 )}
               </div>
               <div className="message-content">
-                <div className="message-bubble">{message.content}</div>
+                <div className="message-bubble">
+                  {renderMessageContent(message.content)}
+                </div>
                 <div className="message-time">
                   {formatTime(message.timestamp)}
                 </div>

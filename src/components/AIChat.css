@@ -397,6 +397,37 @@
   transform: translateX(4px);
 }
 
+/* Product Links in Messages */
+.message-bubble .product-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(0, 123, 255, 0.3);
+  transition: all 0.3s ease;
+  padding: 2px 4px;
+  border-radius: 4px;
+  background: rgba(0, 123, 255, 0.1);
+}
+
+.message-bubble .product-link:hover {
+  background: rgba(0, 123, 255, 0.2);
+  border-bottom-color: #007bff;
+  color: #0056b3;
+  text-decoration: none;
+}
+
+.message.user .message-bubble .product-link {
+  color: rgba(255, 255, 255, 0.9);
+  border-bottom-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.message.user .message-bubble .product-link:hover {
+  color: white;
+  background: rgba(255, 255, 255, 0.3);
+  border-bottom-color: rgba(255, 255, 255, 0.8);
+}
+
 /* Chat Input */
 .chat-input-area {
   background: white;
