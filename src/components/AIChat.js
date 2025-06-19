@@ -54,13 +54,21 @@ const AIChat = () => {
             location: product.location || "Sri Lanka",
             seller_name: product.seller_name || "Anonymous Seller",
           }));
-
           setProductData(processedProducts);
           setCategories(cats);
           setIsDataLoaded(true);
 
           console.log(
-            `AI Assistant loaded ${processedProducts.length} products from ${cats.length} categories`
+            `🤖 AI Assistant loaded ${processedProducts.length} products from ${cats.length} categories`
+          );
+          console.log(
+            "📦 Sample products loaded:",
+            processedProducts.slice(0, 5).map((p) => ({
+              id: p.id,
+              title: p.title,
+              category: p.category_name,
+              price: p.price,
+            }))
           );
         } catch (error) {
           console.error("Error loading product data for AI:", error);
@@ -104,145 +112,58 @@ const AIChat = () => {
   }, [isOpen, isDataLoaded]); // Enhanced product filtering and context creation
   const createProductContext = (userMessage) => {
     const message = userMessage.toLowerCase();
+    console.log("🔍 Searching for:", message);
+    console.log("📦 Total products available:", productData.length);
+
     let relevantProducts = [];
 
-    // Specific product searches (iPhone, Samsung, etc.)
-    if (message.includes("iphone")) {
-      relevantProducts = productData.filter((p) =>
-        p.title?.toLowerCase().includes("iphone")
-      );
-    } else if (message.includes("samsung")) {
-      relevantProducts = productData.filter((p) =>
-        p.title?.toLowerCase().includes("samsung")
-      );
-    } else if (message.includes("laptop")) {
-      relevantProducts = productData.filter((p) =>
-        p.title?.toLowerCase().includes("laptop")
-      );
-    } else if (message.includes("phone") || message.includes("mobile")) {
-      relevantProducts = productData.filter(
-        (p) =>
-          p.title?.toLowerCase().includes("phone") ||
-          p.title?.toLowerCase().includes("mobile") ||
-          p.title?.toLowerCase().includes("samsung") ||
-          p.title?.toLowerCase().includes("iphone") ||
-          p.title?.toLowerCase().includes("oneplus") ||
-          p.title?.toLowerCase().includes("xiaomi")
-      );
-    }
-    // Category-based searches
-    else if (message.includes("electronic") || message.includes("computer")) {
-      relevantProducts = productData.filter((p) =>
-        p.category_name?.toLowerCase().includes("electronic")
-      );
-    } else if (
-      message.includes("furniture") ||
-      message.includes("chair") ||
-      message.includes("table") ||
-      message.includes("sofa")
-    ) {
-      relevantProducts = productData.filter((p) =>
-        p.category_name?.toLowerCase().includes("furniture")
-      );
-    } else if (
-      message.includes("vehicle") ||
-      message.includes("car") ||
-      message.includes("bike") ||
-      message.includes("auto")
-    ) {
-      relevantProducts = productData.filter((p) =>
-        p.category_name?.toLowerCase().includes("vehicle")
-      );
-    } else if (message.includes("book") || message.includes("education")) {
-      relevantProducts = productData.filter((p) =>
-        p.category_name?.toLowerCase().includes("book")
-      );
-    } else if (
-      message.includes("cloth") ||
-      message.includes("fashion") ||
-      message.includes("shoe")
-    ) {
-      relevantProducts = productData.filter((p) =>
-        p.category_name?.toLowerCase().includes("cloth")
-      );
-    } else if (
-      message.includes("sport") ||
-      message.includes("fitness") ||
-      message.includes("gym")
-    ) {
-      relevantProducts = productData.filter((p) =>
-        p.category_name?.toLowerCase().includes("sport")
-      );
-    }
+    // First, try to find products by searching in title and description
+    relevantProducts = productData.filter((product) => {
+      const title = product.title?.toLowerCase() || "";
+      const description = product.description?.toLowerCase() || "";
+      const category = product.category_name?.toLowerCase() || "";
+      const condition = product.condition?.toLowerCase() || "";
 
-    // Filter by location if mentioned
-    const sriLankanCities = [
-      "colombo",
-      "kandy",
-      "galle",
-      "jaffna",
-      "negombo",
-      "anuradhapura",
-      "kurunegala",
-      "ratnapura",
-      "batticaloa",
-      "matara",
-    ];
-    const mentionedCity = sriLankanCities.find((city) =>
-      message.includes(city)
-    );
-    if (mentionedCity && relevantProducts.length === 0) {
-      relevantProducts = productData.filter((p) =>
-        p.location?.toLowerCase().includes(mentionedCity)
-      );
-    } else if (mentionedCity && relevantProducts.length > 0) {
-      relevantProducts = relevantProducts.filter((p) =>
-        p.location?.toLowerCase().includes(mentionedCity)
-      );
-    }
+      // Split the user message into words for better matching
+      const searchWords = message.split(" ").filter((word) => word.length > 2);
 
-    // Filter by price range if mentioned
-    if (message.includes("cheap") || message.includes("low price")) {
-      relevantProducts =
-        relevantProducts.length > 0
-          ? relevantProducts.sort((a, b) => (a.price || 0) - (b.price || 0))
-          : productData
-              .sort((a, b) => (a.price || 0) - (b.price || 0))
-              .slice(0, 10);
-    } else if (message.includes("expensive") || message.includes("premium")) {
-      relevantProducts =
-        relevantProducts.length > 0
-          ? relevantProducts.sort((a, b) => (b.price || 0) - (a.price || 0))
-          : productData
-              .sort((a, b) => (b.price || 0) - (a.price || 0))
-              .slice(0, 10);
-    }
+      // Check if any search word appears in title, description, or category
+      return (
+        searchWords.some(
+          (word) =>
+            title.includes(word) ||
+            description.includes(word) ||
+            category.includes(word) ||
+            condition.includes(word)
+        ) ||
+        // Also check if the full message appears anywhere
+        title.includes(message) ||
+        description.includes(message) ||
+        category.includes(message)
+      );
+    });
 
-    // If general search terms, get recent products
+    // If no specific products found, but user is asking about product availability
     if (
       relevantProducts.length === 0 &&
-      (message.includes("show me") ||
-        message.includes("what's available") ||
-        message.includes("products") ||
-        message.includes("items"))
+      (message.includes("what") ||
+        message.includes("show") ||
+        message.includes("available") ||
+        message.includes("have") ||
+        message.includes("find") ||
+        message.includes("looking"))
     ) {
-      relevantProducts = productData.slice(0, 10);
+      // Return all products if they're asking general questions
+      relevantProducts = productData.slice(0, 20);
     }
+    console.log("✅ Found products:", relevantProducts.length);
+    console.log(
+      "📋 Sample products:",
+      relevantProducts.slice(0, 3).map((p) => p.title)
+    );
 
-    // Filter by condition if mentioned
-    if (message.includes("excellent") || message.includes("new")) {
-      relevantProducts = relevantProducts.filter(
-        (p) => p.condition?.toLowerCase() === "excellent"
-      );
-    } else if (message.includes("good condition")) {
-      relevantProducts = relevantProducts.filter(
-        (p) => p.condition?.toLowerCase() === "good"
-      );
-    }
-
-    return relevantProducts.slice(0, 10); // Limit to 10 most relevant products
+    return relevantProducts;
   };
-
   // Enhanced statistics calculation
   const calculateProductStats = () => {
     if (productData.length === 0) return {};
@@ -364,36 +285,26 @@ const AIChat = () => {
               {
                 parts: [
                   {
-                    text: `You are a helpful AI assistant for Recycle Hub, a marketplace for pre-owned items in Sri Lanka.
+                    text: `You are a helpful AI assistant for Recycle Hub marketplace. You have access to REAL product data.
 
 ${contextData}
 
 USER MESSAGE: "${message}"
 
-IMPORTANT RULES:
-- For greetings (hi/hello/hey), respond warmly and briefly without mentioning products
-- For product queries, ONLY mention products if they appear in "ACTUAL AVAILABLE PRODUCTS" above
-- If no products found, clearly state "Sorry, I don't see any [requested item] available right now"
-- When mentioning products, include clickable links using this format: [Product Name](http://localhost:3000/product/{ID})
-- Use the exact product ID from the Link field in the product data
-- Be honest about what's actually available vs not available
-- Keep responses concise and natural
-- Don't make up product information
-- If asked about specific items not in the list, say they're not currently available
+CRITICAL INSTRUCTIONS:
+- ONLY mention products that are EXPLICITLY listed in the "ACTUAL AVAILABLE PRODUCTS" section above
+- If you see "No products found matching", then NO products exist for that search
+- If you see a list of products, those are the EXACT products available
+- Be 100% accurate - don't guess or assume products exist
+- For greetings (hi/hello), be brief and don't mention products
+- Always include product links when mentioning specific items: [Product Name](/product/{ID})
 
-RESPONSE FORMAT:
-- If products are available, mention 2-3 specific items with their links
-- Format: "I found [Product Name](http://localhost:3000/product/{ID}) for LKR {price}"
-- Include key details like price, condition, and location
+RESPONSE RULES:
+- Found products = mention them with exact details from the list
+- No products found = say "Sorry, I don't see any [item] available right now"
+- Keep responses natural and helpful
 
-${
-  hasResults
-    ? "Use the actual product data above to give specific recommendations with clickable links."
-    : ""
-}
-${isGreeting ? "This is just a greeting - keep it short and friendly." : ""}
-
-Respond appropriately:`,
+Respond accurately based on the product data above.`,
                   },
                 ],
               },
