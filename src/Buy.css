@@ -523,19 +523,19 @@
 }
 
 .product-card {
-  background: white;
+  background: var(--bg-secondary);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px var(--shadow-light);
   transition: all 0.3s ease;
   cursor: pointer;
-  border: 2px solid transparent;
+  border: 2px solid var(--border-color);
 }
 
 .product-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 12px 35px rgba(0,0,0,0.15);
-  border-color: #28a745;
+  box-shadow: 0 12px 35px var(--shadow-medium);
+  border-color: var(--green-primary);
 }
 
 .product-image-container {
@@ -572,22 +572,22 @@
 }
 
 .badge-negotiable {
-  background: #ffc107;
-  color: #212529;
+  background: var(--nature-yellow);
+  color: var(--text-primary);
 }
 
 .badge-condition.excellent {
-  background: #28a745;
+  background: var(--green-primary);
   color: white;
 }
 
 .badge-condition.good {
-  background: #17a2b8;
+  background: var(--sky-blue);
   color: white;
 }
 
 .badge-condition.fair {
-  background: #fd7e14;
+  background: var(--nature-orange);
   color: white;
 }
 
@@ -598,7 +598,7 @@
 .product-name {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #212529;
+  color: var(--text-primary);
   margin-bottom: 12px;
   line-height: 1.3;  display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -614,12 +614,12 @@
 .current-price {
   font-size: 1.3rem;
   font-weight: 700;
-  color: #28a745;
+  color: var(--green-primary);
 }
 
 .original-price {
   font-size: 0.9rem;
-  color: #6c757d;
+  color: var(--text-muted);
   text-decoration: line-through;
   margin-left: 8px;
 }
@@ -629,7 +629,7 @@
   justify-content: space-between;
   margin-bottom: 10px;
   font-size: 0.9rem;
-  color: #6c757d;
+  color: var(--text-muted);
 }
 
 .product-location,
@@ -637,29 +637,31 @@
   display: flex;
   align-items: center;
   gap: 4px;
+  color: var(--text-secondary);
 }
 
 .product-date {
   font-size: 0.8rem;
-  color: #adb5bd;
+  color: var(--text-muted);
 }
 
 .no-products {
   grid-column: 1 / -1;
   text-align: center;
   padding: 60px 20px;
-  background: white;
+  background: var(--bg-secondary);
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px var(--shadow-light);
+  border: 1px solid var(--border-color);
 }
 
 .no-products h3 {
-  color: #495057;
+  color: var(--text-secondary);
   margin-bottom: 15px;
 }
 
 .no-products p {
-  color: #6c757d;
+  color: var(--text-muted);
 }
 
 /* Add Category Modal Styles */
@@ -678,14 +680,15 @@
 }
 
 .modal-content {
-  background: white;
+  background: var(--bg-secondary);
   border-radius: 12px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 20px 60px var(--shadow-heavy);
   width: 90%;
   max-width: 500px;
   max-height: 90vh;
   overflow-y: auto;
   animation: modalSlideIn 0.3s ease-out;
+  border: 1px solid var(--border-color);
 }
 
 @keyframes modalSlideIn {
@@ -704,8 +707,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px 24px;
-  border-bottom: 1px solid #e9ecef;
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  border-bottom: 1px solid var(--border-color);
+  background: var(--gradient-eco);
   color: white;
   border-radius: 12px 12px 0 0;
 }
@@ -749,25 +752,30 @@
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   font-size: 0.95rem;
 }
 
 .add-category-form .form-control {
   width: 100%;
   padding: 12px 16px;
-  border: 2px solid #e9ecef;
+  border: 2px solid var(--border-color);
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.3s ease;
-  background-color: #fafafa;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.add-category-form .form-control::placeholder {
+  color: var(--text-muted);
 }
 
 .add-category-form .form-control:focus {
   outline: none;
-  border-color: #28a745;
-  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
-  background-color: white;
+  border-color: var(--green-primary);
+  box-shadow: 0 0 0 3px var(--shadow-light);
+  background-color: var(--bg-primary);
 }
 
 .add-category-form textarea.form-control {
@@ -781,7 +789,7 @@
   justify-content: flex-end;
   margin-top: 24px;
   padding-top: 20px;
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid var(--border-color);
 }
 
 .modal-actions .btn {
@@ -796,35 +804,36 @@
 }
 
 .modal-actions .btn-secondary {
-  background-color: #6c757d;
+  background-color: var(--text-muted);
   color: white;
 }
 
 .modal-actions .btn-secondary:hover {
-  background-color: #5a6268;
+  background-color: var(--text-secondary);
   transform: translateY(-1px);
 }
 
 .modal-actions .btn-primary {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  background: var(--gradient-eco);
   color: white;
 }
 
 .modal-actions .btn-primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+  background: var(--gradient-eco);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+  box-shadow: 0 4px 12px var(--shadow-medium);
+  filter: brightness(1.1);
 }
 
 .modal-actions .btn-primary:disabled {
-  background-color: #ccc;
+  background-color: var(--text-muted);
   cursor: not-allowed;
   transform: none;
 }
 
 /* Add Category Button Styles */
 .add-category-btn {
-  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  background: var(--gradient-eco);
   color: white;
   border: 2px solid transparent;
   font-weight: 500;
@@ -836,13 +845,76 @@
 }
 
 .add-category-btn:hover {
-  background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+  background: var(--gradient-eco);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+  box-shadow: 0 4px 12px var(--shadow-medium);
+  filter: brightness(1.1);
 }
 
 .add-category-btn i {
   font-size: 0.9rem;
+}
+
+/* Dark theme specific adjustments for product cards */
+.dark-theme .product-card {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+}
+
+.dark-theme .product-card:hover {
+  box-shadow: 0 12px 35px var(--shadow-heavy);
+}
+
+.dark-theme .modal-content {
+  background: var(--bg-secondary);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+}
+
+.dark-theme .add-category-form .form-control {
+  background-color: var(--bg-tertiary);
+  border-color: var(--border-color);
+}
+
+.dark-theme .add-category-form .form-control:focus {
+  background-color: var(--bg-tertiary);
+}
+
+/* Loading states */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  color: var(--text-primary);
+}
+
+.error-container {
+  text-align: center;
+  padding: 50px;
+  color: var(--text-primary);
+}
+
+.error-container h3 {
+  color: var(--text-primary);
+  margin-bottom: 15px;
+}
+
+.error-container p {
+  color: var(--text-muted);
+}
+
+/* Button theme adjustments */
+.btn-primary {
+  background: var(--gradient-eco);
+  border: none;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--gradient-eco);
+  filter: brightness(1.1);
+  box-shadow: 0 4px 12px var(--shadow-medium);
 }
 
 /* Responsive Design */

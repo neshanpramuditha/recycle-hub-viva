@@ -9,7 +9,6 @@ import {
 } from "./lib/productQueries";
 import { useAuth } from "./contexts/AuthContext";
 import { useTheme } from "./contexts/ThemeContext";
-import ThemeToggle from "./components/ThemeToggle";
 import toast, { Toaster } from "react-hot-toast";
 import "./ProductSingle.css";
 
@@ -98,7 +97,7 @@ export default function ProductSingle() {
   const handleAddToFavorites = async () => {
     if (!user) {
       toast.error("Please login to add items to favorites!");
-      navigate("/auth/login");
+      navigate("/Login");
       return;
     }
 
@@ -185,9 +184,6 @@ export default function ProductSingle() {
   }
   return (
     <div className={`product-single-container ${isDark ? 'dark-theme' : 'light-theme'}`}>
-      <div className="theme-toggle-container">
-        <ThemeToggle />
-      </div>
       <div className="container">
         {" "}
         <nav className="breadcrumb-nav">
