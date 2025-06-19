@@ -532,3 +532,107 @@ export async function isProductFavorited(userId, productId) {
     return false;
   }
 }
+
+// ============ RATING/REVIEW FUNCTIONS ============
+
+// Add a review/rating for a seller
+export async function addSellerReview(reviewData) {
+  try {
+    const { data, error } = await supabase
+      .from('reviews')
+      .insert([{
+        reviewer_id: reviewData.reviewer_id,
+        reviewed_user_id: reviewData.reviewed_user_id,
+        product_id: reviewData.product_id,
+        rating: reviewData.rating,
+        comment: reviewData.comment
+      }])
+      .select(`
+        *,
+        reviewer:profiles!reviews_reviewer_id_fkey(full_name, avatar_url)
+      `)
+      .single();
+
+    if (error) {
+      console.error('Error adding seller review:', error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error in addSellerReview:', error);
+    throw error;
+  }
+}
+
+// Get all reviews for a seller
+export async function getSellerReviews(sellerId) {
+  try {
+    const { data, error } = await supabase
+      .from('reviews')
+      .select(`
+        *,
+        reviewer:profiles!reviews_reviewer_id_fkey(full_name, avatar_url),
+        product:products(title)
+      `)
+      .eq('reviewed_user_id', sellerId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching seller reviews:', error);
+      throw error;
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error in getSellerReviews:', error);
+    return [];
+  }
+}
+
+// Get seller rating summary
+export async function getSellerRatingSummary(sellerId) {
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('rating, total_ratings')
+      .eq('id', sellerId)
+      .single();
+
+    if (error) {
+      console.error('Error fetching seller rating summary:', error);
+      throw error;
+    }
+
+    return {
+      averageRating: data.rating || 0,
+      totalRatings: data.total_ratings || 0
+    };
+  } catch (error) {
+    console.error('Error in getSellerRatingSummary:', error);
+    return { averageRating: 0, totalRatings: 0 };
+  }
+}
+
+// Check if user has already reviewed a seller for a specific product
+export async function hasUserReviewedSeller(reviewerId, sellerId, productId) {
+  try {
+    const { data, error } = await supabase
+      .from('reviews')
+      .select('id')
+      .eq('reviewer_id', reviewerId)
+      .eq('reviewed_user_id', sellerId)
+      .eq('product_id', productId)
+      .single();
+
+    if (error && error.code !== 'PGRST116') { // PGRST116 is "not found" error
+      console.error('Error checking if user reviewed seller:', error);
+      throw error;
+    }
+
+    return !!data;
+  } catch (error) {
+    console.error('Error in hasUserReviewedSeller:', error);
+    return false;
+  }
+}

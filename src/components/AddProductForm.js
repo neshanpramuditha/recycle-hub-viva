@@ -15,6 +15,9 @@ export default function AddProductForm() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [profileIncomplete, setProfileIncomplete] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiSuggestions, setAiSuggestions] = useState(null);
+  const [showAiPanel, setShowAiPanel] = useState(false);
 
   // Form data
   const [formData, setFormData] = useState({
@@ -209,11 +212,220 @@ export default function AddProductForm() {
   const addSpecification = () => {
     setSpecifications(prev => [...prev, { name: '', value: '' }]);
   };
-
   // Remove specification field
   const removeSpecification = (index) => {
     setSpecifications(prev => prev.filter((_, i) => i !== index));
   };
+
+  // AI-powered product details enhancement
+  const generateAIProductDetails = async () => {
+    if (!formData.title.trim()) {
+      setError('Please enter a product title first to use AI enhancement');
+      return;
+    }
+
+    setAiLoading(true);
+    setError('');
+
+    try {
+      const selectedCategory = categories.find(cat => cat.id === parseInt(formData.category_id));
+      const categoryName = selectedCategory ? selectedCategory.name : 'General';
+
+      // Simulate AI processing
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const aiResponse = generateSmartSuggestions(formData.title, categoryName, formData.condition);
+      setAiSuggestions(aiResponse);
+      setShowAiPanel(true);
+
+    } catch (err) {
+      console.error('Error generating AI suggestions:', err);
+      setError('Failed to generate AI suggestions. Please try again.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+  // Generate smart suggestions based on product title
+  const generateSmartSuggestions = (title, category, condition) => {
+    const lowerTitle = title.toLowerCase();
+    
+    // Smart description generation
+    let description = `This ${title} is available for sale in ${condition.toLowerCase()} condition. `;
+    
+    if (lowerTitle.includes('phone') || lowerTitle.includes('mobile')) {
+      description += 'All functions have been tested and are working perfectly. Battery health is good and holds charge well. Screen is clear without any cracks or damage. Perfect for daily use with all accessories included. ';
+    } else if (lowerTitle.includes('laptop') || lowerTitle.includes('computer')) {
+      description += 'Runs smoothly with excellent performance for work, study, or entertainment. All ports and features are fully functional. Keyboard and trackpad work perfectly. Ideal for students or professionals. ';
+    } else if (lowerTitle.includes('car') || lowerTitle.includes('vehicle')) {
+      description += 'Well maintained with regular servicing history. All documents are up to date and ready for immediate transfer. Engine runs smoothly with no mechanical issues. ';
+    } else if (lowerTitle.includes('bike') || lowerTitle.includes('motorcycle')) {
+      description += 'Excellent running condition with regular maintenance. All papers are clear and updated. Perfect for daily commuting with good fuel efficiency. ';
+    } else if (lowerTitle.includes('furniture') || lowerTitle.includes('chair') || lowerTitle.includes('table')) {
+      description += 'Sturdy construction with quality materials. No damages or major wear. Perfect addition to home or office space. ';
+    } else {
+      description += 'Well-maintained item with careful usage. All features are functional and in working order. ';
+    }
+    
+    description += 'Serious buyers only. Price is negotiable for quick sale. Contact for more details and viewing arrangement. Cash payment preferred.';
+
+    // Enhanced specifications based on product type
+    let specs = [{ name: 'Brand', value: '' }, { name: 'Model', value: '' }];
+    
+    if (lowerTitle.includes('phone') || lowerTitle.includes('mobile')) {
+      specs = [
+        { name: 'Brand', value: 'Apple/Samsung/Xiaomi' },
+        { name: 'Storage', value: '64GB/128GB/256GB' },
+        { name: 'RAM', value: '4GB/6GB/8GB' },
+        { name: 'Color', value: 'Black/White/Blue' },
+        { name: 'Battery Health', value: '80-95%' },
+        { name: 'Screen Size', value: '6.1"/6.7"' }
+      ];
+    } else if (lowerTitle.includes('laptop') || lowerTitle.includes('computer')) {
+      specs = [
+        { name: 'Brand', value: 'Dell/HP/Lenovo/Asus' },
+        { name: 'Processor', value: 'Intel i5/i7 or AMD Ryzen' },
+        { name: 'RAM', value: '8GB/16GB DDR4' },
+        { name: 'Storage', value: '256GB/512GB SSD' },
+        { name: 'Screen Size', value: '14"/15.6"/17"' },
+        { name: 'Graphics', value: 'Integrated/Dedicated' }
+      ];
+    } else if (lowerTitle.includes('car') || lowerTitle.includes('vehicle')) {
+      specs = [
+        { name: 'Make', value: 'Toyota/Honda/Nissan' },
+        { name: 'Model Year', value: '2015-2023' },
+        { name: 'Mileage', value: '20,000-150,000 km' },
+        { name: 'Fuel Type', value: 'Petrol/Diesel/Hybrid' },
+        { name: 'Transmission', value: 'Manual/Automatic' },
+        { name: 'Engine Size', value: '1000cc-2000cc' }
+      ];
+    } else if (lowerTitle.includes('bike') || lowerTitle.includes('motorcycle')) {
+      specs = [
+        { name: 'Brand', value: 'Honda/Yamaha/Bajaj/TVS' },
+        { name: 'Engine Capacity', value: '100cc-200cc' },
+        { name: 'Model Year', value: '2018-2024' },
+        { name: 'Mileage', value: '5,000-50,000 km' },
+        { name: 'Fuel Type', value: 'Petrol' },
+        { name: 'Type', value: 'Standard/Sports/Scooter' }
+      ];
+    } else if (lowerTitle.includes('furniture')) {
+      specs = [
+        { name: 'Material', value: 'Wood/Metal/Plastic' },
+        { name: 'Color', value: 'Brown/Black/White' },
+        { name: 'Dimensions', value: 'Length x Width x Height' },
+        { name: 'Condition', value: condition },
+        { name: 'Age', value: '1-5 years' }
+      ];
+    }
+
+    // More accurate price suggestions based on Sri Lankan market
+    let priceRange = { min: 5000, max: 15000 };
+    
+    if (lowerTitle.includes('iphone')) {
+      priceRange = { min: 80000, max: 300000 };
+    } else if (lowerTitle.includes('samsung galaxy')) {
+      priceRange = { min: 40000, max: 200000 };
+    } else if (lowerTitle.includes('phone') || lowerTitle.includes('mobile')) {
+      priceRange = { min: 15000, max: 100000 };
+    } else if (lowerTitle.includes('macbook')) {
+      priceRange = { min: 150000, max: 500000 };
+    } else if (lowerTitle.includes('laptop')) {
+      priceRange = { min: 60000, max: 250000 };
+    } else if (lowerTitle.includes('car')) {
+      priceRange = { min: 800000, max: 5000000 };
+    } else if (lowerTitle.includes('bike') || lowerTitle.includes('motorcycle')) {
+      priceRange = { min: 80000, max: 400000 };
+    } else if (lowerTitle.includes('furniture')) {
+      priceRange = { min: 10000, max: 100000 };
+    }
+
+    // Adjust by condition
+    const conditionMultipliers = {
+      'Excellent': 0.85,
+      'Good': 0.70,
+      'Fair': 0.55,
+      'Poor': 0.35
+    };
+
+    const multiplier = conditionMultipliers[condition] || 0.70;
+    priceRange.min = Math.round(priceRange.min * multiplier);
+    priceRange.max = Math.round(priceRange.max * multiplier);
+
+    return {
+      enhanced_description: description,
+      specifications: specs,
+      suggested_price_range: priceRange,
+      keywords: generateContextualKeywords(title, category),
+      selling_points: generateContextualSellingPoints(title, condition, category)
+    };
+  };
+
+  // Generate contextual keywords
+  const generateContextualKeywords = (title, category) => {
+    const words = title.toLowerCase().split(' ');
+    const keywords = [...words, category.toLowerCase()];
+    
+    // Add Sri Lankan market specific keywords
+    keywords.push('sri lanka', 'colombo', 'sale', 'urgent');
+    
+    if (title.toLowerCase().includes('phone')) {
+      keywords.push('mobile', 'smartphone', 'android', 'ios', 'unlocked');
+    } else if (title.toLowerCase().includes('laptop')) {
+      keywords.push('computer', 'notebook', 'gaming', 'office', 'student');
+    } else if (title.toLowerCase().includes('car')) {
+      keywords.push('vehicle', 'auto', 'transport', 'family', 'registered');
+    }
+
+    return [...new Set(keywords)].slice(0, 10);
+  };
+
+  // Generate contextual selling points
+  const generateContextualSellingPoints = (title, condition, category) => {
+    const points = [
+      `${condition} condition with careful usage`,
+      'Quick sale preferred - price negotiable',
+      'Serious buyers only - time wasters please excuse'
+    ];
+
+    const lowerTitle = title.toLowerCase();
+    if (lowerTitle.includes('phone')) {
+      points.push('Battery health verified - no heating issues');
+      points.push('Original charger and accessories included');
+    } else if (lowerTitle.includes('laptop')) {
+      points.push('Perfect for work/study - fast performance');
+      points.push('Original charger and software included');
+    } else if (lowerTitle.includes('car')) {
+      points.push('Regular service maintained - no accidents');
+      points.push('All documents clear - ready for transfer');
+    } else if (lowerTitle.includes('bike')) {
+      points.push('Excellent fuel efficiency - low maintenance');
+      points.push('All papers updated - immediate transfer');
+    }
+
+    return points.slice(0, 5);
+  };
+
+  // Apply AI suggestions to form
+  const applyAISuggestions = (suggestions) => {
+    if (suggestions.enhanced_description) {
+      setFormData(prev => ({ ...prev, description: suggestions.enhanced_description }));
+    }
+    
+    if (suggestions.specifications && suggestions.specifications.length > 0) {
+      setSpecifications(suggestions.specifications);
+    }
+    
+    if (suggestions.suggested_price_range && !formData.price) {
+      const suggestedPrice = Math.round((suggestions.suggested_price_range.min + suggestions.suggested_price_range.max) / 2);
+      setFormData(prev => ({ 
+        ...prev, 
+        price: suggestedPrice.toString(),
+        original_price: suggestions.suggested_price_range.max.toString()
+      }));
+    }
+    
+    setShowAiPanel(false);
+    setSuccess('✨ AI suggestions applied successfully! Review and adjust as needed.');  };
+
   // Form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -229,6 +441,32 @@ export default function AddProductForm() {
       return;
     }
     
+    // Validate required fields
+    if (!formData.title.trim()) {
+      setError('Please enter a product title');
+      return;
+    }
+    
+    if (!formData.description.trim()) {
+      setError('Please enter a product description');
+      return;
+    }
+    
+    if (!formData.category_id) {
+      setError('Please select a category');
+      return;
+    }
+    
+    if (!formData.price || parseFloat(formData.price) <= 0) {
+      setError('Please enter a valid price');
+      return;
+    }
+    
+    if (!formData.location.trim()) {
+      setError('Please enter a location');
+      return;
+    }
+    
     if (imageFiles.length === 0 && imageUrls.filter(url => url.trim()).length === 0) {
       setError('Please add at least one image (file upload or URL)');
       return;
@@ -238,24 +476,44 @@ export default function AddProductForm() {
     setError('');
 
     try {
+      console.log('Starting product submission...');
+      console.log('Form data:', formData);
+      console.log('User ID:', user.id);
+      console.log('Image files:', imageFiles.length);
+      console.log('Image URLs:', imageUrls.filter(url => url.trim()));
+
       // Prepare product data
       const productData = {
-        ...formData,
         seller_id: user.id,
         category_id: parseInt(formData.category_id),
+        title: formData.title.trim(),
+        description: formData.description.trim(),
         price: parseFloat(formData.price),
-        original_price: formData.original_price ? parseFloat(formData.original_price) : null
-      };      
+        original_price: formData.original_price ? parseFloat(formData.original_price) : null,
+        condition: formData.condition,
+        is_negotiable: formData.is_negotiable || false,
+        location: formData.location.trim()
+      };
+
+      console.log('Product data prepared:', productData);
       
-      // Add product with images
+      // Process images
       const validUrls = imageUrls.filter(url => url && url.trim());
+      console.log('Processing images - Files:', imageFiles.length, 'URLs:', validUrls.length);
+      
       const allImages = await processAllProductImages(imageFiles, validUrls, Date.now());
+      console.log('Images processed:', allImages.length);
+
+      // Add product with images
       const product = await addProductWithImages(productData, allImages);
+      console.log('Product added successfully:', product);
 
       // Add specifications if any
       const validSpecs = specifications.filter(spec => spec.name && spec.value);
       if (validSpecs.length > 0) {
+        console.log('Adding specifications:', validSpecs);
         await addProductSpecifications(product.id, validSpecs);
+        console.log('Specifications added successfully');
       }
 
       setSuccess('Product added successfully!');
@@ -266,10 +524,83 @@ export default function AddProductForm() {
       }, 2000);
 
     } catch (err) {
-      console.error('Error adding product:', err);
-      setError('Failed to add product. Please try again.');
+      console.error('Detailed error adding product:', err);
+      console.error('Error message:', err.message);
+      console.error('Error details:', err.details);
+      console.error('Error hint:', err.hint);
+      
+      // More specific error messages
+      if (err.message.includes('violates foreign key constraint')) {
+        setError('Invalid category selected. Please refresh the page and try again.');
+      } else if (err.message.includes('duplicate key')) {
+        setError('A product with this title already exists. Please use a different title.');
+      } else if (err.message.includes('permission')) {
+        setError('You do not have permission to add products. Please check your account settings.');
+      } else if (err.message.includes('network') || err.message.includes('fetch')) {
+        setError('Network error. Please check your internet connection and try again.');
+      } else {
+        setError(`Failed to add product: ${err.message || 'Please try again.'}`);
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  // AI Suggestion Handler
+  const handleAiSuggest = async () => {
+    setAiLoading(true);
+    setError('');
+    setSuccess('');
+    
+    try {
+      // Call your AI service here
+      const response = await fetch('/api/ai-suggest-product-details', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user?.token}` // Adjust based on your auth setup
+        },
+        body: JSON.stringify({
+          images: imageUrls.filter(url => url.trim()),
+          // Add other relevant data for AI suggestion
+        })
+      });
+      
+      if (!response.ok) {
+        throw new Error('AI service responded with an error');
+      }
+      
+      const data = await response.json();
+      
+      // Handle AI response data
+      if (data.success) {
+        setAiSuggestions(data.suggestions);
+        setSuccess('AI suggestions loaded successfully!');
+      } else {
+        setError(data.message || 'Failed to fetch AI suggestions');
+      }
+      
+    } catch (err) {
+      console.error('Error fetching AI suggestions:', err);
+      setError('Failed to fetch AI suggestions. Please try again.');
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  // Apply AI Suggestions
+  const handleApplyAiSuggestions = () => {
+    if (aiSuggestions) {
+      setFormData(prev => ({
+        ...prev,
+        title: aiSuggestions.title || prev.title,
+        description: aiSuggestions.description || prev.description,
+        // Map other fields as necessary
+      }));
+      
+      setSuccess('AI suggestions applied to the form');
+    } else {
+      setError('No AI suggestions available to apply');
     }
   };
 
@@ -424,14 +755,141 @@ export default function AddProductForm() {
                         value={formData.location}
                         onChange={handleInputChange}
                         className="form-control"
-                        placeholder="Enter your city or area"
-                        required
+                        placeholder="Enter your city or area"                        required
                       />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* AI Enhancement Card */}
+            <div className="card mb-4 border-primary">
+              <div className="card-header bg-primary text-white">
+                <h5 className="mb-0">
+                  <i className="fas fa-magic me-2"></i>
+                  AI Product Enhancement
+                </h5>
+              </div>
+              <div className="card-body">
+                <p className="text-muted mb-3">
+                  <i className="fas fa-robot me-1"></i>
+                  Let AI help you create detailed product descriptions, specifications, and pricing suggestions.
+                </p>
+                
+                <div className="d-grid">
+                  <button
+                    type="button"
+                    onClick={generateAIProductDetails}
+                    disabled={aiLoading || !formData.title.trim()}
+                    className="btn btn-primary btn-lg"
+                  >
+                    {aiLoading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2"></span>
+                        AI is analyzing your product...
+                      </>
+                    ) : (
+                      <>
+                        <i className="fas fa-sparkles me-2"></i>
+                        Enhance with AI
+                      </>
+                    )}
+                  </button>
+                </div>
+                
+                {!formData.title.trim() && (
+                  <small className="text-muted mt-2 d-block">
+                    <i className="fas fa-info-circle me-1"></i>
+                    Please enter a product title first to use AI enhancement
+                  </small>
+                )}
+              </div>
+            </div>
+
+            {/* AI Suggestions Panel */}
+            {showAiPanel && aiSuggestions && (
+              <div className="card mb-4 border-success">
+                <div className="card-header bg-success text-white">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <h5 className="mb-0">
+                      <i className="fas fa-lightbulb me-2"></i>
+                      AI Suggestions
+                    </h5>
+                    <button
+                      type="button"
+                      onClick={() => setShowAiPanel(false)}
+                      className="btn btn-sm btn-outline-light"
+                    >
+                      <i className="fas fa-times"></i>
+                    </button>
+                  </div>
+                </div>
+                <div className="card-body">
+                  <div className="row">
+                    <div className="col-12 mb-3">
+                      <h6><i className="fas fa-file-alt me-2 text-primary"></i>Enhanced Description:</h6>
+                      <div className="bg-light p-3 rounded">
+                        <p className="mb-0 small">{aiSuggestions.enhanced_description}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="col-md-6 mb-3">
+                      <h6><i className="fas fa-list me-2 text-primary"></i>Suggested Specifications:</h6>
+                      <div className="bg-light p-3 rounded">
+                        {aiSuggestions.specifications.map((spec, index) => (
+                          <div key={index} className="small mb-1">
+                            <strong>{spec.name}:</strong> {spec.value}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="col-md-6 mb-3">
+                      <h6><i className="fas fa-dollar-sign me-2 text-primary"></i>Price Range:</h6>
+                      <div className="bg-light p-3 rounded">
+                        <div className="small">
+                          <strong>Suggested:</strong> Rs. {aiSuggestions.suggested_price_range.min.toLocaleString()} - Rs. {aiSuggestions.suggested_price_range.max.toLocaleString()}
+                        </div>
+                        <div className="small text-muted mt-1">
+                          Average: Rs. {Math.round((aiSuggestions.suggested_price_range.min + aiSuggestions.suggested_price_range.max) / 2).toLocaleString()}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="col-12 mb-3">
+                      <h6><i className="fas fa-star me-2 text-primary"></i>Key Selling Points:</h6>
+                      <div className="bg-light p-3 rounded">
+                        <ul className="mb-0 small">
+                          {aiSuggestions.selling_points.map((point, index) => (
+                            <li key={index}>{point}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="d-flex gap-2 justify-content-end">
+                    <button
+                      type="button"
+                      onClick={() => applyAISuggestions(aiSuggestions)}
+                      className="btn btn-success"
+                    >
+                      <i className="fas fa-check me-2"></i>
+                      Apply All Suggestions
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowAiPanel(false)}
+                      className="btn btn-outline-secondary"
+                    >
+                      <i className="fas fa-times me-2"></i>
+                      Dismiss
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Product Images Card */}
             <div className="card mb-4">
