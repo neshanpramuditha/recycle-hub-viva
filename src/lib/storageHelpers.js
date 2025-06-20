@@ -14,8 +14,7 @@ export async function uploadImage(file, fileName = null) {
     // Generate unique filename if not provided
     const fileExt = file.name.split('.').pop();
     const finalFileName = fileName || `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-    
-    // Upload to Supabase storage
+      // Upload to Supabase storage
     const { data, error } = await supabase.storage
       .from(PRODUCT_IMAGES_BUCKET)
       .upload(finalFileName, file, {
@@ -25,6 +24,9 @@ export async function uploadImage(file, fileName = null) {
 
     if (error) {
       console.error('Error uploading image:', error);
+      if (error.message.includes('Bucket not found')) {
+        throw new Error('Storage bucket not configured. Please contact the administrator to set up the image storage.');
+      }
       throw error;
     }
 

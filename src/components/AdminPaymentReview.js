@@ -23,11 +23,10 @@ export default function AdminPaymentReview() {
 
   useEffect(() => {
     loadPaymentData();
-  }, []);
-
-  const loadPaymentData = async () => {
+  }, []);  const loadPaymentData = async () => {
     try {
       setLoading(true);
+      
       const [payments, stats] = await Promise.all([
         getPendingManualPayments(),
         getPaymentStatistics()
@@ -36,7 +35,7 @@ export default function AdminPaymentReview() {
       setStatistics(stats);
     } catch (err) {
       console.error('Error loading payment data:', err);
-      setError('Failed to load payment data');
+      setError('Failed to load payment data: ' + err.message);
     } finally {
       setLoading(false);
     }
