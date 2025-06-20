@@ -19,7 +19,6 @@ import ThemeToggle from "./ThemeToggle";
 import PayPalPayment from "./PayPalPayment";
 import ManualPayment from "./ManualPayment";
 import AdminPaymentReview from "./AdminPaymentReview";
-import NotificationCenter from "./NotificationCenter";
 import "./Dashboard.css";
 
 export default function Dashboard() {
@@ -316,18 +315,10 @@ export default function Dashboard() {
     setIsMobileMenuOpen(false);
   };  // Sidebar menu items
   const menuItems = [
-    { id: "overview", label: "Overview", icon: "fas fa-tachometer-alt" },
-    { id: "products", label: "My Products", icon: "fas fa-boxes" },
+    { id: "overview", label: "Overview", icon: "fas fa-tachometer-alt" },    { id: "products", label: "My Products", icon: "fas fa-boxes" },
     { id: "add-product", label: "Add Product", icon: "fas fa-plus-circle" },    { id: "favorites", label: "Favorites", icon: "fas fa-heart" },
     { id: "credits", label: "Credits", icon: "fas fa-coins" },
-    { id: "notifications", label: "Notifications", icon: "fas fa-bell" },
-    { id: "messages", label: "Messages", icon: "fas fa-envelope" },
     { id: "settings", label: "Settings", icon: "fas fa-cog" },
-    {
-      id: "storage",
-      label: "Storage Management",
-      icon: "fas fa-cloud-upload-alt",
-    },
     // Admin-only menu item
     ...(user?.email === 'admin@recyclehub.com' || user?.user_metadata?.role === 'admin' ? [
       {
@@ -363,19 +354,12 @@ export default function Dashboard() {
               loadUserProducts();
             }}
           />
-        );
-      case "favorites":
+        );      case "favorites":
         return renderFavorites();
       case "credits":
         return renderCredits();
-      case "notifications":
-        return <NotificationCenter />;
-      case "messages":
-        return renderMessages();
       case "settings":
         return renderSettings();
-      case "storage":
-        return renderStorageManagement();
       case "admin-payments":
         return <AdminPaymentReview />;
       default:
@@ -594,40 +578,6 @@ export default function Dashboard() {
           </div>
         </div>
       )}
-    </div>
-  );
-
-  const renderMessages = () => (
-    <div className="dashboard-content">
-      <div className="content-header">
-        <h2>Messages</h2>
-        <p className="text-muted">Your conversations with other users</p>
-      </div>
-
-      <div className="coming-soon">
-        <div className="text-center">
-          <i className="fas fa-envelope fa-4x text-muted mb-3"></i>
-          <h4>Messages Coming Soon</h4>
-          <p className="text-muted mb-4">
-            We're working on implementing a messaging system to help you
-            communicate with buyers and sellers directly.
-          </p>
-          <div className="features-list">
-            <div className="feature-item">
-              <i className="fas fa-check-circle text-success me-2"></i>
-              Direct messaging with other users
-            </div>
-            <div className="feature-item">
-              <i className="fas fa-check-circle text-success me-2"></i>
-              Product inquiry management
-            </div>
-            <div className="feature-item">
-              <i className="fas fa-check-circle text-success me-2"></i>
-              Real-time notifications
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
   const renderSettings = () => (
@@ -876,131 +826,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-    </div>
-  );
-
-  const renderStorageManagement = () => (
-    <div className="dashboard-content">
-      <div className="content-header">
-        <h2>Storage Management</h2>
-        <p className="text-muted">
-          Manage your uploaded images and storage usage
-        </p>
-      </div>
-
-      <div className="storage-overview">
-        <div className="row mb-4">
-          <div className="col-md-3">
-            <div className="stat-card">
-              <div className="stat-icon bg-info">
-                <i className="fas fa-images"></i>
-              </div>
-              <div className="stat-content">
-                <h3>
-                  {userProducts.reduce(
-                    (total, product) => total + (product.images?.length || 1),
-                    0
-                  )}
-                </h3>
-                <p>Total Images</p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="stat-card">
-              <div className="stat-icon bg-warning">
-                <i className="fas fa-hdd"></i>
-              </div>
-              <div className="stat-content">
-                <h3>~{Math.round(userProducts.length * 0.5)}MB</h3>
-                <p>Storage Used</p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="stat-card">
-              <div className="stat-icon bg-success">
-                <i className="fas fa-compress-arrows-alt"></i>
-              </div>
-              <div className="stat-content">
-                <h3>Auto</h3>
-                <p>Compression</p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="stat-card">
-              <div className="stat-icon bg-primary">
-                <i className="fas fa-shield-alt"></i>
-              </div>
-              <div className="stat-content">
-                <h3>Secure</h3>
-                <p>Storage</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="card">
-          <div className="card-header">
-            <h5>
-              <i className="fas fa-cog me-2"></i>Storage Settings
-            </h5>
-          </div>
-          <div className="card-body">
-            <div className="row">
-              <div className="col-md-6">
-                <h6>Image Compression</h6>
-                <p className="text-muted">
-                  Images are automatically compressed to reduce storage usage
-                  while maintaining quality.
-                </p>
-                <div className="form-check form-switch mb-3">
-                  <input
-                    className="form-check-input"
-                    type="checkbox"
-                    id="autoCompress"
-                    defaultChecked
-                  />
-                  <label className="form-check-label" htmlFor="autoCompress">
-                    Enable automatic compression
-                  </label>
-                </div>
-                <div className="mb-3">
-                  <label className="form-label">Compression Quality</label>
-                  <select className="form-select">
-                    <option value="high">High Quality (larger files)</option>
-                    <option value="medium" selected>
-                      Medium Quality (recommended)
-                    </option>
-                    <option value="low">Low Quality (smaller files)</option>
-                  </select>
-                </div>
-              </div>
-              <div className="col-md-6">
-                <h6>Storage Cleanup</h6>
-                <p className="text-muted">
-                  Manage your storage by removing unused images and optimizing
-                  space.
-                </p>
-                <button className="btn btn-outline-info mb-2">
-                  <i className="fas fa-search me-2"></i>Find Unused Images
-                </button>
-                <br />
-                <button className="btn btn-outline-warning mb-2">
-                  <i className="fas fa-compress me-2"></i>Optimize All Images
-                </button>
-                <br />
-                <button className="btn btn-outline-danger">
-                  <i className="fas fa-trash me-2"></i>Clear Cache
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+    </div>  );
 
   const renderOverview = () => (
     <div className="dashboard-content">
@@ -1110,16 +936,7 @@ export default function Dashboard() {
                     onClick={() => setActiveSection("products")}
                   >
                     <i className="fas fa-boxes me-2"></i>Manage Products
-                  </button>
-                </div>
-                <div className="col-md-3">
-                  <button
-                    className="btn btn-outline-warning w-100 mb-2"
-                    onClick={() => setActiveSection("storage")}
-                  >
-                    <i className="fas fa-cloud me-2"></i>Storage Settings
-                  </button>
-                </div>
+                  </button>                </div>
               </div>
             </div>
           </div>

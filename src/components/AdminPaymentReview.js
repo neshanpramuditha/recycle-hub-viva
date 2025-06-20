@@ -182,105 +182,163 @@ export default function AdminPaymentReview() {
           {success}
           <button type="button" className="btn-close" onClick={() => setSuccess('')}></button>
         </div>
-      )}
-
-      {/* Pending Payments List */}
-      <div className="card">
-        <div className="card-header">
-          <h5><i className="fas fa-list me-2"></i>Pending Manual Payments</h5>
+      )}      {/* Pending Payments List */}
+      <div className="admin-payments-container">
+        <div className="payments-header">
+          <div className="header-content">
+            <div className="header-icon">
+              <i className="fas fa-clock"></i>
+            </div>
+            <div className="header-text">
+              <h3>Pending Manual Payments</h3>
+              <p className="subtitle">Review and process manual payment submissions</p>
+            </div>
+          </div>
+          <div className="pending-count">
+            <span className="count-badge">{pendingPayments.length}</span>
+          </div>
         </div>
-        <div className="card-body">
+
+        <div className={`payments-content ${pendingPayments.length === 0 ? 'empty-state' : ''}`}>
           {pendingPayments.length === 0 ? (
-            <div className="text-center py-4">
-              <i className="fas fa-check-circle fa-3x text-success mb-3"></i>
-              <h5>All caught up!</h5>
-              <p className="text-muted">No pending manual payments to review.</p>
+            <div className="empty-payments-state">
+              <div className="empty-icon">
+                <i className="fas fa-check-circle"></i>
+              </div>
+              <h4>All Payments Processed!</h4>
+              <p>Great job! There are no pending manual payments to review at the moment.</p>
+              <div className="empty-stats">
+                <div className="stat-item">
+                  <i className="fas fa-clipboard-check"></i>
+                  <span>Ready for new submissions</span>
+                </div>
+              </div>
             </div>
           ) : (
-            <div className="pending-payments-list">
+            <div className="payments-grid">
               {pendingPayments.map((payment) => (
-                <div key={payment.id} className="payment-review-item">
-                  <div className="payment-info">
-                    <div className="payment-header">
-                      <h6>{payment.profiles?.full_name || 'Unknown User'}</h6>
-                      <span className="payment-date">{formatDate(payment.created_at)}</span>
+                <div key={payment.id} className="payment-card">
+                  <div className="payment-card-header">
+                    <div className="user-info">
+                      <div className="user-avatar">
+                        <i className="fas fa-user"></i>
+                      </div>
+                      <div className="user-details">
+                        <h5 className="user-name">{payment.profiles?.full_name || 'Unknown User'}</h5>
+                        <p className="payment-id">ID: #{payment.id}</p>
+                      </div>
                     </div>
-                    <div className="payment-details">
-                      <div className="detail-item">
-                        <strong>Package:</strong> {payment.package_name}
+                    <div className="payment-timestamp">
+                      <i className="fas fa-calendar-alt"></i>
+                      <span>{formatDate(payment.created_at)}</span>
+                    </div>
+                  </div>
+
+                  <div className="payment-card-body">
+                    <div className="payment-summary">
+                      <div className="summary-row">
+                        <div className="summary-item package">
+                          <i className="fas fa-box"></i>
+                          <div>
+                            <span className="label">Package</span>
+                            <strong>{payment.package_name}</strong>
+                          </div>
+                        </div>
+                        <div className="summary-item credits">
+                          <i className="fas fa-coins"></i>
+                          <div>
+                            <span className="label">Credits</span>
+                            <strong>{payment.credits}</strong>
+                          </div>
+                        </div>
                       </div>
-                      <div className="detail-item">
-                        <strong>Credits:</strong> {payment.credits}
+                      <div className="summary-row">
+                        <div className="summary-item amount">
+                          <i className="fas fa-money-bill-wave"></i>
+                          <div>
+                            <span className="label">Amount</span>
+                            <strong className="amount-value">{formatAmount(payment.amount)}</strong>
+                          </div>
+                        </div>
+                        <div className="summary-item method">
+                          <i className="fas fa-credit-card"></i>
+                          <div>
+                            <span className="label">Method</span>
+                            <strong>{payment.payment_method}</strong>
+                          </div>
+                        </div>
                       </div>
-                      <div className="detail-item">
-                        <strong>Amount:</strong> {formatAmount(payment.amount)}
-                      </div>
-                      <div className="detail-item">
-                        <strong>Payment Method:</strong> {payment.payment_method}
-                      </div>
-                      <div className="detail-item">
-                        <strong>Reference Number:</strong> {payment.reference_number}
+                    </div>
+
+                    <div className="payment-details-section">
+                      <div className="detail-row">
+                        <span className="detail-label">Reference:</span>
+                        <span className="detail-value reference-number">{payment.reference_number}</span>
                       </div>
                       {payment.notes && (
-                        <div className="detail-item">
-                          <strong>User Notes:</strong> {payment.notes}
+                        <div className="detail-row notes">
+                          <span className="detail-label">User Notes:</span>
+                          <p className="detail-value user-notes">{payment.notes}</p>
                         </div>
                       )}
                     </div>
                   </div>
                   
-                  <div className="payment-actions">
+                  <div className="payment-card-actions">
                     {payment.receipt_url && (
                       <button
-                        className="btn btn-outline-info btn-sm mb-2"
+                        className="btn btn-receipt"
                         onClick={() => openReceiptInNewTab(payment.receipt_url)}
                       >
-                        <i className="fas fa-eye me-1"></i>View Receipt
+                        <i className="fas fa-receipt"></i>
+                        <span>View Receipt</span>
                       </button>
                     )}
                     
-                    <div className="admin-notes-section mb-2">
-                      <label className="form-label">Admin Notes (Optional)</label>
+                    <div className="admin-notes-input">
+                      <label className="notes-label">
+                        <i className="fas fa-sticky-note"></i>
+                        Admin Notes
+                      </label>
                       <textarea
-                        className="form-control form-control-sm"
-                        rows="2"
+                        className="notes-textarea"
+                        rows="3"
                         value={selectedPayment === payment.id ? adminNotes : ''}
                         onChange={(e) => {
                           setSelectedPayment(payment.id);
                           setAdminNotes(e.target.value);
                         }}
-                        placeholder="Add notes about this payment review..."
+                        placeholder="Add your review notes here..."
                       />
                     </div>
                     
-                    <div className="action-buttons">
+                    <div className="action-buttons-row">
                       <button
-                        className="btn btn-success btn-sm"
+                        className="btn btn-approve"
                         onClick={() => handleApprovePayment(payment.id)}
                         disabled={processing === payment.id}
                       >
                         {processing === payment.id ? (
                           <>
-                            <span className="spinner-border spinner-border-sm me-1" role="status"></span>
-                            Approving...
+                            <div className="btn-spinner"></div>
+                            <span>Approving...</span>
                           </>
                         ) : (
                           <>
-                            <i className="fas fa-check me-1"></i>
-                            Approve
+                            <i className="fas fa-check-circle"></i>
+                            <span>Approve Payment</span>
                           </>
                         )}
                       </button>
                       <button
-                        className="btn btn-danger btn-sm"
+                        className="btn btn-reject"
                         onClick={() => {
                           setSelectedPayment(payment.id);
                           setShowRejectModal(true);
                         }}
-                        disabled={processing === payment.id}
-                      >
-                        <i className="fas fa-times me-1"></i>
-                        Reject
+                        disabled={processing === payment.id}                      >
+                        <i className="fas fa-times-circle"></i>
+                        <span>Reject Payment</span>
                       </button>
                     </div>
                   </div>
