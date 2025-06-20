@@ -18,6 +18,8 @@ import AddProductForm from "./AddProductForm";
 import ThemeToggle from "./ThemeToggle";
 import PayPalPayment from "./PayPalPayment";
 import ManualPayment from "./ManualPayment";
+import AdminPaymentReview from "./AdminPaymentReview";
+import NotificationCenter from "./NotificationCenter";
 import "./Dashboard.css";
 
 export default function Dashboard() {
@@ -312,14 +314,13 @@ export default function Dashboard() {
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
-  };
-  // Sidebar menu items
+  };  // Sidebar menu items
   const menuItems = [
     { id: "overview", label: "Overview", icon: "fas fa-tachometer-alt" },
     { id: "products", label: "My Products", icon: "fas fa-boxes" },
-    { id: "add-product", label: "Add Product", icon: "fas fa-plus-circle" },
-    { id: "favorites", label: "Favorites", icon: "fas fa-heart" },
+    { id: "add-product", label: "Add Product", icon: "fas fa-plus-circle" },    { id: "favorites", label: "Favorites", icon: "fas fa-heart" },
     { id: "credits", label: "Credits", icon: "fas fa-coins" },
+    { id: "notifications", label: "Notifications", icon: "fas fa-bell" },
     { id: "messages", label: "Messages", icon: "fas fa-envelope" },
     { id: "settings", label: "Settings", icon: "fas fa-cog" },
     {
@@ -327,6 +328,14 @@ export default function Dashboard() {
       label: "Storage Management",
       icon: "fas fa-cloud-upload-alt",
     },
+    // Admin-only menu item
+    ...(user?.email === 'admin@recyclehub.com' || user?.user_metadata?.role === 'admin' ? [
+      {
+        id: "admin-payments",
+        label: "Payment Review",
+        icon: "fas fa-gavel",
+      }
+    ] : []),
   ];
 
   // Check URL parameters for section
@@ -359,12 +368,16 @@ export default function Dashboard() {
         return renderFavorites();
       case "credits":
         return renderCredits();
+      case "notifications":
+        return <NotificationCenter />;
       case "messages":
         return renderMessages();
       case "settings":
         return renderSettings();
       case "storage":
         return renderStorageManagement();
+      case "admin-payments":
+        return <AdminPaymentReview />;
       default:
         return renderOverview();
     }

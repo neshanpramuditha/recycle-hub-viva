@@ -177,6 +177,347 @@
   height: 1rem;
 }
 
+/* Admin Payment Review Styles */
+.admin-payment-review {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.content-header {
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--border-color, #dee2e6);
+}
+
+.content-header h2 {
+  margin: 0 0 5px 0;
+  color: var(--text-color, #333);
+  font-weight: 600;
+}
+
+.content-header p {
+  margin: 0;
+  color: var(--text-muted, #6c757d);
+}
+
+.stat-card {
+  background: var(--surface-color, #f8f9fa);
+  border: 1px solid var(--border-color, #dee2e6);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.stat-icon.bg-warning {
+  background: #f59e0b;
+}
+
+.stat-icon.bg-success {
+  background: #10b981;
+}
+
+.stat-icon.bg-info {
+  background: #3b82f6;
+}
+
+.stat-icon.bg-primary {
+  background: #6366f1;
+}
+
+.stat-content h3 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-color, #333);
+}
+
+.stat-content p {
+  margin: 0;
+  color: var(--text-muted, #6c757d);
+  font-size: 0.9rem;
+}
+
+.pending-payments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.payment-review-item {
+  background: var(--background-color, #fff);
+  border: 1px solid var(--border-color, #dee2e6);
+  border-radius: 10px;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: start;
+}
+
+.payment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-color, #dee2e6);
+}
+
+.payment-header h6 {
+  margin: 0;
+  color: var(--text-color, #333);
+  font-weight: 600;
+}
+
+.payment-date {
+  color: var(--text-muted, #6c757d);
+  font-size: 0.85rem;
+}
+
+.payment-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 8px;
+}
+
+.detail-item {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.detail-item strong {
+  color: var(--text-color, #333);
+  margin-right: 5px;
+}
+
+.payment-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 200px;
+}
+
+.admin-notes-section {
+  width: 100%;
+}
+
+.admin-notes-section .form-label {
+  font-size: 0.85rem;
+  color: var(--text-color, #333);
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.admin-notes-section .form-control {
+  font-size: 0.85rem;
+  border: 1px solid var(--border-color, #dee2e6);
+  border-radius: 6px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.action-buttons .btn {
+  flex: 1;
+  font-size: 0.85rem;
+  padding: 6px 12px;
+}
+
+/* Modal Styles */
+.modal-content {
+  background: var(--surface-color, #f8f9fa);
+  border: 1px solid var(--border-color, #dee2e6);
+  border-radius: 10px;
+}
+
+.modal-header {
+  background: var(--background-color, #fff);
+  border-bottom: 1px solid var(--border-color, #dee2e6);
+  border-radius: 10px 10px 0 0;
+}
+
+.modal-title {
+  color: var(--text-color, #333);
+  font-weight: 600;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-body .form-label {
+  color: var(--text-color, #333);
+  font-weight: 500;
+}
+
+.modal-body .form-control {
+  background: var(--background-color, #fff);
+  border: 1px solid var(--border-color, #dee2e6);
+  color: var(--text-color, #333);
+}
+
+.modal-footer {
+  background: var(--background-color, #fff);
+  border-top: 1px solid var(--border-color, #dee2e6);
+  border-radius: 0 0 10px 10px;
+}
+
+/* Notification Center Styles */
+.notification-center {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.notification-header {
+  background: var(--surface-color, #f8f9fa);
+  border: 1px solid var(--border-color, #dee2e6);
+  border-radius: 10px 10px 0 0;
+  padding: 20px;
+  border-bottom: none;
+}
+
+.notification-header h5 {
+  margin: 0;
+  color: var(--text-color, #333);
+  font-weight: 600;
+}
+
+.notification-actions .btn {
+  font-size: 0.85rem;
+}
+
+.notification-list {
+  background: var(--background-color, #fff);
+  border: 1px solid var(--border-color, #dee2e6);
+  border-radius: 0 0 10px 10px;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.notification-item {
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border-color, #dee2e6);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+  transition: background-color 0.2s ease;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item.unread {
+  background: rgba(13, 110, 253, 0.05);
+  border-left: 4px solid var(--primary, #0d6efd);
+}
+
+.notification-item.read {
+  background: var(--background-color, #fff);
+}
+
+.notification-content {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+}
+
+.notification-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-color, #f8f9fa);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.notification-body {
+  flex: 1;
+}
+
+.notification-title {
+  margin: 0 0 5px 0;
+  color: var(--text-color, #333);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.notification-message {
+  margin: 0 0 8px 0;
+  color: var(--text-color, #333);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.notification-date {
+  color: var(--text-muted, #6c757d);
+  font-size: 0.8rem;
+}
+
+.mark-read-btn {
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.empty-notifications {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted, #6c757d);
+}
+
+.empty-notifications h6 {
+  color: var(--text-color, #333);
+  margin-bottom: 10px;
+}
+
+.empty-notifications p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Notification Badge in Header */
+.notification-badge {
+  position: relative;
+  display: inline-block;
+}
+
+.notification-badge .badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .paypal-payment-container,
@@ -192,6 +533,61 @@
   
   .payment-summary .d-flex {
     font-size: 0.9rem;
+  }
+  
+  .admin-payment-review {
+    padding: 15px;
+  }
+  
+  .payment-review-item {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .payment-details {
+    grid-template-columns: 1fr;
+  }
+  
+  .payment-actions {
+    min-width: auto;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .action-buttons .btn {
+    flex: none;
+  }
+  
+  .notification-center {
+    padding: 15px;
+  }
+  
+  .notification-header {
+    padding: 15px;
+  }
+  
+  .notification-header .d-flex {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+  
+  .notification-actions {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .notification-item {
+    padding: 12px 15px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .mark-read-btn {
+    align-self: flex-end;
+    margin-top: 10px;
   }
 }
 

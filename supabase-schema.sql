@@ -565,3 +565,134 @@ WHERE p.status = 'available';
 
 -- Add notification preferences column to profiles table
 ALTER TABLE profiles ADD COLUMN IF NOT EXISTS notification_preferences JSONB DEFAULT '{"emailNotifications": true, "productNotifications": true, "marketingEmails": false}';
+
+-- ========================================
+-- PAYMENT SYSTEM ENHANCEMENTS
+-- ========================================
+
+-- 1. Add missing admin review columns to payment_transactions table
+DO $$
+BEGIN
+    -- Add admin_notes column if it doesn't exist
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'payment_transactions' 
+        AND column_name = 'admin_notes'
+    ) THEN
+        ALTER TABLE payment_transactions ADD COLUMN admin_notes TEXT;
+    END IF;
+
+    -- Add approved_at column if it doesn't exist
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'payment_transactions' 
+        AND column_name = 'approved_at'
+    ) THEN
+        ALTER TABLE payment_transactions ADD COLUMN approved_at TIMESTAMPTZ;
+    END IF;
+
+    -- Add rejected_at column if it doesn't exist
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'payment_transactions' 
+        AND column_name = 'rejected_at'
+    ) THEN
+        ALTER TABLE payment_transactions ADD COLUMN rejected_at TIMESTAMPTZ;
+    END IF;
+END $$;
+
+-- 2. Create payment notifications table
+CREATE TABLE IF NOT EXISTS payment_notifications (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  payment_transaction_id UUID REFERENCES payment_transactions(id) ON DELETE CASCADE,
+  notification_type TEXT NOT NULL, -- 'payment_approved', 'payment_rejected', 'payment_pending'
+  title TEXT NOT NULL,
+  message TEXT NOT NULL,
+  read BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 3. Create performance indexes for payment system
+CREATE INDEX IF NOT EXISTS idx_payment_transactions_status ON payment_transactions(status);
+CREATE INDEX IF NOT EXISTS idx_payment_transactions_user_id ON payment_transactions(user_id);
+CREATE INDEX IF NOT EXISTS idx_payment_notifications_user_id ON payment_notifications(user_id);
+CREATE INDEX IF NOT EXISTS idx_payment_notifications_read ON payment_notifications(read);
+
+-- 4. Add RLS policies for payment notifications
+ALTER TABLE payment_notifications ENABLE ROW LEVEL SECURITY;
+
+-- Users can only read their own notifications
+CREATE POLICY "Users can read own notifications" ON payment_notifications
+  FOR SELECT USING (auth.uid() = user_id);
+
+-- Only authenticated users can insert notifications (for system use)
+CREATE POLICY "System can insert notifications" ON payment_notifications
+  FOR INSERT WITH CHECK (true);
+
+-- Users can update their own notifications (mark as read)
+CREATE POLICY "Users can update own notifications" ON payment_notifications
+  FOR UPDATE USING (auth.uid() = user_id);
+
+-- 5. Add admin role check function for role-based admin access
+CREATE OR REPLACE FUNCTION is_admin()
+RETURNS BOOLEAN AS $$
+BEGIN
+  RETURN (
+    SELECT COALESCE(
+      (auth.jwt() ->> 'email') = 'admin@recyclehub.com' OR
+      (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin',
+      false
+    )
+  );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 6. Add RLS policy for admin access to all payment transactions
+CREATE POLICY "Admins can access all payment transactions" ON payment_transactions
+  FOR ALL USING (is_admin());
+
+-- 7. Create storage bucket for payment receipts
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('payment-receipts', 'payment-receipts', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- 8. Create storage policies for payment receipts
+CREATE POLICY "Users can upload receipts" ON storage.objects
+  FOR INSERT WITH CHECK (
+    bucket_id = 'payment-receipts' AND
+    auth.role() = 'authenticated'
+  );
+
+CREATE POLICY "Users can view receipts" ON storage.objects
+  FOR SELECT USING (
+    bucket_id = 'payment-receipts' AND
+    (auth.role() = 'authenticated' OR is_admin())
+  );
+
+CREATE POLICY "Admins can delete receipts" ON storage.objects
+  FOR DELETE USING (
+    bucket_id = 'payment-receipts' AND
+    is_admin()
+  );
+
+-- 9. Add trigger to update payment_transactions timestamps
+CREATE TRIGGER update_payment_transactions_updated_at
+  BEFORE UPDATE ON payment_transactions
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- 10. Add trigger to update payment_notifications timestamps
+CREATE TRIGGER update_payment_notifications_updated_at
+  BEFORE UPDATE ON payment_notifications
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
+-- 11. Add table comments for documentation
+COMMENT ON TABLE payment_notifications IS 'Stores user notifications for payment status updates';
+COMMENT ON COLUMN payment_notifications.notification_type IS 'Types: payment_approved, payment_rejected, payment_pending, payment_failed';
+
+-- ========================================
+-- END PAYMENT SYSTEM ENHANCEMENTS
+-- ========================================

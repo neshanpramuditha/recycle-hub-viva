@@ -870,3 +870,256 @@ export async function getUserPaymentTransactions(userId) {
     return [];
   }
 }
+
+// Admin Functions for Manual Payment Review
+
+// Get all pending manual payments for admin review
+export async function getPendingManualPayments() {
+  try {
+    const { data, error } = await supabase
+      .from('payment_transactions')
+      .select(`
+        *,
+        profiles:user_id (
+          full_name,
+          email
+        )
+      `)
+      .eq('payment_method', 'manual')
+      .eq('status', 'pending_review')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching pending manual payments:', error);
+      throw error;
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error in getPendingManualPayments:', error);
+    return [];
+  }
+}
+
+// Approve manual payment (admin function)
+export async function approveManualPayment(transactionId, adminNotes = '') {
+  try {
+    // Get transaction details
+    const { data: transaction, error: fetchError } = await supabase
+      .from('payment_transactions')
+      .select('*')
+      .eq('id', transactionId)
+      .single();
+
+    if (fetchError) throw fetchError;
+
+    if (!transaction) {
+      throw new Error('Transaction not found');
+    }
+
+    // Update payment status to completed
+    const { error: updateError } = await supabase
+      .from('payment_transactions')
+      .update({
+        payment_status: 'completed',
+        status: 'completed',
+        admin_notes: adminNotes,
+        approved_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', transactionId);
+
+    if (updateError) throw updateError;
+
+    // Add credits to user account
+    await addCreditsToUser(
+      transaction.user_id,
+      transaction.credits,
+      `Manual payment approved - ${transaction.package_name}`
+    );
+
+    // Send notification to user
+    await createPaymentNotification(
+      transaction.user_id,
+      transactionId,
+      'payment_approved',
+      'Payment Approved! 🎉',
+      `Your payment for ${transaction.package_name} (${transaction.credits} credits) has been approved and credits have been added to your account.`
+    );
+
+    return { success: true, message: 'Payment approved and credits added successfully' };
+  } catch (error) {
+    console.error('Error in approveManualPayment:', error);
+    throw error;
+  }
+}
+
+// Reject manual payment (admin function)
+export async function rejectManualPayment(transactionId, rejectionReason = '') {
+  try {
+    // Get transaction details for notification
+    const { data: transaction, error: fetchError } = await supabase
+      .from('payment_transactions')
+      .select('*')
+      .eq('id', transactionId)
+      .single();
+
+    if (fetchError) throw fetchError;
+
+    const { error } = await supabase
+      .from('payment_transactions')
+      .update({
+        payment_status: 'failed',
+        status: 'rejected',
+        admin_notes: rejectionReason,
+        rejected_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', transactionId);
+
+    if (error) throw error;
+
+    // Send notification to user
+    if (transaction) {
+      await createPaymentNotification(
+        transaction.user_id,
+        transactionId,
+        'payment_rejected',
+        'Payment Rejected ❌',
+        `Your payment for ${transaction.package_name} has been rejected. Reason: ${rejectionReason}. Please contact support if you have questions.`
+      );
+    }
+
+    return { success: true, message: 'Payment rejected successfully' };
+  } catch (error) {
+    console.error('Error in rejectManualPayment:', error);
+    throw error;
+  }
+}
+
+// Get payment statistics for admin dashboard
+export async function getPaymentStatistics() {
+  try {
+    const { data, error } = await supabase
+      .from('payment_transactions')
+      .select('payment_status, payment_method, amount, created_at');
+
+    if (error) throw error;
+
+    const stats = {
+      total: data.length,
+      completed: data.filter(t => t.payment_status === 'completed').length,
+      pending: data.filter(t => t.payment_status === 'pending').length,
+      pendingReview: data.filter(t => t.status === 'pending_review').length,
+      failed: data.filter(t => t.payment_status === 'failed').length,
+      totalRevenue: data
+        .filter(t => t.payment_status === 'completed')
+        .reduce((sum, t) => sum + (t.amount || 0), 0),
+      paypalPayments: data.filter(t => t.payment_method === 'paypal').length,
+      manualPayments: data.filter(t => t.payment_method !== 'paypal').length
+    };
+
+    return stats;
+  } catch (error) {
+    console.error('Error in getPaymentStatistics:', error);
+    throw error;
+  }
+}
+
+// Notification System Functions
+
+// Create payment notification
+export async function createPaymentNotification(userId, paymentTransactionId, type, title, message) {
+  try {
+    const { data, error } = await supabase
+      .from('payment_notifications')
+      .insert({
+        user_id: userId,
+        payment_transaction_id: paymentTransactionId,
+        notification_type: type,
+        title: title,
+        message: message
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error creating payment notification:', error);
+    throw error;
+  }
+}
+
+// Get user notifications
+export async function getUserNotifications(userId, unreadOnly = false) {
+  try {
+    let query = supabase
+      .from('payment_notifications')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (unreadOnly) {
+      query = query.eq('read', false);
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching user notifications:', error);
+    return [];
+  }
+}
+
+// Mark notification as read
+export async function markNotificationAsRead(notificationId) {
+  try {
+    const { error } = await supabase
+      .from('payment_notifications')
+      .update({ read: true })
+      .eq('id', notificationId);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error) {
+    console.error('Error marking notification as read:', error);
+    throw error;
+  }
+}
+
+// Mark all notifications as read for user
+export async function markAllNotificationsAsRead(userId) {
+  try {
+    const { error } = await supabase
+      .from('payment_notifications')
+      .update({ read: true })
+      .eq('user_id', userId)
+      .eq('read', false);
+
+    if (error) throw error;
+    return { success: true };
+  } catch (error) {
+    console.error('Error marking all notifications as read:', error);
+    throw error;
+  }
+}
+
+// Get unread notification count
+export async function getUnreadNotificationCount(userId) {
+  try {
+    const { count, error } = await supabase
+      .from('payment_notifications')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .eq('read', false);
+
+    if (error) throw error;
+    return count || 0;
+  } catch (error) {
+    console.error('Error getting unread notification count:', error);
+    return 0;
+  }
+}

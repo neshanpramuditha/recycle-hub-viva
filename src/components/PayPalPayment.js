@@ -75,37 +75,55 @@ export default function PayPalPayment({ creditPackage, onSuccess, onCancel }) {
             setIsLoading(false);
             throw err;
           }
-        },
-
-        onApprove: async (data, actions) => {
+        },        onApprove: async (data, actions) => {
           try {
             const order = await actions.order.capture();
             const paymentTransactionId = order.purchase_units[0].custom_id;
 
-            // Update payment transaction status
+            console.log('PayPal payment captured:', order.id);
+
+            // Update payment transaction status to completed (automatic for PayPal)
             await updatePaymentTransactionStatus(paymentTransactionId, 'completed', {
               paypal_order_id: order.id,
               payer_email: order.payer.email_address,
-              transaction_id: order.purchase_units[0].payments.captures[0].id
+              transaction_id: order.purchase_units[0].payments.captures[0].id,
+              status: 'completed' // Auto-approve PayPal payments
             });
 
-            // Add credits to user account
+            console.log('Payment transaction updated to completed');
+
+            // Add credits to user account immediately
             await addCreditsToUser(
               user.id, 
               creditPackage.credits, 
-              `Purchased ${creditPackage.name} via PayPal`
+              `Purchased ${creditPackage.name} via PayPal - Order: ${order.id}`
             );
+
+            console.log('Credits added to user account');
 
             setIsLoading(false);
             onSuccess && onSuccess({
               orderId: order.id,
               credits: creditPackage.credits,
-              amount: creditPackage.price
+              amount: creditPackage.price,
+              status: 'completed'
             });
 
           } catch (err) {
             console.error('PayPal payment completion error:', err);
-            setError('Payment was processed but there was an error updating your account. Please contact support.');
+            
+            // Try to update the transaction status to failed
+            try {
+              const paymentTransactionId = data.orderID;
+              await updatePaymentTransactionStatus(paymentTransactionId, 'failed', {
+                error_message: err.message,
+                status: 'failed'
+              });
+            } catch (updateErr) {
+              console.error('Failed to update transaction status:', updateErr);
+            }
+            
+            setError('Payment was processed but there was an error updating your account. Please contact support with Order ID: ' + data.orderID);
             setIsLoading(false);
           }
         },

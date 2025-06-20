@@ -1,20 +1,23 @@
-import React, { useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { createPaymentTransaction } from '../lib/productQueries';
-import { supabase } from '../lib/supabase';
-import './PaymentComponents.css';
+import React, { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import {
+  createPaymentTransaction,
+  createPaymentNotification,
+} from "../lib/productQueries";
+import { supabase } from "../lib/supabase";
+import "./PaymentComponents.css";
 
 export default function ManualPayment({ creditPackage, onSuccess, onCancel }) {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState('');
+  const [previewUrl, setPreviewUrl] = useState("");
   const [paymentDetails, setPaymentDetails] = useState({
-    referenceNumber: '',
-    paymentMethod: 'bank_transfer',
-    notes: ''
+    referenceNumber: "",
+    paymentMethod: "bank_transfer",
+    notes: "",
   });
 
   const handleFileSelect = (e) => {
@@ -22,52 +25,58 @@ export default function ManualPayment({ creditPackage, onSuccess, onCancel }) {
     if (!file) return;
 
     // Validate file type
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'application/pdf'];
+    const allowedTypes = [
+      "image/jpeg",
+      "image/jpg",
+      "image/png",
+      "image/gif",
+      "application/pdf",
+    ];
     if (!allowedTypes.includes(file.type)) {
-      setError('Please upload a valid image (JPG, PNG, GIF) or PDF file');
+      setError("Please upload a valid image (JPG, PNG, GIF) or PDF file");
       return;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      setError('File size must be less than 5MB');
+      setError("File size must be less than 5MB");
       return;
     }
 
     setSelectedFile(file);
-    setError('');
+    setError("");
 
     // Create preview for images
-    if (file.type.startsWith('image/')) {
+    if (file.type.startsWith("image/")) {
       const reader = new FileReader();
       reader.onload = (e) => setPreviewUrl(e.target.result);
       reader.readAsDataURL(file);
     } else {
-      setPreviewUrl('');
+      setPreviewUrl("");
     }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setPaymentDetails(prev => ({
+    setPaymentDetails((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const uploadFile = async (file, transactionId) => {
-    const fileExt = file.name.split('.').pop();
+    const fileExt = file.name.split(".").pop();
     const fileName = `payment_receipts/${user.id}/${transactionId}.${fileExt}`;
 
     const { data, error } = await supabase.storage
-      .from('payment-receipts')
+      .from("payment-receipts")
       .upload(fileName, file);
 
     if (error) throw error;
 
     // Get public URL
     const { data: urlData } = supabase.storage
-      .from('payment-receipts')
+      .from("payment-receipts")
       .getPublicUrl(fileName);
 
     return urlData.publicUrl;
@@ -75,33 +84,33 @@ export default function ManualPayment({ creditPackage, onSuccess, onCancel }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!selectedFile) {
-      setError('Please upload a payment receipt');
+      setError("Please upload a payment receipt");
       return;
     }
 
     if (!paymentDetails.referenceNumber.trim()) {
-      setError('Please enter a reference number');
+      setError("Please enter a reference number");
       return;
     }
 
     setIsLoading(true);
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
-    try {      // Create payment transaction record
+    try {
+      // Create payment transaction record for manual review
       const paymentData = {
         user_id: user.id,
         payment_method: paymentDetails.paymentMethod,
         amount: creditPackage.price,
-        currency: 'LKR',
-        credits: creditPackage.credits,
-        package_name: creditPackage.name,
-        payment_status: 'pending',
-        status: 'pending_review', // Use status for manual payments requiring review
+        currency: "LKR",
+        credits: creditPackage.credits,        package_name: creditPackage.name,
+        payment_status: "pending", // Pending until admin review
+        status: "pending",
         reference_number: paymentDetails.referenceNumber,
-        notes: paymentDetails.notes
+        notes: paymentDetails.notes,
       };
 
       const paymentTransaction = await createPaymentTransaction(paymentData);
@@ -111,34 +120,46 @@ export default function ManualPayment({ creditPackage, onSuccess, onCancel }) {
 
       // Update transaction with receipt URL
       const { error: updateError } = await supabase
-        .from('payment_transactions')
+        .from("payment_transactions")
         .update({ receipt_url: receiptUrl })
-        .eq('id', paymentTransaction.id);
+        .eq("id", paymentTransaction.id);
 
       if (updateError) throw updateError;
 
-      setSuccess('Payment receipt uploaded successfully! Your payment is under review and credits will be added once verified.');
-      
+      // Send notification to user about payment submission
+      await createPaymentNotification(
+        user.id,
+        paymentTransaction.id,
+        "payment_pending",
+        "Payment Submitted for Review 📋",
+        `Your manual payment for ${creditPackage.name} (${creditPackage.credits} credits) has been submitted for admin review. You will be notified once the review is complete.`
+      );
+
+      setSuccess(
+        "Payment receipt uploaded successfully! Your payment is under admin review and credits will be added once approved. You will be notified via email when the review is complete."
+      );
+
       // Reset form
       setSelectedFile(null);
-      setPreviewUrl('');
+      setPreviewUrl("");
       setPaymentDetails({
-        referenceNumber: '',
-        paymentMethod: 'bank_transfer',
-        notes: ''
+        referenceNumber: "",
+        paymentMethod: "bank_transfer",
+        notes: "",
       });
 
       // Call success callback after delay
       setTimeout(() => {
-        onSuccess && onSuccess({
-          transactionId: paymentTransaction.id,
-          status: 'pending_review'
-        });
+        onSuccess &&
+          onSuccess({
+            transactionId: paymentTransaction.id,
+            status: "pending_review",
+            message: "Payment submitted for admin review",
+          });
       }, 2000);
-
     } catch (err) {
-      console.error('Manual payment submission error:', err);
-      setError('Failed to submit payment. Please try again.');
+      console.error("Manual payment submission error:", err);
+      setError("Failed to submit payment. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -172,7 +193,9 @@ export default function ManualPayment({ creditPackage, onSuccess, onCancel }) {
       </div>
 
       <div className="bank-details mb-4">
-        <h6><i className="fas fa-university me-2"></i>Bank Details</h6>
+        <h6>
+          <i className="fas fa-university me-2"></i>Bank Details
+        </h6>
         <div className="bank-info">
           <div className="bank-item">
             <strong>Bank:</strong> Commercial Bank of Ceylon
@@ -258,11 +281,11 @@ export default function ManualPayment({ creditPackage, onSuccess, onCancel }) {
           <div className="mb-3">
             <label className="form-label">Preview</label>
             <div className="receipt-preview">
-              <img 
-                src={previewUrl} 
-                alt="Receipt preview" 
+              <img
+                src={previewUrl}
+                alt="Receipt preview"
                 className="img-fluid rounded"
-                style={{ maxHeight: '200px' }}
+                style={{ maxHeight: "200px" }}
               />
             </div>
           </div>
@@ -288,7 +311,11 @@ export default function ManualPayment({ creditPackage, onSuccess, onCancel }) {
           >
             {isLoading ? (
               <>
-                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
                 Submitting...
               </>
             ) : (
