@@ -63,6 +63,7 @@ export default function ManualPayment({ creditPackage, onSuccess, onCancel }) {
       [name]: value,
     }));
   };
+
   const uploadFile = async (file, transactionId) => {
     const fileExt = file.name.split(".").pop();
     const fileName = `payment_receipts/${user.id}/${transactionId}.${fileExt}`;
@@ -71,12 +72,7 @@ export default function ManualPayment({ creditPackage, onSuccess, onCancel }) {
       .from("payment-receipts")
       .upload(fileName, file);
 
-    if (error) {
-      if (error.message.includes('Bucket not found')) {
-        throw new Error('Storage bucket not configured. Please contact the administrator to set up the payment receipt storage.');
-      }
-      throw error;
-    }
+    if (error) throw error;
 
     // Get public URL
     const { data: urlData } = supabase.storage

@@ -885,8 +885,8 @@ export async function getPendingManualPayments() {
           email
         )
       `)
-      .in('payment_method', ['manual', 'bank_transfer', 'mobile_banking', 'atm_deposit', 'cash_deposit'])
-      .eq('status', 'pending')
+      .eq('payment_method', 'manual')
+      .eq('status', 'pending_review')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -1004,11 +1004,13 @@ export async function getPaymentStatistics() {
       .from('payment_transactions')
       .select('payment_status, payment_method, amount, created_at');
 
-    if (error) throw error;    const stats = {
+    if (error) throw error;
+
+    const stats = {
       total: data.length,
       completed: data.filter(t => t.payment_status === 'completed').length,
       pending: data.filter(t => t.payment_status === 'pending').length,
-      pendingReview: data.filter(t => t.status === 'pending' && t.payment_method === 'manual').length,
+      pendingReview: data.filter(t => t.status === 'pending_review').length,
       failed: data.filter(t => t.payment_status === 'failed').length,
       totalRevenue: data
         .filter(t => t.payment_status === 'completed')
@@ -1119,32 +1121,5 @@ export async function getUnreadNotificationCount(userId) {
   } catch (error) {
     console.error('Error getting unread notification count:', error);
     return 0;
-  }
-}
-
-// Debug function to get all payment transactions (temporary for debugging)
-export async function getAllPaymentTransactions() {
-  try {
-    const { data, error } = await supabase
-      .from('payment_transactions')
-      .select(`
-        *,
-        profiles:user_id (
-          full_name,
-          email
-        )
-      `)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Error fetching all payment transactions:', error);
-      throw error;
-    }
-
-    console.log('All payment transactions:', data);
-    return data || [];
-  } catch (error) {
-    console.error('Error in getAllPaymentTransactions:', error);
-    return [];
   }
 }
