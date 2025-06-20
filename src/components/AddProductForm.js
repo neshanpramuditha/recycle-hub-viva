@@ -2,7 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
-import { getCategories, addProductWithImages, addProductSpecifications } from '../lib/productQueries';
+import { 
+  getCategories, 
+  addProductWithImages, 
+  addProductSpecifications,
+  getUserCredits,
+  deductCreditsForProduct
+} from '../lib/productQueries';
 import { validateImageFile, compressImage, processAllProductImages } from '../lib/storageHelpers';
 import './AddProductForm.css';
 
@@ -14,10 +20,14 @@ export default function AddProductForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [profileIncomplete, setProfileIncomplete] = useState(false);
-  const [aiLoading, setAiLoading] = useState(false);
+  const [profileIncomplete, setProfileIncomplete] = useState(false);  const [aiLoading, setAiLoading] = useState(false);
   const [aiSuggestions, setAiSuggestions] = useState(null);
   const [showAiPanel, setShowAiPanel] = useState(false);
+  
+  // Credit system state
+  const [userCredits, setUserCredits] = useState(0);
+  const [creditLoading, setCreditLoading] = useState(false);
+  const CREDITS_PER_PRODUCT = 5; // Cost to post one product
 
   // Form data
   const [formData, setFormData] = useState({
@@ -67,7 +77,6 @@ export default function AddProductForm() {
     
     return requiredFields.every(field => field && field.trim() !== '');
   };
-
   // Check profile completeness on mount
   useEffect(() => {
     if (user) {
@@ -77,6 +86,24 @@ export default function AddProductForm() {
         setError('⚠️ Complete Your Profile First! Please add your full name, phone number, and location in Dashboard Settings before listing products.');
       }
     }
+  }, [user]);
+
+  // Load user credits
+  useEffect(() => {
+    const loadCredits = async () => {
+      if (user) {
+        try {
+          setCreditLoading(true);
+          const credits = await getUserCredits(user.id);
+          setUserCredits(credits);
+        } catch (err) {
+          console.error('Error loading credits:', err);
+        } finally {
+          setCreditLoading(false);
+        }
+      }
+    };
+    loadCredits();
   }, [user]);
 
   // Handle input changes
@@ -433,11 +460,25 @@ export default function AddProductForm() {
     if (!user) {
       setError('You must be logged in to add a product');
       return;
-    }
-
-    // Check profile completeness
+    }    // Check profile completeness
     if (!checkProfileCompleteness()) {
       setError('🚨 Profile Incomplete! Please complete your profile information (full name, phone number, and location) in Dashboard Settings before adding products.');
+      return;
+    }    // Check if user has enough credits
+    if (userCredits < CREDITS_PER_PRODUCT) {
+      setError(
+        <div>
+          <strong>❌ Insufficient Credits!</strong><br/>
+          You need {CREDITS_PER_PRODUCT} credits to post a product. You currently have {userCredits} credits.<br/>
+          <button 
+            className="btn btn-sm btn-outline-primary mt-2"
+            onClick={() => navigate('/dashboard?section=credits')}
+            type="button"
+          >
+            <i className="fas fa-coins me-1"></i>Purchase Credits
+          </button>
+        </div>
+      );
       return;
     }
     
@@ -502,11 +543,21 @@ export default function AddProductForm() {
       console.log('Processing images - Files:', imageFiles.length, 'URLs:', validUrls.length);
       
       const allImages = await processAllProductImages(imageFiles, validUrls, Date.now());
-      console.log('Images processed:', allImages.length);
-
-      // Add product with images
+      console.log('Images processed:', allImages.length);      // Add product with images
       const product = await addProductWithImages(productData, allImages);
       console.log('Product added successfully:', product);
+
+      // Deduct credits for posting the product
+      try {
+        await deductCreditsForProduct(user.id, product.id, CREDITS_PER_PRODUCT);
+        console.log(`${CREDITS_PER_PRODUCT} credits deducted for product posting`);
+        // Update local credits state
+        setUserCredits(prev => prev - CREDITS_PER_PRODUCT);
+      } catch (creditError) {
+        console.error('Error deducting credits:', creditError);
+        // Note: We don't fail the entire operation if credit deduction fails
+        // But we should log it for manual review
+      }
 
       // Add specifications if any
       const validSpecs = specifications.filter(spec => spec.name && spec.value);
@@ -605,12 +656,32 @@ export default function AddProductForm() {
   };
 
   return (
-    <div className="dashboard-content">
-      <div className="content-header">
-        <h2>
-          Add New Product
-        </h2>
-        <p className="text-muted">Create a new product listing for the marketplace</p>
+    <div className="dashboard-content">      <div className="content-header">
+        <div className="d-flex justify-content-between align-items-center">
+          <div>
+            <h2>Add New Product</h2>
+            <p className="text-muted">Create a new product listing for the marketplace</p>
+          </div>          <div className="credits-display">
+            <div className={`credits-card-small ${userCredits < CREDITS_PER_PRODUCT ? 'insufficient-credits' : ''}`}>
+              <div className="credits-icon">
+                <i className="fas fa-coins"></i>
+              </div>
+              <div className="credits-info">
+                <div className="credits-amount">{userCredits}</div>
+                <div className="credits-label">Credits</div>
+              </div>
+            </div>
+            <small className="text-muted d-block mt-1">
+              {CREDITS_PER_PRODUCT} credits required per product
+            </small>
+            {userCredits < CREDITS_PER_PRODUCT && (
+              <small className="text-danger d-block">
+                <i className="fas fa-exclamation-triangle me-1"></i>
+                Insufficient credits
+              </small>
+            )}
+          </div>
+        </div>
       </div>
 
       {error && (

@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   total_ratings INTEGER DEFAULT 0,
   bio TEXT,
   is_verified BOOLEAN DEFAULT FALSE,
+  credits INTEGER DEFAULT 100, -- Free 100 credits for new users
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
@@ -102,7 +103,50 @@ CREATE TABLE IF NOT EXISTS reviews (
   UNIQUE(reviewer_id, reviewed_user_id, product_id)
 );
 
--- 9. Create indexes for better performance
+-- 9. Create Credit Packages Table
+CREATE TABLE IF NOT EXISTS credit_packages (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  credits INTEGER NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  description TEXT,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+-- 10. Create Credit Transactions Table
+CREATE TABLE IF NOT EXISTS credit_transactions (
+  id SERIAL PRIMARY KEY,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+  transaction_type TEXT CHECK (transaction_type IN ('purchase', 'spend', 'refund')) NOT NULL,
+  credits INTEGER NOT NULL,
+  description TEXT,
+  product_id INTEGER REFERENCES products(id) ON DELETE SET NULL,
+  payment_id INTEGER,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+-- 11. Create Payment Transactions Table
+CREATE TABLE IF NOT EXISTS payment_transactions (
+  id SERIAL PRIMARY KEY,
+  user_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
+  package_id INTEGER REFERENCES credit_packages(id) ON DELETE SET NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  currency TEXT DEFAULT 'USD',
+  payment_method TEXT CHECK (payment_method IN ('paypal', 'manual', 'stripe', 'bank_transfer')) NOT NULL,
+  payment_status TEXT CHECK (payment_status IN ('pending', 'completed', 'failed', 'cancelled', 'refunded')) DEFAULT 'pending',
+  payment_reference TEXT, -- PayPal transaction ID or manual reference
+  payment_slip_url TEXT, -- For manual payments
+  paypal_order_id TEXT,
+  paypal_payment_id TEXT,
+  notes TEXT,
+  processed_by UUID REFERENCES profiles(id) ON DELETE SET NULL, -- Admin who processed manual payment
+  processed_at TIMESTAMP WITH TIME ZONE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+-- 12. Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_products_seller_id ON products(seller_id);
 CREATE INDEX IF NOT EXISTS idx_products_category_id ON products(category_id);
 CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
@@ -113,7 +157,7 @@ CREATE INDEX IF NOT EXISTS idx_favorites_user_id ON favorites(user_id);
 CREATE INDEX IF NOT EXISTS idx_favorites_product_id ON favorites(product_id);
 CREATE INDEX IF NOT EXISTS idx_messages_sender_receiver ON messages(sender_id, receiver_id);
 
--- 10. Insert default categories
+-- 13. Insert default categories
 INSERT INTO categories (name, description, icon_url) VALUES 
 ('Electronics', 'Electronic devices, gadgets, and accessories', '/icons/electronics.svg'),
 ('Furniture', 'Home and office furniture items', '/icons/furniture.svg'),
@@ -124,7 +168,15 @@ INSERT INTO categories (name, description, icon_url) VALUES
 ('Others', 'Miscellaneous items', '/icons/others.svg')
 ON CONFLICT (name) DO NOTHING;
 
--- 11. Create Row Level Security (RLS) policies
+-- 14. Insert default credit packages
+INSERT INTO credit_packages (name, credits, price, description) VALUES 
+('Starter Pack', 50, 9.99, '50 credits to post your products'),
+('Popular Pack', 150, 24.99, '150 credits - Best value for regular sellers'),
+('Pro Pack', 300, 44.99, '300 credits for professional sellers'),
+('Mega Pack', 500, 69.99, '500 credits for high-volume sellers')
+ON CONFLICT DO NOTHING;
+
+-- 15. Create Row Level Security (RLS) policies
 
 -- Profiles policies
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
@@ -232,7 +284,29 @@ CREATE POLICY "Reviews are viewable by everyone" ON reviews
 CREATE POLICY "Authenticated users can insert reviews" ON reviews
   FOR INSERT TO authenticated WITH CHECK (auth.uid() = reviewer_id);
 
--- 12. Create functions and triggers
+-- Credit system RLS policies
+ALTER TABLE credit_packages ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Credit packages are viewable by everyone" ON credit_packages
+  FOR SELECT USING (is_active = true);
+
+ALTER TABLE credit_transactions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can view own credit transactions" ON credit_transactions
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own credit transactions" ON credit_transactions
+  FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
+
+ALTER TABLE payment_transactions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can view own payment transactions" ON payment_transactions
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert own payment transactions" ON payment_transactions
+  FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update own payment transactions" ON payment_transactions
+  FOR UPDATE USING (auth.uid() = user_id);
+
+-- 16. Create functions and triggers
 
 -- Function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -332,14 +406,14 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- 13. Insert sample data for testing
+-- 17. Insert sample data for testing
 
 -- Insert sample profiles (you'll need to replace UUIDs with actual user IDs)
 -- INSERT INTO profiles (id, email, full_name, phone, location, rating, total_ratings) VALUES 
 -- ('550e8400-e29b-41d4-a716-446655440000', 'john.doe@example.com', 'John Doe', '+94 77 123 4567', 'Colombo, Sri Lanka', 4.5, 10),
 -- ('550e8400-e29b-41d4-a716-446655440001', 'sarah.smith@example.com', 'Sarah Smith', '+94 76 987 6543', 'Kandy, Sri Lanka', 4.8, 15);
 
--- 14. Create views for common queries
+-- 18. Create views for common queries
 
 -- View for products with seller info and category
 CREATE OR REPLACE VIEW products_with_details AS

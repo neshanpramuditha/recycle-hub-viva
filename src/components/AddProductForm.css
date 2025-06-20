@@ -629,3 +629,76 @@ form[style*="pointer-events: none"] {
     margin-bottom: 15px;
   }
 }
+
+/* Credits Display Styles */
+.credits-display {
+  text-align: right;
+}
+
+.credits-card-small {
+  display: inline-flex;
+  align-items: center;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #000;
+  padding: 10px 15px;
+  border-radius: 8px;
+  gap: 10px;
+  min-width: 120px;
+}
+
+.credits-icon {
+  font-size: 1.2rem;
+}
+
+.credits-info {
+  text-align: left;
+}
+
+.credits-amount {
+  font-size: 1.3rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.credits-label {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  line-height: 1;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .content-header .d-flex {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 15px;
+  }
+  
+  .credits-display {
+    text-align: left;
+  }
+  
+  .credits-card-small {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Insufficient credits styling */
+.insufficient-credits {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  color: white !important;
+  animation: pulse-red 2s infinite;
+}
+
+.insufficient-credits .credits-amount,
+.insufficient-credits .credits-label,
+.insufficient-credits .credits-icon {
+  color: white !important;
+}
+
+@keyframes pulse-red {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}

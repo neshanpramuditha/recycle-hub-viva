@@ -6,11 +6,18 @@ import {
   getUserProducts,
   deleteProduct,
   getUserFavorites,
+  // Add credit system imports
+  getUserCredits,
+  getCreditPackages,
+  getUserCreditTransactions,
+  getUserPaymentTransactions,
 } from "../lib/productQueries";
 import { deleteImage } from "../lib/storageHelpers";
 import { supabase } from "../lib/supabase";
 import AddProductForm from "./AddProductForm";
 import ThemeToggle from "./ThemeToggle";
+import PayPalPayment from "./PayPalPayment";
+import ManualPayment from "./ManualPayment";
 import "./Dashboard.css";
 
 export default function Dashboard() {
@@ -40,7 +47,6 @@ export default function Dashboard() {
     productNotifications: true,
     marketingEmails: false,
   });
-
   const [stats, setStats] = useState({
     totalProducts: 0,
     activeProducts: 0,
@@ -48,6 +54,17 @@ export default function Dashboard() {
     totalViews: 0,
     totalFavorites: 0,
   });
+
+  // Credit system state
+  const [userCredits, setUserCredits] = useState(0);
+  const [creditPackages, setCreditPackages] = useState([]);
+  const [creditTransactions, setCreditTransactions] = useState([]);
+  const [paymentTransactions, setPaymentTransactions] = useState([]);
+  const [showCreditPurchase, setShowCreditPurchase] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState(null);
+  const [creditLoading, setCreditLoading] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState(""); // 'paypal' or 'manual'
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
 
   // Initialize profile data when user loads
   useEffect(() => {
@@ -59,7 +76,6 @@ export default function Dashboard() {
       });
     }
   }, [user]);
-
   // Load user products and stats
   useEffect(() => {
     if (
@@ -71,7 +87,17 @@ export default function Dashboard() {
     if (user && activeSection === "favorites") {
       loadUserFavorites();
     }
+    if (user && (activeSection === "credits" || activeSection === "overview")) {
+      loadCreditData();
+    }
   }, [user, activeSection]);
+
+  // Load credit data
+  useEffect(() => {
+    if (user) {
+      loadUserCredits();
+    }
+  }, [user]);
 
   const loadUserProducts = async () => {
     try {
@@ -104,7 +130,6 @@ export default function Dashboard() {
       setLoading(false);
     }
   };
-
   const loadUserFavorites = async () => {
     try {
       setLoading(true);
@@ -115,6 +140,39 @@ export default function Dashboard() {
       setError("Failed to load your favorites");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Credit system functions
+  const loadUserCredits = async () => {
+    try {
+      const credits = await getUserCredits(user.id);
+      setUserCredits(credits);
+    } catch (err) {
+      console.error("Error loading user credits:", err);
+    }
+  };
+
+  const loadCreditData = async () => {
+    try {
+      setCreditLoading(true);
+      const [credits, packages, creditTransactions, paymentTransactions] =
+        await Promise.all([
+          getUserCredits(user.id),
+          getCreditPackages(),
+          getUserCreditTransactions(user.id),
+          getUserPaymentTransactions(user.id),
+        ]);
+
+      setUserCredits(credits);
+      setCreditPackages(packages);
+      setCreditTransactions(creditTransactions);
+      setPaymentTransactions(paymentTransactions);
+    } catch (err) {
+      console.error("Error loading credit data:", err);
+      setError("Failed to load credit information");
+    } finally {
+      setCreditLoading(false);
     }
   };
 
@@ -255,13 +313,13 @@ export default function Dashboard() {
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
   };
-
   // Sidebar menu items
   const menuItems = [
     { id: "overview", label: "Overview", icon: "fas fa-tachometer-alt" },
     { id: "products", label: "My Products", icon: "fas fa-boxes" },
     { id: "add-product", label: "Add Product", icon: "fas fa-plus-circle" },
     { id: "favorites", label: "Favorites", icon: "fas fa-heart" },
+    { id: "credits", label: "Credits", icon: "fas fa-coins" },
     { id: "messages", label: "Messages", icon: "fas fa-envelope" },
     { id: "settings", label: "Settings", icon: "fas fa-cog" },
     {
@@ -270,6 +328,15 @@ export default function Dashboard() {
       icon: "fas fa-cloud-upload-alt",
     },
   ];
+
+  // Check URL parameters for section
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const section = urlParams.get("section");
+    if (section && menuItems.find((item) => item.id === section)) {
+      setActiveSection(section);
+    }
+  }, []);
 
   // Render different sections based on active selection
   const renderContent = () => {
@@ -290,6 +357,8 @@ export default function Dashboard() {
         );
       case "favorites":
         return renderFavorites();
+      case "credits":
+        return renderCredits();
       case "messages":
         return renderMessages();
       case "settings":
@@ -740,7 +809,8 @@ export default function Dashboard() {
                 )}
               </button>
             </form>
-          </div>        </div>
+          </div>{" "}
+        </div>
 
         <div className="card mb-4">
           <div className="card-header">
@@ -926,8 +996,7 @@ export default function Dashboard() {
         <p className="text-muted">
           Welcome back, {user?.user_metadata?.full_name || "User"}!
         </p>
-      </div>
-
+      </div>{" "}
       {/* Stats Cards */}
       <div className="row mb-4">
         <div className="col-md-2 col-6">
@@ -985,8 +1054,18 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+        <div className="col-md-2 col-6">
+          <div className="stat-card">
+            <div className="stat-icon bg-secondary">
+              <i className="fas fa-coins"></i>
+            </div>
+            <div className="stat-content">
+              <h3>{userCredits}</h3>
+              <p>Credits</p>
+            </div>
+          </div>
+        </div>
       </div>
-
       {/* Quick Actions */}
       <div className="row mb-4">
         <div className="col-12">
@@ -1033,7 +1112,6 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-
       {/* Recent Products */}
       <div className="row">
         <div className="col-12">
@@ -1098,9 +1176,372 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+      </div>{" "}
+    </div>
+  );
+
+  const renderCredits = () => (
+    <div className="dashboard-content">
+      <div className="content-header">
+        <h2>Credits Management</h2>
+        <p className="text-muted">Manage your credits for posting products</p>
+      </div>
+
+      {/* Current Credits Display */}
+      <div className="row mb-4">
+        <div className="col-md-6">
+          <div className="stat-card credits-card">
+            <div className="stat-icon bg-warning">
+              <i className="fas fa-coins"></i>
+            </div>
+            <div className="stat-content">
+              <h3>{userCredits}</h3>
+              <p>Available Credits</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6">
+          <div className="quick-actions-card">
+            <h5>Need More Credits?</h5>
+            <p className="text-muted">
+              Purchase credit packages to continue posting products
+            </p>
+            <button
+              className="btn btn-success"
+              onClick={() => setShowCreditPurchase(true)}
+            >
+              <i className="fas fa-shopping-cart me-2"></i>Buy Credits
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Credit Purchase Modal/Section */}
+      {showCreditPurchase && (
+        <div className="card mb-4">
+          <div className="card-header d-flex justify-content-between align-items-center">
+            <h5>
+              <i className="fas fa-shopping-cart me-2"></i>Purchase Credits
+            </h5>
+            <button
+              className="btn btn-outline-secondary btn-sm"
+              onClick={() => setShowCreditPurchase(false)}
+            >
+              <i className="fas fa-times"></i>
+            </button>
+          </div>
+          <div className="card-body">
+            {creditLoading ? (
+              <div className="text-center py-4">
+                <div className="spinner-border text-success" role="status">
+                  <span className="visually-hidden">Loading packages...</span>
+                </div>
+              </div>
+            ) : (
+              <div className="row">
+                {creditPackages.map((pkg) => (
+                  <div key={pkg.id} className="col-md-3 mb-3">
+                    <div
+                      className={`credit-package-card ${
+                        selectedPackage?.id === pkg.id ? "selected" : ""
+                      }`}
+                    >
+                      <div className="package-header">
+                        <h6>{pkg.name}</h6>
+                        <div className="package-credits">
+                          {pkg.credits} Credits
+                        </div>
+                      </div>
+                      <div className="package-price">
+                        <span className="currency">LKR</span>
+                        <span className="amount">
+                          {pkg.price.toLocaleString()}
+                        </span>
+                      </div>
+                      <div className="package-description">
+                        {pkg.description}
+                      </div>
+                      <button
+                        className={`btn ${
+                          selectedPackage?.id === pkg.id
+                            ? "btn-success"
+                            : "btn-outline-success"
+                        } w-100`}
+                        onClick={() => setSelectedPackage(pkg)}
+                      >
+                        {selectedPackage?.id === pkg.id
+                          ? "Selected"
+                          : "Select Package"}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            {selectedPackage && (
+              <div className="payment-section mt-4">
+                <h6>Payment Options</h6>
+                <div className="row mb-3">
+                  <div className="col-md-6">
+                    <div
+                      className={`payment-option ${
+                        paymentMethod === "paypal" ? "selected" : ""
+                      }`}
+                      onClick={() => setPaymentMethod("paypal")}
+                    >
+                      <h6>
+                        <i className="fab fa-paypal me-2"></i>PayPal
+                      </h6>
+                      <p className="text-muted">Pay securely with PayPal</p>
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          name="paymentMethod"
+                          value="paypal"
+                          checked={paymentMethod === "paypal"}
+                          onChange={(e) => setPaymentMethod(e.target.value)}
+                        />
+                        <label className="form-check-label">
+                          Select PayPal
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div
+                      className={`payment-option ${
+                        paymentMethod === "manual" ? "selected" : ""
+                      }`}
+                      onClick={() => setPaymentMethod("manual")}
+                    >
+                      <h6>
+                        <i className="fas fa-upload me-2"></i>Manual Payment
+                      </h6>
+                      <p className="text-muted">Upload bank transfer receipt</p>
+                      <div className="form-check">
+                        <input
+                          className="form-check-input"
+                          type="radio"
+                          name="paymentMethod"
+                          value="manual"
+                          checked={paymentMethod === "manual"}
+                          onChange={(e) => setPaymentMethod(e.target.value)}
+                        />
+                        <label className="form-check-label">
+                          Select Manual Payment
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {paymentMethod && (
+                  <div className="payment-form-container">
+                    <button
+                      className="btn btn-success mb-3"
+                      onClick={() => setShowPaymentForm(true)}
+                    >
+                      <i
+                        className={`fas ${
+                          paymentMethod === "paypal"
+                            ? "fa-credit-card"
+                            : "fa-upload"
+                        } me-2`}
+                      ></i>
+                      Proceed to{" "}
+                      {paymentMethod === "paypal" ? "PayPal" : "Payment Upload"}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Payment Form Modal */}
+      {showPaymentForm && selectedPackage && paymentMethod && (
+        <div className="card mb-4">
+          <div className="card-header d-flex justify-content-between align-items-center">
+            <h5>
+              <i
+                className={`fas ${
+                  paymentMethod === "paypal" ? "fa-credit-card" : "fa-upload"
+                } me-2`}
+              ></i>
+              {paymentMethod === "paypal"
+                ? "PayPal Payment"
+                : "Manual Payment Upload"}
+            </h5>
+            <button
+              className="btn btn-outline-secondary btn-sm"
+              onClick={() => {
+                setShowPaymentForm(false);
+                setPaymentMethod("");
+              }}
+            >
+              <i className="fas fa-times"></i>
+            </button>
+          </div>
+          <div className="card-body">
+            {paymentMethod === "paypal" ? (
+              <PayPalPayment
+                creditPackage={selectedPackage}
+                onSuccess={(result) => {
+                  setSuccess(
+                    `Payment successful! ${result.credits} credits have been added to your account.`
+                  );
+                  setShowPaymentForm(false);
+                  setShowCreditPurchase(false);
+                  setPaymentMethod("");
+                  setSelectedPackage(null);
+                  loadCreditData(); // Refresh credit data
+                }}
+                onCancel={() => {
+                  setShowPaymentForm(false);
+                  setPaymentMethod("");
+                }}
+              />
+            ) : (
+              <ManualPayment
+                creditPackage={selectedPackage}
+                onSuccess={(result) => {
+                  setSuccess(
+                    "Payment receipt uploaded successfully! Your payment is under review."
+                  );
+                  setShowPaymentForm(false);
+                  setShowCreditPurchase(false);
+                  setPaymentMethod("");
+                  setSelectedPackage(null);
+                  loadCreditData(); // Refresh credit data
+                }}
+                onCancel={() => {
+                  setShowPaymentForm(false);
+                  setPaymentMethod("");
+                }}
+              />
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Credit History */}
+      <div className="row">
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-header">
+              <h5>
+                <i className="fas fa-history me-2"></i>Credit History
+              </h5>
+            </div>
+            <div className="card-body">
+              {creditLoading ? (
+                <div className="text-center py-3">
+                  <div
+                    className="spinner-border spinner-border-sm"
+                    role="status"
+                  >
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              ) : creditTransactions.length > 0 ? (
+                <div className="transaction-list">
+                  {creditTransactions.slice(0, 5).map((transaction) => (
+                    <div key={transaction.id} className="transaction-item">
+                      <div className="transaction-info">
+                        <div className="transaction-type">
+                          <i
+                            className={`fas ${
+                              transaction.credits > 0
+                                ? "fa-plus-circle text-success"
+                                : "fa-minus-circle text-danger"
+                            }`}
+                          ></i>
+                          <span>{transaction.description}</span>
+                        </div>
+                        <small className="text-muted">
+                          {new Date(
+                            transaction.created_at
+                          ).toLocaleDateString()}
+                        </small>
+                      </div>
+                      <div
+                        className={`transaction-amount ${
+                          transaction.credits > 0
+                            ? "text-success"
+                            : "text-danger"
+                        }`}
+                      >
+                        {transaction.credits > 0 ? "+" : ""}
+                        {transaction.credits}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center text-muted py-3">
+                  <i className="fas fa-history fa-2x mb-2"></i>
+                  <p>No credit transactions yet</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-header">
+              <h5>
+                <i className="fas fa-credit-card me-2"></i>Payment History
+              </h5>
+            </div>
+            <div className="card-body">
+              {creditLoading ? (
+                <div className="text-center py-3">
+                  <div
+                    className="spinner-border spinner-border-sm"
+                    role="status"
+                  >
+                    <span className="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              ) : paymentTransactions.length > 0 ? (
+                <div className="transaction-list">
+                  {paymentTransactions.slice(0, 5).map((payment) => (
+                    <div key={payment.id} className="transaction-item">
+                      <div className="transaction-info">
+                        <div className="transaction-type">
+                          <i className="fas fa-credit-card"></i>
+                          <span>
+                            {payment.payment_method} - {payment.credits} credits
+                          </span>
+                        </div>
+                        <small className="text-muted">
+                          {new Date(payment.created_at).toLocaleDateString()}
+                        </small>
+                      </div>
+                      <div
+                        className={`transaction-status status-${payment.status}`}
+                      >
+                        {payment.status}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center text-muted py-3">
+                  <i className="fas fa-credit-card fa-2x mb-2"></i>
+                  <p>No payments yet</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
+
   return (
     <div className="dashboard-layout">
       {/* Mobile Menu Toggle */}

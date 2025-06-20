@@ -636,3 +636,237 @@ export async function hasUserReviewedSeller(reviewerId, sellerId, productId) {
     return false;
   }
 }
+
+// ============ CREDIT SYSTEM FUNCTIONS ============
+
+// Get user credits
+export async function getUserCredits(userId) {
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('credits')
+      .eq('id', userId)
+      .single();
+
+    if (error) {
+      console.error('Error fetching user credits:', error);
+      throw error;
+    }
+
+    return data.credits || 0;
+  } catch (error) {
+    console.error('Error in getUserCredits:', error);
+    return 0;
+  }
+}
+
+// Get credit packages
+export async function getCreditPackages() {
+  try {
+    const { data, error } = await supabase
+      .from('credit_packages')
+      .select('*')
+      .eq('is_active', true)
+      .order('price');
+
+    if (error) {
+      console.error('Error fetching credit packages:', error);
+      throw error;
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error in getCreditPackages:', error);
+    return [];
+  }
+}
+
+// Deduct credits for posting a product
+export async function deductCreditsForProduct(userId, productId, creditsToDeduct = 10) {
+  try {
+    // Start a transaction
+    const { data: userProfile, error: fetchError } = await supabase
+      .from('profiles')
+      .select('credits')
+      .eq('id', userId)
+      .single();
+
+    if (fetchError) throw fetchError;
+
+    const currentCredits = userProfile.credits || 0;
+    if (currentCredits < creditsToDeduct) {
+      throw new Error('Insufficient credits');
+    }
+
+    // Deduct credits
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({ 
+        credits: currentCredits - creditsToDeduct,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', userId);
+
+    if (updateError) throw updateError;
+
+    // Record transaction
+    const { error: transactionError } = await supabase
+      .from('credit_transactions')
+      .insert({
+        user_id: userId,
+        transaction_type: 'spend',
+        credits: -creditsToDeduct,
+        description: `Credits spent for posting product`,
+        product_id: productId
+      });
+
+    if (transactionError) throw transactionError;
+
+    return { success: true, remainingCredits: currentCredits - creditsToDeduct };
+  } catch (error) {
+    console.error('Error in deductCreditsForProduct:', error);
+    throw error;
+  }
+}
+
+// Add credits to user account
+export async function addCreditsToUser(userId, creditsToAdd, description = 'Credits added') {
+  try {
+    // Get current credits
+    const { data: userProfile, error: fetchError } = await supabase
+      .from('profiles')
+      .select('credits')
+      .eq('id', userId)
+      .single();
+
+    if (fetchError) throw fetchError;
+
+    const currentCredits = userProfile.credits || 0;
+    const newCredits = currentCredits + creditsToAdd;
+
+    // Update credits
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({ 
+        credits: newCredits,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', userId);
+
+    if (updateError) throw updateError;
+
+    // Record transaction
+    const { error: transactionError } = await supabase
+      .from('credit_transactions')
+      .insert({
+        user_id: userId,
+        transaction_type: 'purchase',
+        credits: creditsToAdd,
+        description: description
+      });
+
+    if (transactionError) throw transactionError;
+
+    return { success: true, newCredits };
+  } catch (error) {
+    console.error('Error in addCreditsToUser:', error);
+    throw error;
+  }
+}
+
+// Get user credit transactions
+export async function getUserCreditTransactions(userId) {
+  try {
+    const { data, error } = await supabase
+      .from('credit_transactions')
+      .select(`
+        *,
+        product:products(title)
+      `)
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching credit transactions:', error);
+      throw error;
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error in getUserCreditTransactions:', error);
+    return [];
+  }
+}
+
+// Create payment transaction
+export async function createPaymentTransaction(paymentData) {
+  try {
+    const { data, error } = await supabase
+      .from('payment_transactions')
+      .insert(paymentData)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating payment transaction:', error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error in createPaymentTransaction:', error);
+    throw error;
+  }
+}
+
+// Update payment transaction status
+export async function updatePaymentTransactionStatus(transactionId, status, additionalData = {}) {
+  try {
+    const updateData = {
+      payment_status: status,
+      updated_at: new Date().toISOString(),
+      ...additionalData
+    };
+
+    const { data, error } = await supabase
+      .from('payment_transactions')
+      .update(updateData)
+      .eq('id', transactionId)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating payment transaction:', error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error in updatePaymentTransactionStatus:', error);
+    throw error;
+  }
+}
+
+// Get user payment transactions
+export async function getUserPaymentTransactions(userId) {
+  try {
+    const { data, error } = await supabase
+      .from('payment_transactions')
+      .select(`
+        *,
+        package:credit_packages(name, credits)
+      `)
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching payment transactions:', error);
+      throw error;
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error in getUserPaymentTransactions:', error);
+    return [];
+  }
+}
