@@ -43,8 +43,7 @@ export default function PayPalPayment({ creditPackage, onSuccess, onCancel }) {
           setIsLoading(true);
           setError('');
 
-          try {
-            // Create payment transaction record
+          try {            // Create payment transaction record
             const paymentData = {
               user_id: user.id,
               payment_method: 'paypal',
@@ -52,7 +51,8 @@ export default function PayPalPayment({ creditPackage, onSuccess, onCancel }) {
               currency: 'LKR',
               credits: creditPackage.credits,
               package_name: creditPackage.name,
-              status: 'pending'
+              payment_status: 'pending', // Use payment_status instead of status
+              status: 'pending' // Keep both for compatibility
             };
 
             const paymentTransaction = await createPaymentTransaction(paymentData);

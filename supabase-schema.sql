@@ -133,18 +133,93 @@ CREATE TABLE IF NOT EXISTS payment_transactions (
   package_id INTEGER REFERENCES credit_packages(id) ON DELETE SET NULL,
   amount DECIMAL(10,2) NOT NULL,
   currency TEXT DEFAULT 'USD',
+  credits INTEGER NOT NULL, -- Number of credits to be awarded
+  package_name TEXT, -- Store package name for reference
   payment_method TEXT CHECK (payment_method IN ('paypal', 'manual', 'stripe', 'bank_transfer')) NOT NULL,
   payment_status TEXT CHECK (payment_status IN ('pending', 'completed', 'failed', 'cancelled', 'refunded')) DEFAULT 'pending',
+  status TEXT CHECK (status IN ('pending', 'pending_review', 'completed', 'failed', 'cancelled', 'refunded')) DEFAULT 'pending', -- Alternative status field
   payment_reference TEXT, -- PayPal transaction ID or manual reference
+  reference_number TEXT, -- For manual payments
   payment_slip_url TEXT, -- For manual payments
+  receipt_url TEXT, -- For manual payment receipts
   paypal_order_id TEXT,
   paypal_payment_id TEXT,
+  payer_email TEXT, -- PayPal payer email
+  transaction_id TEXT, -- PayPal transaction ID
   notes TEXT,
   processed_by UUID REFERENCES profiles(id) ON DELETE SET NULL, -- Admin who processed manual payment
   processed_at TIMESTAMP WITH TIME ZONE,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
+
+-- Add missing columns to payment_transactions table (for existing databases)
+-- Run this if you already created the payment_transactions table without these columns
+DO $$
+BEGIN
+    -- Add credits column if it doesn't exist
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'payment_transactions' 
+        AND column_name = 'credits'
+    ) THEN
+        ALTER TABLE payment_transactions ADD COLUMN credits INTEGER NOT NULL DEFAULT 0;
+    END IF;
+
+    -- Add package_name column if it doesn't exist
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'payment_transactions' 
+        AND column_name = 'package_name'
+    ) THEN
+        ALTER TABLE payment_transactions ADD COLUMN package_name TEXT;
+    END IF;
+
+    -- Add status column if it doesn't exist (alternative to payment_status)
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'payment_transactions' 
+        AND column_name = 'status'
+    ) THEN
+        ALTER TABLE payment_transactions ADD COLUMN status TEXT CHECK (status IN ('pending', 'pending_review', 'completed', 'failed', 'cancelled', 'refunded')) DEFAULT 'pending';
+    END IF;
+
+    -- Add reference_number column if it doesn't exist
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'payment_transactions' 
+        AND column_name = 'reference_number'
+    ) THEN
+        ALTER TABLE payment_transactions ADD COLUMN reference_number TEXT;
+    END IF;
+
+    -- Add receipt_url column if it doesn't exist
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'payment_transactions' 
+        AND column_name = 'receipt_url'
+    ) THEN
+        ALTER TABLE payment_transactions ADD COLUMN receipt_url TEXT;
+    END IF;
+
+    -- Add payer_email column if it doesn't exist
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'payment_transactions' 
+        AND column_name = 'payer_email'
+    ) THEN
+        ALTER TABLE payment_transactions ADD COLUMN payer_email TEXT;
+    END IF;
+
+    -- Add transaction_id column if it doesn't exist
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'payment_transactions' 
+        AND column_name = 'transaction_id'
+    ) THEN
+        ALTER TABLE payment_transactions ADD COLUMN transaction_id TEXT;
+    END IF;
+END $$;
 
 -- 12. Create indexes for better performance
 CREATE INDEX IF NOT EXISTS idx_products_seller_id ON products(seller_id);

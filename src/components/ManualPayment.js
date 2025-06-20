@@ -90,8 +90,7 @@ export default function ManualPayment({ creditPackage, onSuccess, onCancel }) {
     setError('');
     setSuccess('');
 
-    try {
-      // Create payment transaction record
+    try {      // Create payment transaction record
       const paymentData = {
         user_id: user.id,
         payment_method: paymentDetails.paymentMethod,
@@ -99,7 +98,8 @@ export default function ManualPayment({ creditPackage, onSuccess, onCancel }) {
         currency: 'LKR',
         credits: creditPackage.credits,
         package_name: creditPackage.name,
-        status: 'pending_review',
+        payment_status: 'pending',
+        status: 'pending_review', // Use status for manual payments requiring review
         reference_number: paymentDetails.referenceNumber,
         notes: paymentDetails.notes
       };
