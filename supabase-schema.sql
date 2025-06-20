@@ -605,7 +605,7 @@ END $$;
 CREATE TABLE IF NOT EXISTS payment_notifications (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-  payment_transaction_id UUID REFERENCES payment_transactions(id) ON DELETE CASCADE,
+  payment_transaction_id INTEGER REFERENCES payment_transactions(id) ON DELETE CASCADE,
   notification_type TEXT NOT NULL, -- 'payment_approved', 'payment_rejected', 'payment_pending'
   title TEXT NOT NULL,
   message TEXT NOT NULL,
