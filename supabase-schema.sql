@@ -267,6 +267,10 @@ CREATE POLICY "Users can update own profile" ON profiles
 CREATE POLICY "Users can insert own profile" ON profiles
   FOR INSERT WITH CHECK (auth.uid() = id);
 
+-- Allow admins to update any user's profile (needed for credit management)
+CREATE POLICY "Admins can update all profiles" ON profiles
+  FOR UPDATE TO authenticated USING (is_admin());
+
 -- Categories policies (public read)
 ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Categories are viewable by everyone" ON categories

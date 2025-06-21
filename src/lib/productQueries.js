@@ -732,6 +732,8 @@ export async function deductCreditsForProduct(userId, productId, creditsToDeduct
 // Add credits to user account
 export async function addCreditsToUser(userId, creditsToAdd, description = 'Credits added') {
   try {
+    console.log(`Starting addCreditsToUser: userId=${userId}, creditsToAdd=${creditsToAdd}, description=${description}`);
+    
     // Get current credits
     const { data: userProfile, error: fetchError } = await supabase
       .from('profiles')
@@ -739,35 +741,58 @@ export async function addCreditsToUser(userId, creditsToAdd, description = 'Cred
       .eq('id', userId)
       .single();
 
-    if (fetchError) throw fetchError;
+    if (fetchError) {
+      console.error('Error fetching user profile:', fetchError);
+      throw fetchError;
+    }
+
+    if (!userProfile) {
+      throw new Error(`User profile not found for userId: ${userId}`);
+    }
 
     const currentCredits = userProfile.credits || 0;
     const newCredits = currentCredits + creditsToAdd;
+    
+    console.log(`Credit calculation: ${currentCredits} + ${creditsToAdd} = ${newCredits}`);
 
-    // Update credits
-    const { error: updateError } = await supabase
+    // Update credits in profiles table
+    const { data: updateData, error: updateError } = await supabase
       .from('profiles')
       .update({ 
         credits: newCredits,
         updated_at: new Date().toISOString()
       })
-      .eq('id', userId);
+      .eq('id', userId)
+      .select();
 
-    if (updateError) throw updateError;
+    if (updateError) {
+      console.error('Error updating user credits:', updateError);
+      throw updateError;
+    }
 
-    // Record transaction
-    const { error: transactionError } = await supabase
+    console.log('Credits updated in profiles table:', updateData);
+
+    // Record transaction in credit_transactions
+    const { data: transactionData, error: transactionError } = await supabase
       .from('credit_transactions')
       .insert({
         user_id: userId,
         transaction_type: 'purchase',
         credits: creditsToAdd,
-        description: description
-      });
+        description: description,
+        created_at: new Date().toISOString()
+      })
+      .select();
 
-    if (transactionError) throw transactionError;
+    if (transactionError) {
+      console.error('Error creating credit transaction record:', transactionError);
+      // Don't throw here - the credits were already added to the user
+      console.warn('Credits were added to user but transaction record failed to create');
+    } else {
+      console.log('Credit transaction recorded:', transactionData);
+    }
 
-    return { success: true, newCredits };
+    return { success: true, newCredits, previousCredits: currentCredits };
   } catch (error) {
     console.error('Error in addCreditsToUser:', error);
     throw error;
@@ -928,15 +953,21 @@ export async function approveManualPayment(transactionId, adminNotes = '') {
         approved_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       })
-      .eq('id', transactionId);
-
-    if (updateError) throw updateError;
+      .eq('id', transactionId);    if (updateError) throw updateError;
 
     // Add credits to user account
-    await addCreditsToUser(
-      transaction.user_id,
-      transaction.credits,
-      `Manual payment approved - ${transaction.package_name}`    );
+    console.log(`Adding ${transaction.credits} credits to user ${transaction.user_id}`);
+    try {
+      const creditResult = await addCreditsToUser(
+        transaction.user_id,
+        transaction.credits,
+        `Manual payment approved - ${transaction.package_name}`
+      );
+      console.log('Credits added successfully:', creditResult);
+    } catch (creditError) {
+      console.error('Failed to add credits to user:', creditError);
+      throw new Error(`Payment approved but failed to add credits: ${creditError.message}`);
+    }
 
     // Send notification to user (don't let notification failure stop payment approval)
     try {
