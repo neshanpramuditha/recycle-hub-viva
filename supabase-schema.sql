@@ -666,38 +666,74 @@ CREATE POLICY "Admins can view all credit transactions" ON credit_transactions
   FOR SELECT USING (is_admin());
 
 -- 7. Create storage bucket for payment receipts
-INSERT INTO storage.buckets (id, name, public)
-VALUES ('payment-receipts', 'payment-receipts', true)
-ON CONFLICT (id) DO NOTHING;
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES (
+  'payment-receipts', 
+  'payment-receipts', 
+  true, 
+  52428800, -- 50MB limit
+  ARRAY['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf']
+)
+ON CONFLICT (id) DO UPDATE SET 
+  public = true,
+  file_size_limit = 52428800,
+  allowed_mime_types = ARRAY['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'];
 
 -- 8. Create storage policies for payment receipts
--- Drop existing policies to avoid conflicts
-DROP POLICY IF EXISTS "Users can upload receipts" ON storage.objects;
-DROP POLICY IF EXISTS "Users can view receipts" ON storage.objects;
-DROP POLICY IF EXISTS "Admins can delete receipts" ON storage.objects;
-DROP POLICY IF EXISTS "Admins can view all payment receipts" ON storage.objects;
+-- Drop all existing storage policies for payment-receipts to avoid conflicts
+DO $$
+DECLARE
+    policy_record RECORD;
+BEGIN
+    FOR policy_record IN 
+        SELECT policyname 
+        FROM pg_policies 
+        WHERE schemaname = 'storage' 
+        AND tablename = 'objects' 
+        AND policyname ILIKE '%payment%receipt%'
+    LOOP
+        EXECUTE 'DROP POLICY IF EXISTS "' || policy_record.policyname || '" ON storage.objects;';
+    END LOOP;
+END $$;
 
--- Allow users to upload their own payment receipts
+-- Allow authenticated users to upload payment receipts to their own folder
 CREATE POLICY "Users can upload payment receipts" ON storage.objects
   FOR INSERT TO authenticated WITH CHECK (
     bucket_id = 'payment-receipts' AND
-    (storage.foldername(name))[1] = auth.uid()::text
+    (storage.foldername(name))[1] = 'payment_receipts' AND
+    (storage.foldername(name))[2] = auth.uid()::text
   );
 
 -- Allow users to view their own payment receipts
 CREATE POLICY "Users can view own payment receipts" ON storage.objects
   FOR SELECT TO authenticated USING (
     bucket_id = 'payment-receipts' AND
-    (storage.foldername(name))[1] = auth.uid()::text
+    (storage.foldername(name))[1] = 'payment_receipts' AND
+    (storage.foldername(name))[2] = auth.uid()::text
   );
 
--- Allow admins to view all payment receipts
+-- Allow users to update their own payment receipts
+CREATE POLICY "Users can update own payment receipts" ON storage.objects
+  FOR UPDATE TO authenticated USING (
+    bucket_id = 'payment-receipts' AND
+    (storage.foldername(name))[1] = 'payment_receipts' AND
+    (storage.foldername(name))[2] = auth.uid()::text
+  );
+
+-- Allow users to delete their own payment receipts
+CREATE POLICY "Users can delete own payment receipts" ON storage.objects
+  FOR DELETE TO authenticated USING (
+    bucket_id = 'payment-receipts' AND
+    (storage.foldername(name))[1] = 'payment_receipts' AND
+    (storage.foldername(name))[2] = auth.uid()::text
+  );
+
+-- Admin policies: Allow admins to view and manage all payment receipts
 CREATE POLICY "Admins can view all payment receipts" ON storage.objects
   FOR SELECT TO authenticated USING (
     bucket_id = 'payment-receipts' AND is_admin()
   );
 
--- Allow admins to delete receipts if needed
 CREATE POLICY "Admins can delete payment receipts" ON storage.objects
   FOR DELETE TO authenticated USING (
     bucket_id = 'payment-receipts' AND is_admin()
