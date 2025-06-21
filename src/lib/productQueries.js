@@ -936,17 +936,20 @@ export async function approveManualPayment(transactionId, adminNotes = '') {
     await addCreditsToUser(
       transaction.user_id,
       transaction.credits,
-      `Manual payment approved - ${transaction.package_name}`
-    );
+      `Manual payment approved - ${transaction.package_name}`    );
 
-    // Send notification to user
-    await createPaymentNotification(
-      transaction.user_id,
-      transactionId,
-      'payment_approved',
-      'Payment Approved! 🎉',
-      `Your payment for ${transaction.package_name} (${transaction.credits} credits) has been approved and credits have been added to your account.`
-    );
+    // Send notification to user (don't let notification failure stop payment approval)
+    try {
+      await createPaymentNotification(
+        transaction.user_id,
+        transactionId,
+        'payment_approved',
+        'Payment Approved! 🎉',
+        `Your payment for ${transaction.package_name} (${transaction.credits} credits) has been approved and credits have been added to your account.`
+      );
+    } catch (notificationError) {
+      console.warn('Failed to create approval notification, but payment was still approved:', notificationError);
+    }
 
     return { success: true, message: 'Payment approved and credits added successfully' };
   } catch (error) {
@@ -978,17 +981,19 @@ export async function rejectManualPayment(transactionId, rejectionReason = '') {
       })
       .eq('id', transactionId);
 
-    if (error) throw error;
-
-    // Send notification to user
+    if (error) throw error;    // Send notification to user (don't let notification failure stop payment rejection)
     if (transaction) {
-      await createPaymentNotification(
-        transaction.user_id,
-        transactionId,
-        'payment_rejected',
-        'Payment Rejected ❌',
-        `Your payment for ${transaction.package_name} has been rejected. Reason: ${rejectionReason}. Please contact support if you have questions.`
-      );
+      try {
+        await createPaymentNotification(
+          transaction.user_id,
+          transactionId,
+          'payment_rejected',
+          'Payment Rejected ❌',
+          `Your payment for ${transaction.package_name} has been rejected. Reason: ${rejectionReason}. Please contact support if you have questions.`
+        );
+      } catch (notificationError) {
+        console.warn('Failed to create rejection notification, but payment was still rejected:', notificationError);
+      }
     }
 
     return { success: true, message: 'Payment rejected successfully' };
@@ -1033,6 +1038,7 @@ export async function getPaymentStatistics() {
 // Create payment notification
 export async function createPaymentNotification(userId, paymentTransactionId, type, title, message) {
   try {
+    // Use the service role or admin context for creating notifications
     const { data, error } = await supabase
       .from('payment_notifications')
       .insert({
@@ -1040,16 +1046,27 @@ export async function createPaymentNotification(userId, paymentTransactionId, ty
         payment_transaction_id: paymentTransactionId,
         notification_type: type,
         title: title,
-        message: message
+        message: message,
+        read: false,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       })
       .select()
       .single();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Notification creation error:', error);
+      // Log the specific error but don't throw it to prevent payment approval from failing
+      console.warn(`Failed to create notification for user ${userId}: ${error.message}`);
+      return null; // Return null instead of throwing to allow payment processing to continue
+    }
+    
+    console.log('Notification created successfully:', data);
     return data;
   } catch (error) {
-    console.error('Error creating payment notification:', error);
-    throw error;
+    console.error('Unexpected error in createPaymentNotification:', error);
+    // Don't throw the error - just log it so payment approval can continue
+    return null;
   }
 }
 

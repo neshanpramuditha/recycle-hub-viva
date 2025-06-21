@@ -622,17 +622,33 @@ CREATE INDEX IF NOT EXISTS idx_payment_notifications_read ON payment_notificatio
 -- 4. Add RLS policies for payment notifications
 ALTER TABLE payment_notifications ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies to avoid conflicts
+DROP POLICY IF EXISTS "Users can read own notifications" ON payment_notifications;
+DROP POLICY IF EXISTS "System can insert notifications" ON payment_notifications;
+DROP POLICY IF EXISTS "Users can update own notifications" ON payment_notifications;
+DROP POLICY IF EXISTS "Admins can insert notifications" ON payment_notifications;
+DROP POLICY IF EXISTS "Authenticated users can insert notifications" ON payment_notifications;
+DROP POLICY IF EXISTS "Admins can read all notifications" ON payment_notifications;
+
 -- Users can only read their own notifications
 CREATE POLICY "Users can read own notifications" ON payment_notifications
   FOR SELECT USING (auth.uid() = user_id);
 
--- Only authenticated users can insert notifications (for system use)
-CREATE POLICY "System can insert notifications" ON payment_notifications
-  FOR INSERT WITH CHECK (true);
+-- Allow any authenticated user to insert notifications (needed for admin actions)
+CREATE POLICY "Authenticated users can insert notifications" ON payment_notifications
+  FOR INSERT TO authenticated WITH CHECK (true);
+
+-- Allow admins to insert notifications for any user (explicit admin policy)
+CREATE POLICY "Admins can insert notifications" ON payment_notifications
+  FOR INSERT TO authenticated WITH CHECK (is_admin());
 
 -- Users can update their own notifications (mark as read)
 CREATE POLICY "Users can update own notifications" ON payment_notifications
   FOR UPDATE USING (auth.uid() = user_id);
+
+-- Admins can read all notifications (for debugging/support)
+CREATE POLICY "Admins can read all notifications" ON payment_notifications
+  FOR SELECT TO authenticated USING (is_admin());
 
 -- 5. Add admin role check function for role-based admin access
 CREATE OR REPLACE FUNCTION is_admin()
