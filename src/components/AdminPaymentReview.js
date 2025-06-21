@@ -21,22 +21,42 @@ export default function AdminPaymentReview() {
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
 
-  useEffect(() => {
-    loadPaymentData();
-  }, []);
+  // Check if user is admin
+  const isAdmin = user?.email === 'admin@recyclehub.com' || 
+                  user?.user_metadata?.role === 'admin' || 
+                  user?.app_metadata?.role === 'admin';
 
+  useEffect(() => {
+    console.log('Current user:', user); // Debug log
+    console.log('Is admin:', isAdmin); // Debug log
+    
+    if (isAdmin) {
+      loadPaymentData();
+    } else {
+      setError('Access denied. Administrator privileges required.');
+      setLoading(false);
+    }
+  }, [isAdmin]);
   const loadPaymentData = async () => {
     try {
       setLoading(true);
+      setError(''); // Clear previous errors
+      
+      console.log('Loading payment data...'); // Debug log
+      
       const [payments, stats] = await Promise.all([
         getPendingManualPayments(),
         getPaymentStatistics()
       ]);
+      
+      console.log('Loaded payments:', payments); // Debug log
+      console.log('Loaded stats:', stats); // Debug log
+      
       setPendingPayments(payments);
       setStatistics(stats);
     } catch (err) {
       console.error('Error loading payment data:', err);
-      setError('Failed to load payment data');
+      setError('Failed to load payment data: ' + err.message);
     } finally {
       setLoading(false);
     }
@@ -84,10 +104,18 @@ export default function AdminPaymentReview() {
       setProcessing(null);
     }
   };
-
   const openReceiptInNewTab = (receiptUrl) => {
     if (receiptUrl) {
-      window.open(receiptUrl, '_blank');
+      console.log('Opening receipt URL:', receiptUrl); // Debug log
+      try {
+        window.open(receiptUrl, '_blank', 'noopener,noreferrer');
+      } catch (err) {
+        console.error('Error opening receipt:', err);
+        setError('Failed to open receipt. URL: ' + receiptUrl);
+      }
+    } else {
+      console.log('No receipt URL provided'); // Debug log
+      setError('No receipt available for this payment');
     }
   };
 

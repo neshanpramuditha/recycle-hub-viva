@@ -642,7 +642,8 @@ BEGIN
   RETURN (
     SELECT COALESCE(
       (auth.jwt() ->> 'email') = 'admin@recyclehub.com' OR
-      (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin',
+      (auth.jwt() -> 'user_metadata' ->> 'role') = 'admin' OR
+      (auth.jwt() -> 'app_metadata' ->> 'role') = 'admin',
       false
     )
   );
@@ -653,28 +654,53 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE POLICY "Admins can access all payment transactions" ON payment_transactions
   FOR ALL USING (is_admin());
 
+-- 6.1. Add RLS policies for admin access to credit transactions
+-- These are essential for payment approval functionality
+DROP POLICY IF EXISTS "Admins can insert credit transactions" ON credit_transactions;
+DROP POLICY IF EXISTS "Admins can view all credit transactions" ON credit_transactions;
+
+CREATE POLICY "Admins can insert credit transactions" ON credit_transactions
+  FOR INSERT TO authenticated WITH CHECK (is_admin());
+
+CREATE POLICY "Admins can view all credit transactions" ON credit_transactions
+  FOR SELECT USING (is_admin());
+
 -- 7. Create storage bucket for payment receipts
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('payment-receipts', 'payment-receipts', true)
 ON CONFLICT (id) DO NOTHING;
 
 -- 8. Create storage policies for payment receipts
-CREATE POLICY "Users can upload receipts" ON storage.objects
-  FOR INSERT WITH CHECK (
+-- Drop existing policies to avoid conflicts
+DROP POLICY IF EXISTS "Users can upload receipts" ON storage.objects;
+DROP POLICY IF EXISTS "Users can view receipts" ON storage.objects;
+DROP POLICY IF EXISTS "Admins can delete receipts" ON storage.objects;
+DROP POLICY IF EXISTS "Admins can view all payment receipts" ON storage.objects;
+
+-- Allow users to upload their own payment receipts
+CREATE POLICY "Users can upload payment receipts" ON storage.objects
+  FOR INSERT TO authenticated WITH CHECK (
     bucket_id = 'payment-receipts' AND
-    auth.role() = 'authenticated'
+    (storage.foldername(name))[1] = auth.uid()::text
   );
 
-CREATE POLICY "Users can view receipts" ON storage.objects
-  FOR SELECT USING (
+-- Allow users to view their own payment receipts
+CREATE POLICY "Users can view own payment receipts" ON storage.objects
+  FOR SELECT TO authenticated USING (
     bucket_id = 'payment-receipts' AND
-    (auth.role() = 'authenticated' OR is_admin())
+    (storage.foldername(name))[1] = auth.uid()::text
   );
 
-CREATE POLICY "Admins can delete receipts" ON storage.objects
-  FOR DELETE USING (
-    bucket_id = 'payment-receipts' AND
-    is_admin()
+-- Allow admins to view all payment receipts
+CREATE POLICY "Admins can view all payment receipts" ON storage.objects
+  FOR SELECT TO authenticated USING (
+    bucket_id = 'payment-receipts' AND is_admin()
+  );
+
+-- Allow admins to delete receipts if needed
+CREATE POLICY "Admins can delete payment receipts" ON storage.objects
+  FOR DELETE TO authenticated USING (
+    bucket_id = 'payment-receipts' AND is_admin()
   );
 
 -- 9. Add trigger to update payment_transactions timestamps

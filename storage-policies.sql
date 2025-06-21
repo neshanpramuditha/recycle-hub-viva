@@ -90,10 +90,10 @@ BEGIN
   END IF;
 END $$;
 
--- 3. Create storage bucket for payment receipts (private bucket)
+-- 3. Create storage bucket for payment receipts (public bucket for easier access)
 INSERT INTO storage.buckets (id, name, public)
-VALUES ('payment-receipts', 'payment-receipts', false)
-ON CONFLICT (id) DO NOTHING;
+VALUES ('payment-receipts', 'payment-receipts', true)
+ON CONFLICT (id) DO UPDATE SET public = true;
 
 -- 4. Set up storage policies for payment receipts
 
@@ -152,7 +152,27 @@ BEGIN
 END $$;
 
 -- Allow admins to view all payment receipts (for verification)
--- Note: You'll need to set up admin roles in your application
+-- First ensure the admin function exists
+DO $$
+BEGIN
+  -- Create admin function if it doesn't exist
+  IF NOT EXISTS (SELECT 1 FROM pg_proc WHERE proname = 'is_admin') THEN
+    EXECUTE 'CREATE OR REPLACE FUNCTION is_admin()
+    RETURNS BOOLEAN AS $func$
+    BEGIN
+      RETURN (
+        SELECT COALESCE(
+          (auth.jwt() ->> ''email'') = ''admin@recyclehub.com'' OR
+          (auth.jwt() -> ''user_metadata'' ->> ''role'') = ''admin'' OR
+          (auth.jwt() -> ''app_metadata'' ->> ''role'') = ''admin'',
+          false
+        )
+      );
+    END;
+    $func$ LANGUAGE plpgsql SECURITY DEFINER;';
+  END IF;
+END $$;
+
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -164,11 +184,24 @@ BEGIN
     CREATE POLICY "Admins can view all payment receipts" ON storage.objects 
       FOR SELECT TO authenticated 
       USING (
-        bucket_id = 'payment-receipts' 
-        AND (
-          auth.jwt() ->> 'role' = 'admin' 
-          OR auth.jwt() ->> 'user_role' = 'admin'
-        )
+        bucket_id = 'payment-receipts' AND is_admin()
+      );
+  END IF;
+END $$;
+
+-- Allow admins to delete payment receipts if needed
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies 
+    WHERE schemaname = 'storage' 
+    AND tablename = 'objects' 
+    AND policyname = 'Admins can delete payment receipts'
+  ) THEN
+    CREATE POLICY "Admins can delete payment receipts" ON storage.objects 
+      FOR DELETE TO authenticated 
+      USING (
+        bucket_id = 'payment-receipts' AND is_admin()
       );
   END IF;
 END $$;

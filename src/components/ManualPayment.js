@@ -63,22 +63,32 @@ export default function ManualPayment({ creditPackage, onSuccess, onCancel }) {
       [name]: value,
     }));
   };
-
   const uploadFile = async (file, transactionId) => {
     const fileExt = file.name.split(".").pop();
     const fileName = `payment_receipts/${user.id}/${transactionId}.${fileExt}`;
+
+    console.log('Uploading file:', fileName); // Debug log
 
     const { data, error } = await supabase.storage
       .from("payment-receipts")
       .upload(fileName, file);
 
-    if (error) throw error;
+    if (error) {
+      console.error('Upload error:', error);
+      if (error.message.includes('Bucket not found')) {
+        throw new Error('Storage bucket not configured. Please contact the administrator to set up the payment receipt storage.');
+      }
+      throw error;
+    }
+
+    console.log('Upload successful:', data); // Debug log
 
     // Get public URL
     const { data: urlData } = supabase.storage
       .from("payment-receipts")
       .getPublicUrl(fileName);
 
+    console.log('Receipt URL:', urlData.publicUrl); // Debug log
     return urlData.publicUrl;
   };
 

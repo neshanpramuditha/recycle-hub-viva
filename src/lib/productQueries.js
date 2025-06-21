@@ -885,8 +885,8 @@ export async function getPendingManualPayments() {
           email
         )
       `)
-      .eq('payment_method', 'manual')
-      .eq('status', 'pending_review')
+      .in('payment_method', ['manual', 'bank_transfer', 'mobile_banking', 'atm_deposit', 'cash_deposit'])
+      .eq('status', 'pending')
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -894,6 +894,7 @@ export async function getPendingManualPayments() {
       throw error;
     }
 
+    console.log('Fetched pending payments:', data); // Debug log
     return data || [];
   } catch (error) {
     console.error('Error in getPendingManualPayments:', error);
@@ -1002,7 +1003,7 @@ export async function getPaymentStatistics() {
   try {
     const { data, error } = await supabase
       .from('payment_transactions')
-      .select('payment_status, payment_method, amount, created_at');
+      .select('payment_status, status, payment_method, amount, created_at');
 
     if (error) throw error;
 
@@ -1010,15 +1011,16 @@ export async function getPaymentStatistics() {
       total: data.length,
       completed: data.filter(t => t.payment_status === 'completed').length,
       pending: data.filter(t => t.payment_status === 'pending').length,
-      pendingReview: data.filter(t => t.status === 'pending_review').length,
+      pendingReview: data.filter(t => t.status === 'pending' && ['manual', 'bank_transfer', 'mobile_banking', 'atm_deposit', 'cash_deposit'].includes(t.payment_method)).length,
       failed: data.filter(t => t.payment_status === 'failed').length,
       totalRevenue: data
         .filter(t => t.payment_status === 'completed')
         .reduce((sum, t) => sum + (t.amount || 0), 0),
       paypalPayments: data.filter(t => t.payment_method === 'paypal').length,
-      manualPayments: data.filter(t => t.payment_method !== 'paypal').length
+      manualPayments: data.filter(t => ['manual', 'bank_transfer', 'mobile_banking', 'atm_deposit', 'cash_deposit'].includes(t.payment_method)).length
     };
 
+    console.log('Payment statistics:', stats); // Debug log
     return stats;
   } catch (error) {
     console.error('Error in getPaymentStatistics:', error);
