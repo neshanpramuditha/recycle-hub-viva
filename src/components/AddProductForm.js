@@ -989,8 +989,7 @@ export default function AddProductForm({ onSuccess }) {
                 <p className="text-muted mb-3">
                   <i className="fas fa-info-circle me-1"></i>
                   Upload high-quality images. The first image will be your main product photo.
-                </p>
-                  {/* File Upload */}
+                </p>                {/* File Upload */}
                 <div className="image-upload-area mb-4">
                   <input
                     type="file"
@@ -1006,13 +1005,6 @@ export default function AddProductForm({ onSuccess }) {
                     <p className="upload-subtitle">or drag and drop files here</p>
                     <small className="text-muted">PNG, JPG, GIF up to 10MB each</small>
                   </label>
-                  
-                  {/* Debug info */}
-                  <div className="mt-2">
-                    <small className="text-info">
-                      Files: {imageFiles.length}, Previews: {imagePreviews.length}
-                    </small>
-                  </div>
                   
                   {/* Show image errors */}
                   {imageErrors.length > 0 && (
