@@ -175,7 +175,7 @@ export async function compressImage(file, maxWidth = 800, quality = 0.8) {
  * @returns {{valid: boolean, error?: string}}
  */
 export function validateImageFile(file) {
-  const maxSize = 5 * 1024 * 1024; // 5MB
+  const maxSize = 10 * 1024 * 1024; // 10MB to match UI text
   const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
   if (!allowedTypes.includes(file.type)) {
@@ -188,7 +188,7 @@ export function validateImageFile(file) {
   if (file.size > maxSize) {
     return {
       valid: false,
-      error: 'File size too large. Please upload images smaller than 5MB.'
+      error: 'File size too large. Please upload images smaller than 10MB.'
     };
   }
 

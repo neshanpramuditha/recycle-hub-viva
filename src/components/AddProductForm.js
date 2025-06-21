@@ -12,7 +12,7 @@ import {
 import { validateImageFile, compressImage, processAllProductImages } from '../lib/storageHelpers';
 import './AddProductForm.css';
 
-export default function AddProductForm() {
+export default function AddProductForm({ onSuccess }) {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { theme } = useTheme();
@@ -117,7 +117,9 @@ export default function AddProductForm() {
 
   // Handle image file selection
   const handleImageSelect = async (e) => {
+    console.log('handleImageSelect called');
     const files = Array.from(e.target.files);
+    console.log('Selected files:', files);
     
     if (files.length === 0) return;
 
@@ -128,11 +130,14 @@ export default function AddProductForm() {
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
+      console.log(`Processing file ${i}:`, file.name, file.type, file.size);
       
       // Validate file
       const validation = validateImageFile(file);
-      if (!validation.isValid) {
+      console.log(`Validation result for ${file.name}:`, validation);
+      if (!validation.valid) {
         errors[i] = validation.error;
+        console.log(`Validation failed for ${file.name}:`, validation.error);
         continue;
       }
 
@@ -141,11 +146,16 @@ export default function AddProductForm() {
         const preview = URL.createObjectURL(file);
         newPreviews[i] = preview;
         newFiles[i] = file;
+        console.log(`Preview created for ${file.name}:`, preview);
       } catch (error) {
         errors[i] = 'Failed to process image';
         console.error('Error processing image:', error);
       }
     }
+
+    console.log('New previews:', newPreviews.filter(Boolean));
+    console.log('New files:', newFiles.filter(Boolean));
+    console.log('Errors:', errors);
 
     setImagePreviews(prev => [...prev, ...newPreviews.filter(Boolean)]);
     setImageFiles(prev => [...prev, ...newFiles.filter(Boolean)]);
@@ -565,14 +575,19 @@ export default function AddProductForm() {
         console.log('Adding specifications:', validSpecs);
         await addProductSpecifications(product.id, validSpecs);
         console.log('Specifications added successfully');
-      }
-
-      setSuccess('Product added successfully!');
+      }      setSuccess('Product added successfully!');
       
-      // Redirect to product page after short delay
-      setTimeout(() => {
-        navigate(`/product/${product.id}`);
-      }, 2000);
+      // Call onSuccess callback if provided (from Dashboard)
+      if (onSuccess) {
+        setTimeout(() => {
+          onSuccess();
+        }, 1500);
+      } else {
+        // Redirect to product page after short delay
+        setTimeout(() => {
+          navigate(`/product/${product.id}`);
+        }, 2000);
+      }
 
     } catch (err) {
       console.error('Detailed error adding product:', err);
@@ -975,8 +990,7 @@ export default function AddProductForm() {
                   <i className="fas fa-info-circle me-1"></i>
                   Upload high-quality images. The first image will be your main product photo.
                 </p>
-                
-                {/* File Upload */}
+                  {/* File Upload */}
                 <div className="image-upload-area mb-4">
                   <input
                     type="file"
@@ -992,6 +1006,24 @@ export default function AddProductForm() {
                     <p className="upload-subtitle">or drag and drop files here</p>
                     <small className="text-muted">PNG, JPG, GIF up to 10MB each</small>
                   </label>
+                  
+                  {/* Debug info */}
+                  <div className="mt-2">
+                    <small className="text-info">
+                      Files: {imageFiles.length}, Previews: {imagePreviews.length}
+                    </small>
+                  </div>
+                  
+                  {/* Show image errors */}
+                  {imageErrors.length > 0 && (
+                    <div className="mt-2">
+                      {imageErrors.map((error, index) => error && (
+                        <div key={index} className="alert alert-danger alert-sm">
+                          <small>File {index + 1}: {error}</small>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Image Previews */}
