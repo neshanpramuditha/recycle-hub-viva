@@ -134,10 +134,9 @@ CREATE TABLE IF NOT EXISTS payment_transactions (
   amount DECIMAL(10,2) NOT NULL,
   currency TEXT DEFAULT 'USD',
   credits INTEGER NOT NULL, -- Number of credits to be awarded
-  package_name TEXT, -- Store package name for reference
-  payment_method TEXT CHECK (payment_method IN ('paypal', 'manual', 'stripe', 'bank_transfer')) NOT NULL,
+  package_name TEXT, -- Store package name for reference  payment_method TEXT CHECK (payment_method IN ('paypal', 'manual', 'stripe', 'bank_transfer', 'mobile_banking', 'atm_deposit', 'cash_deposit')) NOT NULL,
   payment_status TEXT CHECK (payment_status IN ('pending', 'completed', 'failed', 'cancelled', 'refunded')) DEFAULT 'pending',
-  status TEXT CHECK (status IN ('pending', 'pending_review', 'completed', 'failed', 'cancelled', 'refunded')) DEFAULT 'pending', -- Alternative status field
+  status TEXT CHECK (status IN ('pending', 'pending_review', 'completed', 'failed', 'cancelled', 'refunded', 'rejected', 'approved')) DEFAULT 'pending', -- Alternative status field
   payment_reference TEXT, -- PayPal transaction ID or manual reference
   reference_number TEXT, -- For manual payments
   payment_slip_url TEXT, -- For manual payments
@@ -181,7 +180,7 @@ BEGIN
         WHERE table_name = 'payment_transactions' 
         AND column_name = 'status'
     ) THEN
-        ALTER TABLE payment_transactions ADD COLUMN status TEXT CHECK (status IN ('pending', 'pending_review', 'completed', 'failed', 'cancelled', 'refunded')) DEFAULT 'pending';
+        ALTER TABLE payment_transactions ADD COLUMN status TEXT CHECK (status IN ('pending', 'pending_review', 'completed', 'failed', 'cancelled', 'refunded', 'rejected', 'approved')) DEFAULT 'pending';
     END IF;
 
     -- Add reference_number column if it doesn't exist
@@ -758,3 +757,14 @@ COMMENT ON COLUMN payment_notifications.notification_type IS 'Types: payment_app
 -- ========================================
 -- END PAYMENT SYSTEM ENHANCEMENTS
 -- ========================================
+
+-- 1.1. Update check constraints to include all possible status values
+-- Drop and recreate constraints to include 'rejected' and 'approved' statuses
+ALTER TABLE payment_transactions DROP CONSTRAINT IF EXISTS payment_transactions_status_check;
+ALTER TABLE payment_transactions ADD CONSTRAINT payment_transactions_status_check 
+  CHECK (status IN ('pending', 'pending_review', 'completed', 'failed', 'cancelled', 'refunded', 'rejected', 'approved'));
+
+-- Update payment_method constraint to include all supported methods
+ALTER TABLE payment_transactions DROP CONSTRAINT IF EXISTS payment_transactions_payment_method_check;
+ALTER TABLE payment_transactions ADD CONSTRAINT payment_transactions_payment_method_check 
+  CHECK (payment_method IN ('paypal', 'manual', 'stripe', 'bank_transfer', 'mobile_banking', 'atm_deposit', 'cash_deposit'));
