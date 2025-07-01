@@ -20,7 +20,12 @@
 
 /* Dark theme navbar adjustments */
 [data-theme="dark"] .navbar {
-  background: linear-gradient(135deg, #1a202c 0%, #2d3748 50%, #374151 100%) !important;
+  background: linear-gradient(
+    135deg,
+    #1a202c 0%,
+    #2d3748 50%,
+    #374151 100%
+  ) !important;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
 }
 
@@ -29,16 +34,37 @@
   border-bottom: 1px solid var(--border-color);
 }
 
-/* Brand Logo */
+/* Logo and Brand Container */
+.navbar-brand-container {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  text-decoration: none;
+}
+
+.navbar-logo {
+  height: 50px;
+  width: auto;
+  max-width: 55px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.navbar-logo:hover {
+  transform: scale(1.1);
+}
+
+/* Brand Logo and Text */
 #Recycle_Hub {
-  font-size: clamp(24px, 4vw, 35px);
-  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: clamp(20px, 3.5vw, 28px);
+  font-family: "Georgia", "Times New Roman", serif;
   font-weight: 700;
-  padding-left: 20px;
   color: white;
   text-decoration: none;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
 #Recycle_Hub:hover {
@@ -49,10 +75,11 @@
 
 [data-theme="dark"] #Recycle_Hub {
   color: var(--text-primary);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
 }
 
 [data-theme="dark"] #Recycle_Hub:hover {
-  color: var(--green-primary);
+  color: var(--green-light);
 }
 
 /* Navigation Links */
@@ -86,7 +113,7 @@
 }
 
 .nav-link::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
@@ -169,24 +196,24 @@
   .navbar {
     padding-bottom: 0.75rem;
   }
-  
+
   .navbar-nav {
     text-align: center;
     padding: 1rem 0;
     flex-direction: column;
   }
-  
+
   .nav-links-center {
     flex-direction: column;
     width: 100%;
     gap: 0.5rem;
   }
-  
+
   .nav-item {
     margin: 0.25rem 0;
     width: 100%;
   }
-  
+
   .nav-link {
     display: block;
     width: 100%;
@@ -207,7 +234,7 @@
     background-color: #343a40 !important;
     border: none;
   }
-  
+
   #Recycle_Hub {
     padding-left: 15px;
   }
@@ -217,33 +244,33 @@
   .navbar {
     padding-bottom: 1rem;
   }
-  
+
   .navbar-brand {
     font-size: 28px;
   }
-  
+
   .nav-link {
     font-size: 18px;
     padding: 0.75rem 1rem;
     background-color: rgba(255, 255, 255, 0.05);
     margin: 0.2rem 0;
   }
-  
+
   .nav-link:hover {
     background-color: rgba(255, 255, 255, 0.15);
   }
-    #signup_button {
+  #signup_button {
     font-size: 18px;
     padding: 0.75rem 1.5rem;
     margin-top: 1.5rem;
     margin-bottom: 1rem;
   }
-  
+
   .navbar-toggler {
     border: 2px solid rgba(255, 255, 255, 0.3);
     padding: 0.5rem;
   }
-  
+
   .navbar-toggler:focus {
     box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25);
   }
@@ -253,35 +280,35 @@
   .navbar {
     padding-bottom: 1.5rem;
   }
-  
+
   #Recycle_Hub {
     font-size: 22px;
     padding-left: 10px;
   }
-  
+
   .nav-link {
     font-size: 16px;
     padding: 0.6rem 0.75rem;
     margin: 0.15rem 0;
   }
-    #signup_button {
+  #signup_button {
     font-size: 16px;
     padding: 0.6rem 1.2rem;
     margin-top: 1rem;
     margin-bottom: 1.5rem;
     width: 90%;
   }
-  
+
   .navbar-nav {
     gap: 0.3rem;
     padding: 0.5rem 0;
   }
-  
+
   .navbar-toggler {
     padding: 0.4rem;
     margin-right: 10px;
   }
-  
+
   .collapse.navbar-collapse {
     margin-top: 1rem;
   }
@@ -333,7 +360,7 @@
 }
 
 .user-icon::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -2px;
   left: -2px;
@@ -540,20 +567,20 @@
     right: -10px;
     min-width: 260px;
   }
-  
+
   .dropdown-arrow {
     right: 25px;
   }
-  
+
   .user-icon {
     width: 40px;
     height: 40px;
   }
-  
+
   .user-initial {
     font-size: 16px;
   }
-  
+
   .user-icon i {
     font-size: 18px;
   }
@@ -564,7 +591,7 @@
     right: -20px;
     min-width: 240px;
   }
-  
+
   .dropdown-arrow {
     right: 30px;
   }

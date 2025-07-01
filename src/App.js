@@ -23,6 +23,7 @@ import EditProductForm from "./components/EditProductForm.js";
 import Layout from "./components/Layout.js";
 import ScrollToTop from "./components/ScrollToTop.js";
 import "./styles/themes.css";
+import Locate from "./locate.js";
 
 export default function App() {
   return (
@@ -69,6 +70,14 @@ export default function App() {
               element={
                 <Layout>
                   <Contact />
+                </Layout>
+              }
+            />
+            <Route
+              path="/Locate"
+              element={
+                <Layout>
+                  <Locate/>
                 </Layout>
               }
             />

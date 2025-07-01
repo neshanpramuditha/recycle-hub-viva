@@ -44,9 +44,16 @@ export default function Navigation_bar() {
   return (
     <div>
       <nav className="navbar navbar-dark bg-success navbar-expand-lg fixed-top">
-        <Link to="/" className="navbar-brand" id="Recycle_Hub">
-          Recycle Hub
-        </Link>
+        <div className="navbar-brand-container">
+          <img
+            src="/image/Recycling Reuse Logo.png"
+            alt="Recycle Hub Logo"
+            className="navbar-logo"
+          />
+          <Link to="/" className="navbar-brand" id="Recycle_Hub">
+            Recycle Hub
+          </Link>
+        </div>
 
         <button
           className="navbar-toggler"
@@ -84,6 +91,11 @@ export default function Navigation_bar() {
               <li className="nav-item">
                 <Link to="/Buy" className="nav-link active" id="link4">
                   Buy
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/Locate" className="nav-link active" id="link4">
+                  Location
                 </Link>
               </li>
               <li className="nav-item">
