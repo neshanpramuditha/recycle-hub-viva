@@ -229,6 +229,87 @@ function Contact() {
             </div>
           </div>
         </div>
+
+        {/* Recycling Centers Map Section */}
+        <div className="recycling-centers-section">
+          <div className="recycling-header">
+            <h2 className="recycling-title">
+              <i className="bi bi-geo-alt-fill"></i>
+              Find Recycling Centers Near You
+            </h2>
+            <p className="recycling-subtitle">
+              Can't find what you need through donations? Locate the nearest recycling centers for proper disposal of your items.
+            </p>
+          </div>
+
+          <div className="map-container">
+            <div className="map-info">
+              <h3>Recycling Centers in Sri Lanka</h3>
+              <div className="info-cards">
+                <div className="info-card">
+                  <div className="info-icon">
+                    <i className="bi bi-recycle"></i>
+                  </div>
+                  <div className="info-content">
+                    <h4>Municipal Centers</h4>
+                    <p>Official recycling facilities managed by local authorities</p>
+                  </div>
+                </div>
+                <div className="info-card">
+                  <div className="info-icon">
+                    <i className="bi bi-clock"></i>
+                  </div>
+                  <div className="info-content">
+                    <h4>Operating Hours</h4>
+                    <p>Most centers operate Monday to Saturday, 8 AM - 5 PM</p>
+                  </div>
+                </div>
+                <div className="info-card">
+                  <div className="info-icon">
+                    <i className="bi bi-check-circle"></i>
+                  </div>
+                  <div className="info-content">
+                    <h4>Accepted Items</h4>
+                    <p>Electronics, plastics, metals, paper, and glass</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="map-frame">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15842.656811574874!2d79.96745868715821!3d6.930679699999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae257933c002533%3A0x1a4c5c43049f18c4!2sKaduwela%20municipal%20council%20garbage%20recycling%20center!5e0!3m2!1sen!2slk!4v1751338168202!5m2!1sen!2slk"
+                width="100%"
+                height="400"
+                style={{ border: 0, borderRadius: '15px' }}
+                allowFullScreen=""
+                loading="lazy"
+                title="Recycling Centers Map"
+              ></iframe>
+            </div>
+          </div>
+
+          <div className="recycling-actions">
+            <div className="action-buttons">
+              <a
+                href="https://www.google.com/maps/search/recycling+centers+sri+lanka"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-primary"
+              >
+                <i className="bi bi-map"></i>
+                View All Centers
+              </a>
+              <a
+                href="tel:+94119087631"
+                className="btn btn-outline-primary"
+              >
+                <i className="bi bi-telephone"></i>
+                Call for Info
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

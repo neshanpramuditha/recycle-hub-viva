@@ -6,6 +6,7 @@ import Services from "./Services.js";
 import Buy_And_Sale from "./Buy_And_Sale.js";
 import Contact from "./Contact.js";
 import ProductSingle from "./[id].js";
+import DonationSingle from "./DonationSingle.js";
 import Buy from "./Buy.js";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Sale from "./Sale.js";
@@ -103,6 +104,14 @@ export default function App() {
               element={
                 <Layout>
                   <Donate />
+                </Layout>
+              }
+            />
+            <Route
+              path="/donation/:id"
+              element={
+                <Layout>
+                  <DonationSingle />
                 </Layout>
               }
             />

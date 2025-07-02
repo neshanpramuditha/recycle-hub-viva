@@ -137,6 +137,51 @@ export const getDonationsByCategory = async (category) => {
   }
 };
 
+// Get a single donation by ID
+export const getDonationById = async (donationId) => {
+  try {
+    const { data, error } = await supabase
+      .from('donations')
+      .select('*')
+      .eq('id', donationId)
+      .single();
+
+    if (error) {
+      console.error('Error fetching donation:', error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error in getDonationById:', error);
+    throw error;
+  }
+};
+
+// Get similar donations by category
+export const getSimilarDonations = async (donationId, category, limit = 6) => {
+  try {
+    const { data, error } = await supabase
+      .from('donations')
+      .select('*')
+      .eq('status', 'available')
+      .eq('category', category)
+      .neq('id', donationId)
+      .order('created_at', { ascending: false })
+      .limit(limit);
+
+    if (error) {
+      console.error('Error fetching similar donations:', error);
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error('Error in getSimilarDonations:', error);
+    throw error;
+  }
+};
+
 // Search donations
 export const searchDonations = async (searchTerm) => {
   try {
