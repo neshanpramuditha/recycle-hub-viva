@@ -24,6 +24,7 @@ import Layout from "./components/Layout.js";
 import ScrollToTop from "./components/ScrollToTop.js";
 import "./styles/themes.css";
 import Locate from "./locate.js";
+import Donate from "./donate.js";
 
 export default function App() {
   return (
@@ -57,14 +58,14 @@ export default function App() {
                 </Layout>
               }
             />
-            {/* <Route
+             <Route
               path="/Buy_And_Sale"
               element={
                 <Layout>
                   <Buy_And_Sale />
                 </Layout>
               }
-            /> */}
+            /> 
             <Route
               path="/Contact"
               element={
@@ -94,6 +95,14 @@ export default function App() {
               element={
                 <Layout>
                   <ProductSingle />
+                </Layout>
+              }
+            />
+            <Route
+              path="/donate"
+              element={
+                <Layout>
+                  <Donate />
                 </Layout>
               }
             />

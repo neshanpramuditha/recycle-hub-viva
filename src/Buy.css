@@ -909,85 +909,514 @@
   color: var(--text-muted);
 }
 
-/* Button theme adjustments */
-.btn-primary {
-  background: var(--gradient-eco);
-  border: none;
+/* ========================================
+   DONATION PAGE SPECIFIC STYLES
+   ======================================== */
+
+/* Donation-specific badges */
+.badge-donation {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
-.btn-primary:hover {
+.badge-donation i {
+  font-size: 0.8rem;
+  animation: heartbeat 2s infinite;
+}
+
+@keyframes heartbeat {
+  0%, 50%, 100% { transform: scale(1); }
+  25%, 75% { transform: scale(1.1); }
+}
+
+/* Donation CTA button in header */
+.donate-cta {
+  background: var(--gradient-eco) !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3) !important;
+}
+
+.donate-cta:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4) !important;
+}
+
+/* Donation card hover effects */
+.donation-card:hover {
+  border-color: var(--accent-color, #10b981) !important;
+}
+
+.donation-card .product-actions {
+  padding-top: 1rem;
+}
+
+.donation-card .contact-btn {
   background: var(--gradient-eco);
-  filter: brightness(1.1);
-  box-shadow: 0 4px 12px var(--shadow-medium);
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  font-size: 0.9rem;
 }
 
-/* Responsive Design */
+.donation-card .contact-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  filter: brightness(1.1);
+}
+
+/* Product details styling for donations */
+.donation-card .product-details {
+  margin: 1rem 0;
+}
+
+.donation-card .detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.donation-card .detail-label {
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 500;
+}
+
+.donation-card .detail-label i {
+  color: var(--accent-color, #10b981);
+  width: 12px;
+  font-size: 0.8rem;
+}
+
+.donation-card .detail-value {
+  color: var(--text-primary);
+  font-weight: 600;
+  text-align: right;
+  max-width: 60%;
+  word-break: break-word;
+}
+
+/* Donation modal specific styles */
+.donation-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+  backdrop-filter: blur(5px);
+}
+
+.donation-modal {
+  background: var(--bg-secondary);
+  border-radius: 20px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-header {
+  padding: 2rem 2rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--border-color);
+  margin-bottom: 1.5rem;
+}
+
+.modal-header h3 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.donation-form {
+  padding: 0 2rem 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--accent-color, #10b981);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.file-input {
+  border: 2px dashed var(--border-color) !important;
+  text-align: center;
+  cursor: pointer;
+  padding: 2rem !important;
+  background: var(--bg-primary) !important;
+}
+
+.file-input:hover {
+  border-color: var(--accent-color, #10b981) !important;
+  background: var(--bg-tertiary, #f8f9fa) !important;
+}
+
+.form-group small {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+  display: block;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--border-color);
+}
+
+.cancel-btn {
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+  border: 2px solid var(--border-color);
+  padding: 0.8rem 2rem;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background: var(--border-color);
+  color: var(--text-primary);
+}
+
+.cancel-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.submit-btn {
+  background: var(--gradient-eco);
+  color: white;
+  border: none;
+  padding: 0.8rem 2rem;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 150px;
+  justify-content: center;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  filter: brightness(1.1);
+}
+
+.submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.spinner-small {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* No results section for donations */
+.no-results {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--text-secondary);
+}
+
+.no-results-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  color: var(--accent-color, #10b981);
+  opacity: 0.5;
+}
+
+.no-results h3 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.no-results p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Dark theme adjustments for donations */
+[data-theme="dark"] .donation-modal {
+  background: #1a1a1a;
+}
+
+[data-theme="dark"] .modal-header {
+  border-color: #333;
+}
+
+[data-theme="dark"] .form-group input,
+[data-theme="dark"] .form-group textarea,
+[data-theme="dark"] .form-group select {
+  background: #0a0a0a;
+  border-color: #333;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .file-input {
+  background: #0a0a0a !important;
+  border-color: #333 !important;
+}
+
+[data-theme="dark"] .file-input:hover {
+  background: #1a1a1a !important;
+  border-color: #10b981 !important;
+}
+
+[data-theme="dark"] .cancel-btn {
+  background: #333;
+  border-color: #555;
+  color: #cccccc;
+}
+
+[data-theme="dark"] .cancel-btn:hover:not(:disabled) {
+  background: #444;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .form-actions {
+  border-color: #333;
+}
+
+/* Responsive design for donation forms */
 @media (max-width: 768px) {
-  .buy-title {
-    font-size: 2.2rem;
-  }
-  
-  .buy-subtitle {
-    font-size: 1rem;
-  }
-  
-  .filters-section {
-    margin-bottom: 30px;
-  }
-  
-  .products-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-  
-  .category-filters {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  
-  .category-btn {
-    flex: 1;
-    min-width: calc(50% - 4px);
-    text-align: center;
-  }
-  
-  .modal-content {
-    width: 95%;
-    margin: 20px;
+  .donation-modal {
+    margin: 1rem;
+    max-height: 85vh;
   }
   
   .modal-header {
-    padding: 16px 20px;
+    padding: 1.5rem 1.5rem 1rem;
   }
   
-  .add-category-form {
-    padding: 20px;
+  .modal-header h3 {
+    font-size: 1.5rem;
   }
   
-  .modal-actions {
+  .donation-form {
+    padding: 0 1.5rem 1.5rem;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-actions {
     flex-direction: column;
   }
   
-  .modal-actions .btn {
+  .cancel-btn,
+  .submit-btn {
     width: 100%;
+    justify-content: center;
+  }
+  
+  .donation-card .detail-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
+  
+  .donation-card .detail-value {
+    text-align: left;
+    max-width: 100%;
   }
 }
 
-@media (max-width: 480px) {
-  
-  .buy-header {
-    padding: 40px 0;
+@media (max-width: 576px) {
+  .file-input {
+    padding: 1.5rem !important;
   }
   
-  .buy-title {
-    font-size: 1.8rem;
+  .donation-card .contact-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* Additional donation page styles for better buy page consistency */
+.donation-card .product-image {
+  transition: transform 0.3s ease;
+}
+
+.donation-card:hover .product-image {
+  transform: scale(1.05);
+}
+
+.donation-card .product-description {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0.8rem 0;
+}
+
+.donation-card .product-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0 0.5rem;
+  font-size: 0.85rem;
+  gap: 1rem;
+}
+
+.donation-card .product-meta span {
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.donation-card .product-date {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+/* Improve mobile responsiveness for donation cards */
+@media (max-width: 768px) {
+  .donation-card .product-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
   
-  .category-btn {
-    min-width: 100%;
+  .donation-card .detail-row {
+    font-size: 0.8rem;
+  }
+  
+  .donation-card .detail-value {
+    max-width: 70%;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-header {
+    padding: 1.5rem 1.5rem 1rem;
+  }
+  
+  .donation-form {
+    padding: 0 1.5rem 1.5rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  
+  .form-actions button {
+    width: 100%;
   }
 }
 

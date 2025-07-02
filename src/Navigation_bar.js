@@ -89,7 +89,7 @@ export default function Navigation_bar() {
                 </Link>
               </li>
               <li className="nav-item">
-                <Link to="/Buy" className="nav-link active" id="link4">
+                <Link to="/Buy_And_Sale" className="nav-link active" id="link4">
                   Buy
                 </Link>
               </li>
