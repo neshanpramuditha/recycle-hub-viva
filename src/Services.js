@@ -151,7 +151,7 @@ export default function Services() {
                 Fast Service
               </h4>
               <p style={{ color: "var(--text-secondary)" }}>
-                Quick pickup and delivery across all locations
+                Quick pickup
               </p>
             </div>
           </div>
