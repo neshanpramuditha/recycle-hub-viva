@@ -202,7 +202,7 @@ function Contact() {
                   </div>
                   <div className="contact-details">
                     <h4>Facebook</h4>
-                    <p>www.facebook.com/Recycle Hub</p>
+                    <p>https://www.facebook.com/profile.php?id=100094431764478</p>
                   </div>
                 </div>
 

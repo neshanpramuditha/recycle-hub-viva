@@ -15,7 +15,7 @@ const Footer = () => {
               Reduce, reuse, recycle - together we make a difference for a sustainable future.
             </p>
             <div className="footer-social-links">
-              <a href="#" className="footer-social-icon" aria-label="Facebook">
+              <a href="https://www.facebook.com/profile.php?id=100094431764478" target="_blank" className="footer-social-icon" aria-label="Facebook">
                 <i className="fab fa-facebook-f"></i>
               </a>
               <a href="#" className="footer-social-icon" aria-label="Twitter">
