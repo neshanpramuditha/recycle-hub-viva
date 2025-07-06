@@ -59,9 +59,9 @@
 #Recycle_Hub_home {
   font-size: clamp(3rem, 8vw, 6rem);
   font-family: 'Georgia', 'Times New Roman', serif;
-  color: var(--text-primary);
+  color: white;
   font-weight: 700;
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+  text-shadow: 3px 3px 6px rgba(245, 239, 239, 0.7);
   margin-bottom: 20px;
   display: block;
   line-height: 1.1;
@@ -70,9 +70,9 @@
 
 #Buy_and_Sell_home {
   font-size: clamp(1.5rem, 4vw, 2.5rem);
-  color: var(--text-secondary);
+  color: white;
   font-family: 'Lucida Sans', 'Lucida Sans Regular', sans-serif;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+  text-shadow: 2px 2px 4px rgba(247, 244, 244, 0.6);
   margin-bottom: 20px;
   display: block;
   font-weight: 300;
@@ -80,9 +80,9 @@
 
 .home-hero-description {
   font-size: 1.2rem;
-  color: var(--text-secondary);
+  color: white;
   font-family: 'Inter', sans-serif;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.5);
   margin-bottom: 40px;
   line-height: 1.6;
   max-width: 600px;

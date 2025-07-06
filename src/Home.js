@@ -16,8 +16,9 @@ export default function Home() {
                   Buy & Sell Second-Hand Items Easily
                 </p>
                 <p className="home-hero-description">
-                  Join our eco-friendly marketplace where sustainability meets convenience. 
-                  Give new life to pre-loved items and reduce environmental impact.
+                  Join our eco-friendly marketplace where sustainability meets
+                  convenience. Give new life to pre-loved items and reduce
+                  environmental impact.
                 </p>
                 <div className="home-hero-buttons">
                   <a
@@ -56,7 +57,10 @@ export default function Home() {
                   <i className="fas fa-recycle"></i>
                 </div>
                 <h3>Eco-Friendly</h3>
-                <p>Reduce waste by giving items a second life. Every purchase contributes to a cleaner planet.</p>
+                <p>
+                  Reduce waste by giving items a second life. Every purchase
+                  contributes to a cleaner planet.
+                </p>
               </div>
             </div>
             <div className="col-md-4">
@@ -65,7 +69,10 @@ export default function Home() {
                   <i className="fas fa-shield-alt"></i>
                 </div>
                 <h3>Secure Trading</h3>
-                <p>Safe and secure transactions with verified sellers and quality-checked products.</p>
+                <p>
+                  Safe and secure transactions with verified sellers and
+                  quality-checked products.
+                </p>
               </div>
             </div>
             <div className="col-md-4">
@@ -74,7 +81,10 @@ export default function Home() {
                   <i className="fas fa-dollar-sign"></i>
                 </div>
                 <h3>Great Deals</h3>
-                <p>Find amazing deals on quality second-hand items at unbeatable prices.</p>
+                <p>
+                  Find amazing deals on quality second-hand items at unbeatable
+                  prices.
+                </p>
               </div>
             </div>
           </div>
@@ -129,21 +139,30 @@ export default function Home() {
               <div className="home-step-card">
                 <div className="home-step-number">1</div>
                 <h4>Browse & Discover</h4>
-                <p>Explore thousands of quality second-hand items from electronics to furniture.</p>
+                <p>
+                  Explore thousands of quality second-hand items from
+                  electronics to furniture.
+                </p>
               </div>
             </div>
             <div className="col-md-4">
               <div className="home-step-card">
                 <div className="home-step-number">2</div>
                 <h4>Buy or Sell</h4>
-                <p>Purchase items you love or list your own products to earn while helping the environment.</p>
+                <p>
+                  Purchase items you love or list your own products to earn
+                  while helping the environment.
+                </p>
               </div>
             </div>
             <div className="col-md-4">
               <div className="home-step-card">
                 <div className="home-step-number">3</div>
                 <h4>Make Impact</h4>
-                <p>Every transaction contributes to reducing waste and creating a sustainable future.</p>
+                <p>
+                  Every transaction contributes to reducing waste and creating a
+                  sustainable future.
+                </p>
               </div>
             </div>
           </div>
