@@ -6,8 +6,6 @@ import {
   getCategories,
   addProductWithImages,
   addProductSpecifications,
-  getUserCredits,
-  deductCreditsForProduct,
 } from "../lib/productQueries";
 import {
   validateImageFile,
@@ -25,14 +23,6 @@ export default function AddProductForm({ onSuccess }) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [profileIncomplete, setProfileIncomplete] = useState(false);
-  const [aiLoading, setAiLoading] = useState(false);
-  const [aiSuggestions, setAiSuggestions] = useState(null);
-  const [showAiPanel, setShowAiPanel] = useState(false);
-
-  // Credit system state
-  const [userCredits, setUserCredits] = useState(0);
-  const [creditLoading, setCreditLoading] = useState(false);
-  const CREDITS_PER_PRODUCT = 5; // Cost to post one product
 
   // Form data
   const [formData, setFormData] = useState({
@@ -93,24 +83,6 @@ export default function AddProductForm({ onSuccess }) {
         );
       }
     }
-  }, [user]);
-
-  // Load user credits
-  useEffect(() => {
-    const loadCredits = async () => {
-      if (user) {
-        try {
-          setCreditLoading(true);
-          const credits = await getUserCredits(user.id);
-          setUserCredits(credits);
-        } catch (err) {
-          console.error("Error loading credits:", err);
-        } finally {
-          setCreditLoading(false);
-        }
-      }
-    };
-    loadCredits();
   }, [user]);
 
   // Handle input changes
@@ -609,64 +581,7 @@ Consider Sri Lankan market conditions, local preferences, currency (LKR), popula
     return description;
   };
 
-  const generateSpecifications = (productType, condition) => {
-    const specs = {
-      smartphone: [
-        { name: "Type", value: "Smartphone" },
-        { name: "Condition", value: condition },
-        {
-          name: "Battery Health",
-          value:
-            condition === "Excellent"
-              ? "90-95%"
-              : condition === "Good"
-              ? "80-90%"
-              : "70-85%",
-        },
-        { name: "Accessories", value: "Charger included" },
-        { name: "Warranty", value: "No warranty" },
-      ],
-      laptop: [
-        { name: "Type", value: "Laptop Computer" },
-        { name: "Condition", value: condition },
-        {
-          name: "Battery Life",
-          value: condition === "Excellent" ? "6-8 hours" : "4-6 hours",
-        },
-        { name: "Accessories", value: "Charger included" },
-        { name: "Operating System", value: "Windows/macOS" },
-      ],
-      car: [
-        { name: "Type", value: "Motor Vehicle" },
-        { name: "Condition", value: condition },
-        { name: "Documentation", value: "All papers clear" },
-        { name: "Service History", value: "Available" },
-        { name: "Registration", value: "Up to date" },
-      ],
-      motorcycle: [
-        { name: "Type", value: "Motorcycle" },
-        { name: "Condition", value: condition },
-        { name: "Papers", value: "All clear and updated" },
-        { name: "Maintenance", value: "Regular service maintained" },
-        { name: "Fuel Efficiency", value: "Excellent" },
-      ],
-      furniture: [
-        { name: "Type", value: "Furniture" },
-        { name: "Condition", value: condition },
-        { name: "Material", value: "Quality construction" },
-        { name: "Assembly", value: "Ready to use" },
-        { name: "Durability", value: "Long-lasting" },
-      ],
-    };
-
-    return (
-      specs[productType] || [
-        { name: "Condition", value: condition },
-        { name: "Quality", value: "Good" },
-        { name: "Functionality", value: "Fully working" },
-      ]
-    );
-  };
+  
 
   const calculatePriceRange = (productType, condition) => {
     const basePrices = {
@@ -695,103 +610,6 @@ Consider Sri Lankan market conditions, local preferences, currency (LKR), popula
     };
   };
 
-  const generateKeywords = (title, category, productType) => {
-    const keywords = new Set();
-
-    // Add title words
-    title
-      .toLowerCase()
-      .split(" ")
-      .forEach((word) => {
-        if (word.length > 2) keywords.add(word);
-      });
-
-    // Add category
-    keywords.add(category.toLowerCase());
-
-    // Add location keywords
-    ["sri lanka", "colombo", "sale", "urgent", "negotiable"].forEach((kw) =>
-      keywords.add(kw)
-    );
-
-    // Add product-specific keywords
-    const typeKeywords = {
-      smartphone: ["mobile", "phone", "android", "ios"],
-      laptop: ["computer", "work", "study", "portable"],
-      car: ["vehicle", "transport", "family", "registered"],
-      motorcycle: ["bike", "commute", "fuel efficient"],
-      furniture: ["home", "office", "decor"],
-    };
-
-    (typeKeywords[productType] || []).forEach((kw) => keywords.add(kw));
-
-    return Array.from(keywords).slice(0, 12);
-  };
-
-  const generateSellingPoints = (productType, condition) => {
-    const points = [
-      `${condition} condition`,
-      "Genuine seller",
-      "Negotiable price",
-      "Quick sale preferred",
-    ];
-
-    const typePoints = {
-      smartphone: ["All functions tested", "Charger included"],
-      laptop: ["Perfect for work/study", "Good battery life"],
-      car: ["Service history available", "All documents clear"],
-      motorcycle: ["Fuel efficient", "Low maintenance"],
-      furniture: ["Quality construction", "Ready to use"],
-    };
-
-    points.push(
-      ...(typePoints[productType] || ["Quality assured", "Value for money"])
-    );
-
-    return points.slice(0, 6);
-  };
-
-  const generateTitleSuggestions = (title, condition) => {
-    return [
-      `${title} - ${condition} Condition`,
-      `🔥 ${title} - Quick Sale!`,
-      `💰 ${title} - Negotiable Price`,
-      `📍 ${title} - Colombo/Islandwide Delivery`,
-    ].slice(0, 3);
-  };
-
-  // Apply AI suggestions to form
-  const applyAISuggestions = (suggestions) => {
-    if (suggestions.enhanced_description) {
-      setFormData((prev) => ({
-        ...prev,
-        description: suggestions.enhanced_description,
-      }));
-    }
-
-    if (suggestions.specifications && suggestions.specifications.length > 0) {
-      setSpecifications(suggestions.specifications);
-    }
-
-    if (suggestions.suggested_price_range && !formData.price) {
-      const suggestedPrice = Math.round(
-        (suggestions.suggested_price_range.min +
-          suggestions.suggested_price_range.max) /
-          2
-      );
-      setFormData((prev) => ({
-        ...prev,
-        price: suggestedPrice.toString(),
-        original_price: suggestions.suggested_price_range.max.toString(),
-      }));
-    }
-
-    setShowAiPanel(false);
-    setSuccess(
-      "✨ AI suggestions applied successfully! Review and adjust as needed."
-    );
-  };
-
   // Form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -803,25 +621,6 @@ Consider Sri Lankan market conditions, local preferences, currency (LKR), popula
     if (!checkProfileCompleteness()) {
       setError(
         "🚨 Profile Incomplete! Please complete your profile information (full name, phone number, and location) in Dashboard Settings before adding products."
-      );
-      return;
-    } // Check if user has enough credits
-    if (userCredits < CREDITS_PER_PRODUCT) {
-      setError(
-        <div>
-          <strong>❌ Insufficient Credits!</strong>
-          <br />
-          You need {CREDITS_PER_PRODUCT} credits to post a product. You
-          currently have {userCredits} credits.
-          <br />
-          <button
-            className="btn btn-sm btn-outline-primary mt-2"
-            onClick={() => navigate("/dashboard?section=credits")}
-            type="button"
-          >
-            <i className="fas fa-coins me-1"></i>Purchase Credits
-          </button>
-        </div>
       );
       return;
     }
@@ -907,20 +706,6 @@ Consider Sri Lankan market conditions, local preferences, currency (LKR), popula
       console.log("Images processed:", allImages.length); // Add product with images
       const product = await addProductWithImages(productData, allImages);
       console.log("Product added successfully:", product);
-
-      // Deduct credits for posting the product
-      try {
-        await deductCreditsForProduct(user.id, product.id, CREDITS_PER_PRODUCT);
-        console.log(
-          `${CREDITS_PER_PRODUCT} credits deducted for product posting`
-        );
-        // Update local credits state
-        setUserCredits((prev) => prev - CREDITS_PER_PRODUCT);
-      } catch (creditError) {
-        console.error("Error deducting credits:", creditError);
-        // Note: We don't fail the entire operation if credit deduction fails
-        // But we should log it for manual review
-      }
 
       // Add specifications if any
       const validSpecs = specifications.filter(
@@ -1047,30 +832,6 @@ Consider Sri Lankan market conditions, local preferences, currency (LKR), popula
             <p className="text-muted">
               Create a new product listing for the marketplace
             </p>
-          </div>{" "}
-          <div className="credits-display">
-            <div
-              className={`credits-card-small ${
-                userCredits < CREDITS_PER_PRODUCT ? "insufficient-credits" : ""
-              }`}
-            >
-              <div className="credits-icon">
-                <i className="fas fa-coins"></i>
-              </div>
-              <div className="credits-info">
-                <div className="credits-amount">{userCredits}</div>
-                <div className="credits-label">Credits</div>
-              </div>
-            </div>
-            <small className="text-muted d-block mt-1">
-              {CREDITS_PER_PRODUCT} credits required per product
-            </small>
-            {userCredits < CREDITS_PER_PRODUCT && (
-              <small className="text-danger d-block">
-                <i className="fas fa-exclamation-triangle me-1"></i>
-                Insufficient credits
-              </small>
-            )}
           </div>
         </div>
       </div>
@@ -1614,112 +1375,6 @@ Consider Sri Lankan market conditions, local preferences, currency (LKR), popula
                     )}
                   </div>
                 )}
-                {/* URL Upload Section */}
-                <div className="url-upload-section">
-                  <h6>
-                    <i className="fas fa-link me-2"></i>
-                    Or add images from URL
-                  </h6>
-                  {imageUrls.map((url, index) => (
-                    <div key={index} className="url-input-group mb-2">
-                      <div className="input-group">
-                        <input
-                          type="url"
-                          value={url}
-                          onChange={(e) =>
-                            handleUrlChange(index, e.target.value)
-                          }
-                          className={`form-control ${
-                            urlErrors[index] ? "is-invalid" : ""
-                          }`}
-                          placeholder="https://example.com/image.jpg"
-                        />
-                        {imageUrls.length > 1 && (
-                          <button
-                            type="button"
-                            onClick={() => removeUrlField(index)}
-                            className="btn btn-outline-danger"
-                          >
-                            <i className="fas fa-times"></i>
-                          </button>
-                        )}
-                      </div>
-                      {urlErrors[index] && (
-                        <div className="invalid-feedback">
-                          {urlErrors[index]}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                  <button
-                    type="button"
-                    onClick={addUrlField}
-                    className="btn btn-outline-primary btn-sm"
-                  >
-                    <i className="fas fa-plus me-1"></i>Add Another URL
-                  </button>
-                </div>
-              </div>
-            </div>
-            {/* Specifications Card */}
-            <div className="card mb-4">
-              <div className="card-header">
-                <h5>
-                  <i className="fas fa-list-ul me-2"></i>
-                  Product Specifications
-                </h5>
-              </div>
-              <div className="card-body">
-                <p className="text-muted mb-3">
-                  Add specific details about your product (optional but
-                  recommended)
-                </p>
-                {specifications.map((spec, index) => (
-                  <div key={index} className="specification-row mb-3">
-                    <div className="row">
-                      <div className="col-md-5">
-                        <input
-                          type="text"
-                          placeholder="Specification (e.g., Brand, Model, Color)"
-                          value={spec.name}
-                          onChange={(e) =>
-                            handleSpecChange(index, "name", e.target.value)
-                          }
-                          className="form-control"
-                        />
-                      </div>
-                      <div className="col-md-5">
-                        <input
-                          type="text"
-                          placeholder="Value (e.g., Apple, iPhone 12, Black)"
-                          value={spec.value}
-                          onChange={(e) =>
-                            handleSpecChange(index, "value", e.target.value)
-                          }
-                          className="form-control"
-                        />
-                      </div>
-                      <div className="col-md-2">
-                        {specifications.length > 1 && (
-                          <button
-                            type="button"
-                            onClick={() => removeSpecification(index)}
-                            className="btn btn-outline-danger btn-sm w-100"
-                          >
-                            <i className="fas fa-trash"></i>
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                <button
-                  type="button"
-                  onClick={addSpecification}
-                  className="btn btn-outline-primary btn-sm"
-                >
-                  <i className="fas fa-plus me-1"></i>Add Specification
-                </button>
               </div>
             </div>
           </div>
