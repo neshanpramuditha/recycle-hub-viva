@@ -1,4 +1,4 @@
-# 🌱 Recycle Hub Viva - Sustainable Marketplace
+# 🌱 Recycle Hub  - Sustainable Marketplace
 
 A modern React-based marketplace application for buying and selling second-hand items, promoting sustainability and environmental consciousness. Built with Vite, Supabase, and integrated AI chat support.
 
