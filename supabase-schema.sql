@@ -134,7 +134,8 @@ CREATE TABLE IF NOT EXISTS payment_transactions (
   amount DECIMAL(10,2) NOT NULL,
   currency TEXT DEFAULT 'USD',
   credits INTEGER NOT NULL, -- Number of credits to be awarded
-  package_name TEXT, -- Store package name for reference  payment_method TEXT CHECK (payment_method IN ('paypal', 'manual', 'stripe', 'bank_transfer', 'mobile_banking', 'atm_deposit', 'cash_deposit')) NOT NULL,
+  package_name TEXT, -- Store package name for reference
+  payment_method TEXT CHECK (payment_method IN ('paypal', 'manual', 'stripe', 'bank_transfer', 'mobile_banking', 'atm_deposit', 'cash_deposit')) NOT NULL,
   payment_status TEXT CHECK (payment_status IN ('pending', 'completed', 'failed', 'cancelled', 'refunded')) DEFAULT 'pending',
   status TEXT CHECK (status IN ('pending', 'pending_review', 'completed', 'failed', 'cancelled', 'refunded', 'rejected', 'approved')) DEFAULT 'pending', -- Alternative status field
   payment_reference TEXT, -- PayPal transaction ID or manual reference
