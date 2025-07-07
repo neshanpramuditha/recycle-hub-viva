@@ -13,8 +13,8 @@ export default function About() {
             <div className="header-section">
               <div className="hero-content">
                 <h1 className="hero-title">
-                  Your <span className="accent-text">second-hand</span>{" "}
-                  marketplace
+                  <span className="accent-text">About Us</span>{" "}
+                  
                 </h1>
                 <p className="hero-subtitle">
                   Building a sustainable future through conscious consumption
