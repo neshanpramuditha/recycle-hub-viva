@@ -13,10 +13,10 @@ export default function Home() {
               <div className="home-hero-content">
                 <h1 id="Recycle_Hub_home">Recycle Hub</h1>
                 <p id="Buy_and_Sell_home">
-                  Buy & Sell Second-Hand Items Easily
+                  & From Bin to Begin Again...
                 </p>
                 <p className="home-hero-description">
-                  Join our eco-friendly marketplace where sustainability meets
+                  Join with our eco-friendly solutions where sustainability meets
                   convenience. Give new life to pre-loved items and reduce
                   environmental impact.
                 </p>
